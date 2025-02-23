@@ -64,24 +64,6 @@ This project is a web application that requires Node.js and npm for development.
   pip install pre-commit
   ```
 
-- After installing `pre-commit`, ensure it is set up correctly by running:
-
-  ```sh
-  pre-commit install
-  ```
-
-  Then, to check that pre-commit hooks are working, run:
-
-  ```sh
-  pre-commit run --all-files
-  ```
-
-  Additionally, install the commit message hook by running:
-
-  ```sh
-  pre-commit install --hook-type
-  ```
-
 ## Installation
 
 ### 1. Clone the Repository
@@ -100,6 +82,24 @@ cd littleeinstein-frontend
 
 ```sh
 npm install
+```
+
+### Ensure pre-commit is set up correctly by running
+
+```sh
+pre-commit install
+```
+
+Additionally, install the commit message hook by running:
+
+```sh
+pre-commit install --hook-type
+```
+
+Then, to check that pre-commit hooks are working, run:
+
+```sh
+pre-commit run --all-files
 ```
 
 ## Running the Development Server
