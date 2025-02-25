@@ -4,6 +4,7 @@ const SaveName = () => {
       <h1 className="text-2xl font-bold mb-4">Type Your Name Below</h1>
       <ul>
         <li>Matt Lafferty</li>
+        <li>Karla Martinez</li>
       </ul>
     </div>
   );
