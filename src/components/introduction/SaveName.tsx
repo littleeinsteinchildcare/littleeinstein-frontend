@@ -6,6 +6,7 @@ const SaveName = () => {
         <li>Matt Lafferty</li>
         <li>Andres Gutierrez Bravo</li>
         <li>Kevin Phan</li>
+        <li>Amrit Thapa</li>
       </ul>
     </div>
   );
