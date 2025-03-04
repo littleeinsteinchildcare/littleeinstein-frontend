@@ -4,6 +4,7 @@ const Intro = () => {
   return (
     <div>
       <SaveName />
+      <SaveName />
     </div>
   );
 };
