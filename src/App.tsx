@@ -1,8 +1,10 @@
-import Intro from "./pages/sampleIntro/Intro";
+import Homepage from "./pages/Homepage";
+
 const App = () => {
   return (
     <div>
-      <Intro />
+      {/*<Intro />*/}
+      <Homepage />
     </div>
   );
 };
