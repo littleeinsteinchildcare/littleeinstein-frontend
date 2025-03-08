@@ -1,8 +1,8 @@
-import Intro from "./pages/sampleIntro/Intro";
+import CalendarPage from "@/pages/calendar/Calendar";
 const App = () => {
   return (
     <div>
-      <Intro />
+      <CalendarPage />
     </div>
   );
 };
