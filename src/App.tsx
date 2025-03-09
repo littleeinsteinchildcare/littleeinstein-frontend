@@ -1,8 +1,9 @@
-import Intro from "./pages/sampleIntro/Intro";
+import ResourcesPage from "./pages/resourcesPage";
+
 const App = () => {
   return (
     <div>
-      <Intro />
+      <ResourcesPage />
     </div>
   );
 };
