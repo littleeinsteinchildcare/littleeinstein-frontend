@@ -1,4 +1,4 @@
-import CalendarPage from "./pages/calendar/Calendar.tsx";
+import CalendarPage from "@/pages/calendar/Calendar.tsx";
 
 // not adding react-router-dom yet, just temp for now for PR
 // Line Below: commented to fix merge conflict.
@@ -8,8 +8,8 @@ const App = () => {
   return (
     <div>
       <CalendarPage />
-      <!-- Line Below: commented to fix merge conflict. -->
-      <!-- <Staff /> -->
+      {/* <!-- Line Below: commented to fix merge conflict. -->
+      <!-- <Staff /> --> */}
     </div>
   );
 };
