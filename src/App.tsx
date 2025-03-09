@@ -1,4 +1,5 @@
-import CalendarPage from "@/pages/calendar/Calendar";
+import CalendarPage from "./pages/calendar/Calendar.tsx";
+
 const App = () => {
   return (
     <div>
