@@ -1,12 +1,15 @@
-//import Intro from "./pages/sampleIntro/Intro";
+import CalendarPage from "@/pages/calendar/Calendar.tsx";
 
 // not adding react-router-dom yet, just temp for now for PR
-import Staff from "./pages/Staff";
+// Line Below: commented to fix merge conflict.
+//import Staff from "./pages/Staff";
 
 const App = () => {
   return (
     <div>
-      <Staff />
+      <CalendarPage />
+      {/* <!-- Line Below: commented to fix merge conflict. -->
+      <!-- <Staff /> --> */}
     </div>
   );
 };
