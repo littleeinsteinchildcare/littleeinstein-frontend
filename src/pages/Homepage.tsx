@@ -1,4 +1,4 @@
-import outputonlinepngtools from "../assets/outputonlinepngtools.png";
+import outputonlinepngtools from "@/assets/outputonlinepngtools.png";
 
 const Homepage = () => {
   return (
