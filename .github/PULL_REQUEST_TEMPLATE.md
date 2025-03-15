@@ -6,7 +6,9 @@
 
 ## 🔗 Please Link Your Jira Ticket
 
-<!-- Link the the ticket, if applicable ex: https://littleeinsteinchildcare.atlassian.net/browse/LEC-26 -->
+<!-- Please replace the ## with your ticket number, if no ticket number, remove the link-->
+
+<https://littleeinsteinchildcare.atlassian.net/browse/LEC-##>
 
 ## ✅ Changes Made
 
@@ -14,7 +16,6 @@
 
 1. Change 1
 2. Change 2
-3. Change 3
 
 ## 🛠️ How to Test
 
@@ -22,7 +23,6 @@
 
 1. Step 1
 2. Step 2
-3. Step 3
 
 ## 📌 Checklist
 
