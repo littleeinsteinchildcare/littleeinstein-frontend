@@ -1,19 +1,27 @@
-//import CalendarPage from "@/pages/calendar/Calendar.tsx";
-//import ResourcesPage from "@/pages/resourcesPage";
-// not adding react-router-dom yet, just temp for now for PR
-// Line Below: commented to fix merge conflict.
-//import Staff from "@/pages/Staff";
-import Homepage from "@/pages/Homepage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// pages
+import CalendarPage from "@/pages/calendar/Calendar";
+import SignInPage from "@/pages/signIn/SignIn.tsx";
+import Homepage from "@/pages/home/Home.tsx";
+import ResourcesPage from "@/pages/resources/Resources.tsx";
+//import AboutPage from '@/pages/aboutPage/AboutPage.tsx
+
+// components
+import Navbar from "@/components/Navbar.tsx";
 
 const App = () => {
   return (
-    <div>
-      <Homepage />
-      {/*<ResourcesPage />
-      <!-- Line Below: commented to fix merge conflict. -->
-        <CalendarPage />
-      <!-- <Staff /> --> */}
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/calendar" element={<CalendarPage />} />
+      </Routes>
+    </Router>
   );
 };
+
 export default App;
