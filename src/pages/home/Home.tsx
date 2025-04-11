@@ -1,6 +1,9 @@
 import outputonlinepngtools from "@/assets/outputonlinepngtools.png";
+import { useTranslation } from "react-i18next";
 
 const Homepage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-[#FFFBCF] min-h-screen max-w-screen p-8 grid grid-flow-col gap-8 overflow-x-hidden">
       {/*Location picture component*/}
@@ -16,13 +19,14 @@ const Homepage = () => {
       {/*Side text */}
       <div className="pt-37 pb-35">
         <p className="text-black text-3xl font-semibold pb-5">
-          1789 SE River RD Hillsboro OR 97123
+          {t("homepage.address")}
         </p>
         <p className="text-black text-lg mt-2 pb-5">
-          <strong>Hours:</strong> 7am - 5:30 pm
+          <strong>{t("homepage.hoursLabel")}:</strong>{" "}
+          {t("homepage.hoursValue")}
         </p>
         <p className="text-black text-lg mt-1 pb-5">
-          <strong>Ages:</strong> 2 months to 4 years
+          <strong>{t("homepage.agesLabel")}:</strong> {t("homepage.agesValue")}
         </p>
       </div>
       {/*slideshow*/}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Calendar, momentLocalizer, Event, View } from "react-big-calendar";
+import { useTranslation } from "react-i18next";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment-timezone";
@@ -25,14 +26,30 @@ const events: Event[] = [
 const LittleCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>("month");
+  const { t } = useTranslation();
+
+  const messages = {
+    today: t("calendar.today"),
+    previous: t("calendar.previous"),
+    next: t("calendar.next"),
+    month: t("calendar.month"),
+    week: t("calendar.week"),
+    day: t("calendar.day"),
+    agenda: t("calendar.agenda"),
+    date: t("calendar.date"),
+    time: t("calendar.time"),
+    event: t("calendar.event"),
+    noEventsInRange: t("calendar.noEvents"),
+  };
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-[700px] h-[700px]">
       <h1 className="text-xl font-bold mb-4 text-gray-800 text-center">
-        Calendar
+        {t("calendar.title")}
       </h1>
       <Calendar
         localizer={localizer}
+        messages={messages}
         events={events}
         startAccessor="start"
         endAccessor="end"

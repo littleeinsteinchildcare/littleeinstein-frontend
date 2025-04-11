@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // just prep for auth
   const handleSignIn = () => {
@@ -12,13 +14,13 @@ const SignInPage = () => {
   return (
     <div className="h-screen flex justify-center items-start pt-20 bg-[#FFFBCF]">
       <div className="bg-[#94EE8F] shadow-lg rounded-lg p-8 w-80 text-center">
-        <h1 className="text-2xl font-bold mb-8">Sign In</h1>
+        <h1 className="text-2xl font-bold mb-8">{t("signin.signin")}</h1>
 
         <button
           onClick={handleSignIn}
           className="bg-[#FFFBCF] py-2 px-6 rounded-md shadow-md hover:bg-green-200"
         >
-          Sign In
+          {t("signin.signin")}
         </button>
       </div>
     </div>
