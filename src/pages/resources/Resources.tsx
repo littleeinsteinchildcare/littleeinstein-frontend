@@ -1,21 +1,30 @@
+import ChildEnrollmentForms from "@/assets/ChildEnrollmentForm.pdf";
+import ChildEnrollmentAuthorization from "@/assets/ChildEnrollmentAuthorization.pdf";
+
 const ResourcesPage = () => {
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-40 text-3xl">
       <strong> Forms Required by New Parents </strong>
       <div className="flex flex-col pt-10">
-        <a className="mb-8 w-fit" href="/form1">
-          Form 1
+        <a
+          className="mb-8 w-fit hover:underline hover:text-blue-900"
+          href={ChildEnrollmentForms}
+          target="_blank"
+        >
+          Northwest Nutrition Service Child Enrollment Form
         </a>
-        <a className="mb-8 w-fit" href="/form2">
-          Form 2
+        <a
+          className="mb-8 w-fit hover:underline hover:text-blue-900"
+          href={ChildEnrollmentAuthorization}
+          target="_blank"
+        >
+          ODE Child Enrollment Authorization Form
         </a>
-        <a className="mb-8 w-fit" href="/form3">
-          Form 3
-        </a>
-        <a className="mb-8 w-fit" href="/helpful-resources">
-          Helpful Resources
-        </a>
-        <a className="mb-8 w-fit" href="/wic-resources">
+        <a
+          className="mb-8 w-fit hover:underline hover:text-blue-900"
+          href="https://www.fns.usda.gov/wic"
+          target="_blank"
+        >
           WiC Resources
         </a>
       </div>
