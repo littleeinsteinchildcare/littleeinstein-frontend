@@ -36,14 +36,12 @@ export const en = {
   },
 
   aboutus: {
-    bio: `Hello, my name is Sonia Diaz. I have lived in the United States for 35 years. I have been working for 22 years supporting early childhood education. I have worked for programs such as Head Start and OCDC, supporting children in their educational development, always pursuing professional development.
+    bio: `Hello my name is Sonia Diaz and I’ve been working with children for the past 22 years. I’ve worked with organizations like Head Start and OCDC supporting children in early education, always giving myself room to grow professionally.
 
-    I currently work independently, have trained, and have obtained my license to work individually. My educational focus is supporting infants and toddlers, implementing the creative curriculum and Montessori theories.
+    After several years of working alongside other professionals and expanding my skills, I was able to obtain my very own license to be an independent provider. I focused on early education servicing mainly babies and toddlers, curating creative curriculums using the Montessori methods. I enjoy implementing activities to the children that will stimulate all 5 senses to encourage a healthy development.`,
+    philosophy: `My philosophy is to offer high quality childcare in a fun and safe environment where children have the opportunity to grow intellectually, socially, and emotionally. My approach is offering care, understanding,  and guidance through age appropriate activities. I plan activities with love and care, and help in catering an environment to encourage learning and growth. One of my strengths is my ability to communicate with families the needs that I see in their children when in my care. I strive to support families to meet any goals they may have.
 
-    I love implementing real-life activities for children, enabling them to develop their five senses by stimulating them with real objects.`,
-    philosophy: `My philosophy is to offer high quality childcare in a fun and safe environment whereby children have the opportunity to grow intellectually, socially, emotionally and physically. I achieve these goals by offering affection, understanding, protection, and guidance through age appropriate activities. I plan all these activities with love and care to be catered around an environment that encourages learning and growth. One of my strengths is my ability to communicate with families the needs that I see in their children when in my care, I aim to guide families and their children to meet any goals set out by them.
-
-    We also invite families to participate in any activities we have planned with their children to encourages inclusion and diversity within our space.`,
+    In addition,  we also invite families to participate in any activities we have planned with their children as we believe and encourage inclusion and diversity within our space.`,
     philosophyTitle: "Our Philosophy",
     bioTitle: "About Sonia",
   },
