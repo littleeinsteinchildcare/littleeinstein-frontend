@@ -1,16 +1,19 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const ResourcesPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-40 text-3xl">
-      <strong> Forms Required by New Parents </strong>
+      <strong> {t("resources.header")} </strong>
       <div className="flex flex-col pt-10">
         <Link
           className="mb-8 w-fit hover:underline hover:text-blue-900"
           to="/resources/NWChildEnrollmentForm"
           target="_blank"
         >
-          Northwest Nutrition Service Child Enrollment Form
+          {t("resources.NWChildEnrollmentForm")}
         </Link>
 
         <Link
@@ -18,7 +21,7 @@ const ResourcesPage = () => {
           to="/resources/ODEChildEnrollmentForm"
           target="_blank"
         >
-          ODE Child Enrollment Authorization Form
+          {t("resources.ODEChildEnrollmentForm")}
         </Link>
 
         <a
@@ -26,7 +29,7 @@ const ResourcesPage = () => {
           href="https://www.fns.usda.gov/wic"
           target="_blank"
         >
-          WiC Resources
+          {t("resources.WicResources")}
         </a>
       </div>
     </div>

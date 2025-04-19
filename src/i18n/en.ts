@@ -45,4 +45,11 @@ export const en = {
     philosophyTitle: "Our Philosophy",
     bioTitle: "About Sonia",
   },
+
+  resources: {
+    header: "Forms Required by New Parents",
+    NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
+    ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
+    WicResources: "WiC Resources",
+  },
 };

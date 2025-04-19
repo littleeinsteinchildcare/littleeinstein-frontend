@@ -47,4 +47,13 @@ export const es = {
     philosophyTitle: "Nuestra filosofía",
     bioTitle: "Acerca de Sonia",
   },
+
+  resources: {
+    header: "Formularios Requeridos Para Padres Nuevos",
+    NWChildEnrollmentForm:
+      "Formulario de Inscription de Niño del Northwest Nutrition Service",
+    ODEChildEnrollmentForm:
+      "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
+    WicResources: "Recursos de WiC",
+  },
 };

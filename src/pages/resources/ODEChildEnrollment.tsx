@@ -1,10 +1,13 @@
 import ChildEnrollmentAuthorization from "@/assets/ChildEnrollmentAuthorization.pdf";
+import { useTranslation } from "react-i18next";
 
 const ODEChildEnrollmentForm = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col items-center p-10">
       <h1 className="text-2xl font-bold mb-4">
-        Oregon Department of Education Child Enrollment Authorization Form
+        {t("resources.ODEChildEnrollmentForm")}
       </h1>
       <iframe
         src={ChildEnrollmentAuthorization}
