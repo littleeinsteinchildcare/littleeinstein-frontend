@@ -5,7 +5,7 @@ import CalendarPage from "@/pages/calendar/Calendar";
 import SignInPage from "@/pages/signIn/SignIn.tsx";
 import Homepage from "@/pages/home/Home.tsx";
 import ResourcesPage from "@/pages/resources/Resources.tsx";
-//import AboutPage from '@/pages/aboutPage/AboutPage.tsx
+import AboutUsPage from "@/pages/aboutUs/AboutUs.tsx";
 import NWChildEnrollmentForm from "./pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "./pages/resources/ODEChildEnrollment";
 
@@ -29,6 +29,7 @@ const App = () => {
         />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
       </Routes>
     </Router>
   );
