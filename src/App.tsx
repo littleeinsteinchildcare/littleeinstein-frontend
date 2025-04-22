@@ -6,9 +6,11 @@ import SignInPage from "@/pages/signIn/SignIn.tsx";
 import Homepage from "@/pages/home/Home.tsx";
 import ResourcesPage from "@/pages/resources/Resources.tsx";
 import AboutUsPage from "@/pages/aboutUs/AboutUs.tsx";
+import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 
 // components
-import Navbar from "@/components/Navbar.tsx";
+import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/footer/Footer";
 
 const App = () => {
   return (
@@ -20,7 +22,13 @@ const App = () => {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/contact" element={<ContactUsPage />} />
+        <Route
+          path="*"
+          element={<h1 className="text-center p-20">404 - Page Not Found</h1>}
+        />
       </Routes>
+      <Footer />
     </Router>
   );
 };

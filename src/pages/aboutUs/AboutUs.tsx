@@ -10,6 +10,8 @@ const AboutUsPage = () => {
       <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
         {t("aboutus.bioTitle")}
       </h2>
+      <div className="w-36 h-1 bg-green-800 mx-auto mb-6"></div>
+
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 max-w-5xl mx-auto p-6">
         <img
           src={soniaPic}
@@ -32,8 +34,9 @@ const AboutUsPage = () => {
       <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
         {t("aboutus.philosophyTitle")}
       </h2>
+      <div className="w-48 h-1 bg-green-800 mx-auto mb-6"></div>
 
-      <div className="text-xl mt-8 mx-auto text-center font-semibold text-black max-w-4xl">
+      <div className="text-xl mt-8 mx-auto text-left font-semibold text-black max-w-5xl p-6">
         {t("aboutus.philosophy")
           .split("\n")
           .map((line, id) => (
