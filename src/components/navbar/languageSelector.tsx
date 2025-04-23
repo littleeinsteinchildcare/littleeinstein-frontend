@@ -1,0 +1,51 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { VscChevronDown } from "react-icons/vsc";
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+];
+
+const LanguageSelector = () => {
+  const [open, setOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+    setOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="text-sm block p-2 md:py-1.5 mt-2 md:mt-0 bg-green-200 shadow-sm hover:bg-green-100 font-semibold whitespace-nowrap"
+      >
+        {t("navbar.selectLanguage")}{" "}
+        <VscChevronDown
+          className={`inline-block ml-1 transform transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      {open && (
+        <div className="absolute right-0 w-full bg-green-200 shadow-sm z-50">
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => changeLanguage(lang.code)}
+              className={`block w-full text-left px-4 py-1 hover:bg-green-100 ${
+                i18n.language === lang.code ? "font-semibold" : ""
+              }`}
+            >
+              {lang.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LanguageSelector;
