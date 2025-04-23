@@ -7,6 +7,8 @@ import Homepage from "@/pages/home/Home.tsx";
 import ResourcesPage from "@/pages/resources/Resources.tsx";
 import AboutUsPage from "@/pages/aboutUs/AboutUs.tsx";
 import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
+import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
+import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
 
 // components
 import Navbar from "@/components/navbar/Navbar";
@@ -18,7 +20,15 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/resources/" element={<ResourcesPage />} />
+        <Route
+          path="/resources/NWChildEnrollmentForm"
+          element={<NWChildEnrollmentForm />}
+        />
+        <Route
+          path="/resources/ODEChildEnrollmentForm"
+          element={<ODEChildEnrollmentForm />}
+        />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/about" element={<AboutUsPage />} />

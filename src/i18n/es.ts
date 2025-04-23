@@ -73,4 +73,13 @@ export const es = {
     hoursLabel: "Horas",
     hoursValue: "Lunes - Viernes, 7:00 AM - 5:30 PM",
   },
+  
+  resources: {
+    header: "Formularios Requeridos Para Padres Nuevos",
+    NWChildEnrollmentForm:
+      "Formulario de Inscription de Niño del Northwest Nutrition Service",
+    ODEChildEnrollmentForm:
+      "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
+    WicResources: "Recursos de WiC",
+  },
 };

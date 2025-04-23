@@ -71,4 +71,11 @@ export const en = {
     hoursLabel: "Hours",
     hoursValue: "Monday - Friday, 7:00 am - 5:30 pm",
   },
+  
+  resources: {
+    header: "Forms Required by New Parents",
+    NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
+    ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
+    WicResources: "WiC Resources",
+  },
 };
