@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import NavLinkItem from "./navLinkItem";
 import LanguageSelector from "./languageSelector";
 
-const Navbar = () => {
+const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -34,7 +34,9 @@ const Navbar = () => {
             <NavLinkItem to="/calendar" label={t("navbar.calendar")} />
             <NavLinkItem to="/resources" label={t("navbar.resources")} />
             <NavLinkItem to="/contact" label={t("navbar.contact")} />
-            <NavLinkItem to="/profile" label={t("navbar.profile")} />
+            {isLoggedIn && (
+              <NavLinkItem to="/profile" label={t("navbar.profile")} />
+            )}
 
             <Link
               to="/signin"

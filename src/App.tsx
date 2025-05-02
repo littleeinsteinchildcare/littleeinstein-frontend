@@ -16,9 +16,11 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 
 const App = () => {
+  const isLoggedIn = true;
+
   return (
     <Router>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/profile" element={<Profile />} />
