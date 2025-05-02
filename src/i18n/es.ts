@@ -5,13 +5,26 @@ export const es = {
     resources: "Recursos",
     signin: "Iniciar sesión",
     title: "Little Einstein Childcare",
-    selectLanguage: "Idioma",
+    contact: "Contacta con nosotros",
+    selectLanguage: "Seleccionar idioma",
+  },
+
+  footer: {
+    thissite: "Este Sitio",
+    connect: "Conecta Con Nosotros",
+    contactHeader: "Contacto",
+    about: "Sobre nosotros",
+    calendar: "Calendario",
+    resources: "Recursos",
+    contact: "Contacta con nosotros",
+    terms: "Términos & Condiciones",
+    privacy: "Aviso de Privacidad",
   },
 
   homepage: {
     address: "1789 SE River RD Hillsboro OR 97123",
     hoursLabel: "Horas",
-    hoursValue: "7am - 5:30 pm",
+    hoursValue: "Lunes - Viernes, 7:00 am - 5:30 pm",
     agesLabel: "Rango de edad",
     agesValue: "2 meses a 4 años",
   },
@@ -46,6 +59,19 @@ export const es = {
     Ademas, invitamos a las familias a participar en las actividades que hemos planificado con sus hijos, ya que creemos y fomentamos la inclusión y la diversidad en nuestro espacio.`,
     philosophyTitle: "Nuestra filosofía",
     bioTitle: "Acerca de Sonia",
+  },
+
+  contact: {
+    title: "Contacto",
+    heading: "Contacta con nosotros!",
+    sub: "¿Te interesa inscribirte o tienes alguna pregunta? Completa el formulario a continuación.",
+    name: "Nombre",
+    email: "Correo electrónico",
+    phone: "Número de teléfono",
+    message: "Mensaje",
+    send: "Enviar",
+    hoursLabel: "Horas",
+    hoursValue: "Lunes - Viernes, 7:00 AM - 5:30 PM",
   },
 
   resources: {
