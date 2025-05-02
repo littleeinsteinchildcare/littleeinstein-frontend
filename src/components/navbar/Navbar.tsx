@@ -34,6 +34,7 @@ const Navbar = () => {
             <NavLinkItem to="/calendar" label={t("navbar.calendar")} />
             <NavLinkItem to="/resources" label={t("navbar.resources")} />
             <NavLinkItem to="/contact" label={t("navbar.contact")} />
+            <NavLinkItem to="/profile" label={t("navbar.profile")} />
 
             <Link
               to="/signin"

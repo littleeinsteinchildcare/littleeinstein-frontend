@@ -6,6 +6,7 @@ export const es = {
     signin: "Iniciar sesión",
     title: "Little Einstein Childcare",
     contact: "Contacta con nosotros",
+    profile: "Perfil",
     selectLanguage: "Seleccionar idioma",
   },
 
@@ -81,5 +82,9 @@ export const es = {
     ODEChildEnrollmentForm:
       "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
     WicResources: "Recursos de WiC",
+  },
+
+  profile: {
+    title: "Perfil",
   },
 };

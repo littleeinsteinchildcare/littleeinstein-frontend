@@ -6,6 +6,7 @@ export const en = {
     signin: "Sign in",
     title: "Little Einstein Childcare",
     contact: "Contact Us",
+    profile: "Profile",
     selectLanguage: "Select Language",
   },
 
@@ -77,5 +78,9 @@ export const en = {
     NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
     ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
     WicResources: "WiC Resources",
+  },
+
+  profile: {
+    title: "Profile",
   },
 };
