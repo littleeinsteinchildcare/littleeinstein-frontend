@@ -2,9 +2,23 @@ import outputonlinepngtools from "@/assets/outputonlinepngtools.png";
 import { useTranslation } from "react-i18next";
 import drawing1 from "@/assets/temp1.png";
 import drawing2 from "@/assets/outputonlinepngtools.png";
+import { useMsal } from "@azure/msal-react";
+import { useEffect } from "react";
 
 const Homepage = () => {
   const { t } = useTranslation();
+  const { instance } = useMsal();
+  useEffect(() => {
+    const activeAccount = instance.getActiveAccount();
+    if (activeAccount) {
+      console.log("Full idTokenClaims:", activeAccount.idTokenClaims);
+
+      const objectId = activeAccount.idTokenClaims?.oid;
+      console.log("User Object ID:", objectId);
+    } else {
+      console.log("No active account. User is not signed in.");
+    }
+  }, [instance]);
 
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">

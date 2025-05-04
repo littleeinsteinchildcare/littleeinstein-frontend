@@ -1,14 +1,34 @@
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMsal } from "@azure/msal-react";
+// import { loginRequest } from "@/auth/authConfig";
 
 const SignInPage = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const { instance } = useMsal();
 
-  // just prep for auth
-  const handleSignIn = () => {
-    console.log("Sign-in button clicked");
-    navigate("/"); // redirect to home for now
+  // const handleSignIn = () => {
+  //   instance
+  //     .loginPopup({
+  //       ...loginRequest,
+  //       prompt: "login",
+  //     })
+  //     .catch((error) => {
+  //       console.error("Login failed: ", error);
+  //     });
+  // };
+  const handleSignIn = async () => {
+    try {
+      await instance.logoutPopup(); // <-- clears old account from wrong authority
+      await instance.loginPopup(); // <-- clears old account from wrong authority
+
+      // await instance.loginPopup({
+      //   ...loginRequest,
+      //   prompt: "login",
+      // });
+      // await instance.login()
+    } catch (error) {
+      console.error("Login failed: ", error);
+    }
   };
 
   return (
