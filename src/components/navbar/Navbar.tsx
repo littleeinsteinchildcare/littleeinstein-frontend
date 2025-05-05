@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMsal } from "@azure/msal-react";
 import NavLinkItem from "./navLinkItem";
 import LanguageSelector from "./languageSelector";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
+  const { instance, accounts } = useMsal();
+  const isAuthenticated = accounts.length > 0;
+
+  const handleSignOut = () => {
+    instance.logoutPopup().catch((error) => {
+      console.error("Logout failed: ", error);
+    });
+  };
 
   return (
     <div className="bg-[#FFFBCF] mt-8">
@@ -31,16 +40,30 @@ const Navbar = () => {
             }`}
           >
             <NavLinkItem to="/about" label={t("navbar.about")} />
-            <NavLinkItem to="/calendar" label={t("navbar.calendar")} />
+            <NavLinkItem to="/calendar" label={t("calendar.title")} />
             <NavLinkItem to="/resources" label={t("navbar.resources")} />
             <NavLinkItem to="/contact" label={t("navbar.contact")} />
 
-            <Link
-              to="/signin"
-              className="block px-5 md:py-1 mt-2 md:mt-0 font-semibold whitespace-nowrap bg-green-200 text-black rounded-2xl shadow-sm hover:bg-green-100 hover:shadow-md hover:scale-105 transform transition duration-300"
-            >
-              {t("navbar.signin")}
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2">
+                <span className="font-medium text-sm">
+                  {accounts[0]?.name || accounts[0]?.username || "User"}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="block px-5 md:py-1 mt-2 md:mt-0 font-semibold whitespace-nowrap bg-green-200 text-black rounded-2xl shadow-sm hover:bg-green-100 hover:shadow-md hover:scale-105 transform transition duration-300"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/signin"
+                className="block px-5 md:py-1 mt-2 md:mt-0 font-semibold whitespace-nowrap bg-green-200 text-black rounded-2xl shadow-sm hover:bg-green-100 hover:shadow-md hover:scale-105 transform transition duration-300"
+              >
+                {t("navbar.signin")}
+              </Link>
+            )}
 
             <LanguageSelector />
           </div>
