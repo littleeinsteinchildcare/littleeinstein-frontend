@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useMsal } from "@azure/msal-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { loginRequest } from "@/auth/authConfig";
 
 const SignInPage = () => {
   const { t } = useTranslation();
@@ -20,8 +21,8 @@ const SignInPage = () => {
     try {
       // Simple login with popup - no need to logout first
       await instance.loginPopup({
-        scopes: ["openid", "profile", "email"],
-        prompt: "select_account", // Allows user to choose an account
+        scopes: loginRequest.scopes,
+        prompt: "select_account", // Ensures user can choose an account
       });
 
       // After successful login, redirect to home page

@@ -72,20 +72,20 @@ export const msalConfig = {
  */
 
 // Login scopes (used during the initial login flow)
-export const authScopes = {
-  scopes: ["openid", "profile"],
+export const loginRequest = {
+  scopes: ["openid", "profile", "email"],
 };
 
 // The API scope uses the backend API ID
 export const apiScopes = {
   scopes: [
-    "https://littleeinsteinchildcare.onmicrosoft.com/bac428ae-b0ba-4b2d-a68e-6cf4762a93b7/PublicInfo.Read",
+    "https://littleeinsteinchildcare.onmicrosoft.com/bac428ae-b0ba-4b2d-a68e-6cf4762a93b7/.default",
   ],
 };
 
 // Combine scopes for scenarios where you need both authentication and API access
 export const allScopes = {
-  scopes: [...authScopes.scopes, ...apiScopes.scopes],
+  scopes: [...loginRequest.scopes, ...apiScopes.scopes],
 };
 // export const loginRequest = {
 //   scopes: [],
