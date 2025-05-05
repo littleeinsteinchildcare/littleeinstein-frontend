@@ -10,15 +10,28 @@ import { apiScopes } from "@/auth/authConfig";
 // API base URL - matching the provided example
 const API_BASE_URL = "http://localhost:8080";
 
+interface TokenVerificationStatus {
+  success: boolean;
+  message: string;
+  error?: string;
+  details?: Record<string, unknown>;
+}
+
 const DocsPage = () => {
   const { instance, accounts } = useMsal();
   const [apiEndpoint, setApiEndpoint] = useState("auth/azure-b2c");
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [tokenVerificationStatus, setTokenVerificationStatus] =
-    useState<any>(null);
-  const [accountDetails, setAccountDetails] = useState<any>(null);
+    useState<TokenVerificationStatus | null>(null);
+  const [accountDetails, setAccountDetails] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const [requestMethod, setRequestMethod] = useState<string>("GET");
   const [requestBody, setRequestBody] = useState<string>(
     '{\n  "key": "value"\n}',
@@ -125,7 +138,7 @@ const DocsPage = () => {
           // Validate JSON
           const jsonBody = JSON.parse(requestBody);
           options.body = JSON.stringify(jsonBody);
-        } catch (e) {
+        } catch {
           throw new Error("Invalid JSON in request body");
         }
       }
@@ -140,7 +153,7 @@ const DocsPage = () => {
       if (!response.ok) {
         const errorText = await response
           .text()
-          .catch((e) => "Could not read error response");
+          .catch(() => "Could not read error response");
         throw new Error(`API error: ${response.status} - ${errorText}`);
       }
 
@@ -152,16 +165,16 @@ const DocsPage = () => {
         details: result,
       });
 
-      setApiResponse(result);
+      setApiResponse(result as Record<string, unknown>);
       setIsLoading(false);
     } catch (error) {
       console.error("API request failed:", error);
-      setApiError(error.message);
+      setApiError(error instanceof Error ? error.message : String(error));
 
       setTokenVerificationStatus({
         success: false,
         message: "Request failed",
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       });
 
       setIsLoading(false);
