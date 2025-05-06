@@ -128,7 +128,6 @@ const DocsPage = () => {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "X-User-ObjectId": objectId,
         },
       };
 
@@ -147,7 +146,11 @@ const DocsPage = () => {
         `Making ${requestMethod} request to ${API_BASE_URL}/${apiEndpoint}`,
       );
 
-      const response = await fetch(`${API_BASE_URL}/${apiEndpoint}`, options);
+      const finalEndpoint = apiEndpoint.includes(objectId)
+        ? apiEndpoint
+        : `${apiEndpoint}/${objectId}`;
+
+      const response = await fetch(`${API_BASE_URL}/${finalEndpoint}`, options);
       console.log(`Response status: ${response.status}`);
 
       if (!response.ok) {
@@ -259,7 +262,6 @@ const DocsPage = () => {
               <p className="mb-1"># Required Headers Format</p>
               <p className="mb-1">Authorization: Bearer eyJ0eXAiOi...token</p>
               <p className="mb-1">Content-Type: application/json</p>
-              <p className="mb-1">X-User-ObjectId: {objectId}</p>
             </div>
           </div>
 
