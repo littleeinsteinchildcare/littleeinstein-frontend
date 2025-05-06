@@ -41,8 +41,14 @@ const DocsPage = () => {
   useEffect(() => {
     if (accounts.length > 0) {
       setAccountDetails(accounts[0]);
+
+      // Add this block to update the endpoint with the object ID
+      const objectId = accounts[0]?.idTokenClaims?.sub;
+      if (objectId && !apiEndpoint.includes(objectId)) {
+        setApiEndpoint(`auth/azure-b2c/${objectId}`);
+      }
     }
-  }, [accounts]);
+  }, [accounts, apiEndpoint]);
 
   // Function to get an access token for the API
   async function getAccessTokenForApi() {
@@ -120,9 +126,6 @@ const DocsPage = () => {
         throw new Error("Failed to acquire access token");
       }
 
-      // Extract object ID from the current account
-      const objectId = accounts[0]?.idTokenClaims?.sub || "";
-
       const options: RequestInit = {
         method: requestMethod,
         headers: {
@@ -146,11 +149,7 @@ const DocsPage = () => {
         `Making ${requestMethod} request to ${API_BASE_URL}/${apiEndpoint}`,
       );
 
-      const finalEndpoint = apiEndpoint.includes(objectId)
-        ? apiEndpoint
-        : `${apiEndpoint}/${objectId}`;
-
-      const response = await fetch(`${API_BASE_URL}/${finalEndpoint}`, options);
+      const response = await fetch(`${API_BASE_URL}/${apiEndpoint}`, options);
       console.log(`Response status: ${response.status}`);
 
       if (!response.ok) {
@@ -262,6 +261,7 @@ const DocsPage = () => {
               <p className="mb-1"># Required Headers Format</p>
               <p className="mb-1">Authorization: Bearer eyJ0eXAiOi...token</p>
               <p className="mb-1">Content-Type: application/json</p>
+              {/* Removed X-User-ObjectId header reference */}
             </div>
           </div>
 
@@ -340,15 +340,15 @@ const DocsPage = () => {
           </div>
 
           {/* Display API errors if any */}
-          {apiError && (
+          {apiError ? (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               <h3 className="font-bold text-center">API Error:</h3>
               <p className="text-center">{apiError}</p>
             </div>
-          )}
+          ) : null}
 
           {/* Display token verification status if available */}
-          {tokenVerificationStatus && (
+          {tokenVerificationStatus ? (
             <div
               className={`mb-6 p-4 border rounded ${
                 tokenVerificationStatus.success
@@ -362,14 +362,14 @@ const DocsPage = () => {
                   : "Request Failed"}
               </h3>
               <p className="text-center">{tokenVerificationStatus.message}</p>
-              {tokenVerificationStatus.error && (
+              {tokenVerificationStatus.error ? (
                 <p className="text-center">{tokenVerificationStatus.error}</p>
-              )}
+              ) : null}
             </div>
-          )}
+          ) : null}
 
           {/* Display API response data if available */}
-          {apiResponse && (
+          {apiResponse ? (
             <div className="border border-gray-300 px-4 py-3 rounded mb-6">
               <h3 className="font-bold text-gray-800 text-center">
                 API Response Data:
@@ -378,7 +378,7 @@ const DocsPage = () => {
                 {JSON.stringify(apiResponse, null, 2)}
               </pre>
             </div>
-          )}
+          ) : null}
 
           <div className="text-center mt-6">
             <button
