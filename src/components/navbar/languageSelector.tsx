@@ -17,10 +17,10 @@ const LanguageSelector = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative inline-block">
       <button
         onClick={() => setOpen(!open)}
-        className="text-sm block p-2 md:py-1.5 mt-2 md:mt-0 bg-green-200 shadow-sm hover:bg-green-100 font-semibold whitespace-nowrap"
+        className="text-sm block p-2 md:py-1.5 mt-2 md:mt-0 bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white shadow-sm  font-semibold whitespace-nowrap"
       >
         {t("navbar.selectLanguage")}{" "}
         <VscChevronDown
@@ -30,7 +30,7 @@ const LanguageSelector = () => {
         />
       </button>
       {open && (
-        <div className="absolute right-0 w-full bg-green-200 shadow-sm z-50">
+        <div className="absolute right-0 w-full border-x-1 border-b bg-white text-[#003366] shadow-sm z-50">
           {languages.map((lang) => (
             <button
               key={lang.code}

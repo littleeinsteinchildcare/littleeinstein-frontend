@@ -5,7 +5,11 @@ const ResourcesPage = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-[#FFFBCF] min-h-screen p-40 text-3xl">
+    <div className="bg-[#FFFBCF] min-h-screen p-8 text-3xl">
+      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
+        {t("resources.title")}
+      </h2>
+      <div className="w-20 h-1 bg-green-800 mx-auto mb-6"></div>
       <strong> {t("resources.header")} </strong>
       <div className="flex flex-col pt-10">
         <Link

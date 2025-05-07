@@ -35,7 +35,7 @@ const App = () => {
         <Route path="/contact" element={<ContactUsPage />} />
         <Route
           path="*"
-          element={<h1 className="text-center p-20">404 - Page Not Found</h1>}
+          element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
         />
       </Routes>
       <Footer />
