@@ -1,14 +1,35 @@
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useMsal } from "@azure/msal-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { loginRequest } from "@/auth/authConfig";
 
 const SignInPage = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const { instance, accounts } = useMsal();
+  const navigate = useNavigate();
 
-  // just prep for auth
-  const handleSignIn = () => {
-    console.log("Sign-in button clicked");
-    navigate("/"); // redirect to home for now
+  // Check if user is already logged in
+  useEffect(() => {
+    if (accounts.length > 0) {
+      // User is already authenticated, redirect to home page
+      navigate("/");
+    }
+  }, [accounts, navigate]);
+
+  const handleSignIn = async () => {
+    try {
+      // Simple login with popup - no need to logout first
+      await instance.loginPopup({
+        scopes: loginRequest.scopes,
+        prompt: "select_account", // Ensures user can choose an account
+      });
+
+      // After successful login, redirect to home page
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed: ", error);
+    }
   };
 
   return (

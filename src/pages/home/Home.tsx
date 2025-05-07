@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import { useMsal } from "@azure/msal-react";
+
+// home page components
 import WelcomeSection from "@/components/home/welcome";
 import LocationInfo from "@/components/home/location";
 import Tour from "@/components/home/tour";
@@ -7,6 +11,19 @@ import Art from "@/components/home/art";
 import Testimonials from "@/components/home/testimonials";
 
 const Homepage = () => {
+  const { instance } = useMsal();
+  useEffect(() => {
+    const activeAccount = instance.getActiveAccount();
+    if (activeAccount) {
+      console.log("Full idTokenClaims:", activeAccount.idTokenClaims);
+
+      const objectId = activeAccount.idTokenClaims?.oid;
+      console.log("User Object ID:", objectId);
+    } else {
+      console.log("No active account. User is not signed in.");
+    }
+  }, [instance]);
+
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
       {/* Welcome v1 */}
