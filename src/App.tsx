@@ -9,6 +9,7 @@ import AboutUsPage from "@/pages/aboutUs/AboutUs.tsx";
 import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
+import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
 import Profile from "./pages/profile/Profile";
 
 // components
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactUsPage />} />
+        <Route path="/docs" element={<DocsPage />} />{" "}
         <Route
           path="*"
           element={<h1 className="text-center p-20">404 - Page Not Found</h1>}
