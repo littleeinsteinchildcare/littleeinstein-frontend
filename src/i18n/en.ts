@@ -86,6 +86,27 @@ export const en = {
     time: "Time",
     event: "Event",
     noEvents: "No events in this range",
+    createEvent: "Create Event",
+  },
+  
+  events: {
+    title: "Event Title",
+    date: "Date",
+    startTime: "Start Time",
+    endTime: "End Time",
+    location: "Location",
+    description: "Description",
+    createEvent: "Create New Event",
+    cancel: "Cancel",
+    submit: "Create Event",
+    errorTitle: "Event title is required",
+    errorDate: "Date is required",
+    errorStartTime: "Start time is required",
+    errorEndTime: "End time is required",
+    errorTimeRange: "End time must be after start time",
+    errorLocation: "Location is required",
+    successTitle: "Success!",
+    successMessage: "Your event has been created.",
   },
 
   signin: {

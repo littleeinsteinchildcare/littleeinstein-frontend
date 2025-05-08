@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Calendar, momentLocalizer, Event, View } from "react-big-calendar";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment-timezone";
@@ -27,6 +28,7 @@ const LittleCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>("month");
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const messages = {
     today: t("calendar.today"),
@@ -44,9 +46,17 @@ const LittleCalendar = () => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-[700px] h-[700px]">
-      <h1 className="text-xl font-bold mb-4 text-gray-800 text-center">
-        {t("calendar.title")}
-      </h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold text-gray-800">
+          {t("calendar.title")}
+        </h1>
+        <button 
+          onClick={() => navigate('/calendar/events')}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200"
+        >
+          {t("calendar.createEvent")}
+        </button>
+      </div>
       <Calendar
         localizer={localizer}
         messages={messages}
