@@ -82,5 +82,7 @@ export const en = {
 
   profile: {
     title: "Profile",
+    upload: "Contribute to our Gallery!",
+    browse: "Browse Photos",
   },
 };

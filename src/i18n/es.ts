@@ -86,5 +86,7 @@ export const es = {
 
   profile: {
     title: "Perfil",
+    upload: "Contribuye a Nuestra Galería",
+    browse: "Buscar Fotos",
   },
 };

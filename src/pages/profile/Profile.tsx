@@ -27,7 +27,7 @@ const Profile = () => {
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
         <div className="shadow-md rounded flex-col p-5">
           <h2 className="text-2xl text-black font-bold mx-auto mb-5">
-            Upload fotos to the slideshow!
+            {t("profile.upload")}
           </h2>
           <input
             type="file"
@@ -40,7 +40,7 @@ const Profile = () => {
             htmlFor="fileUpload"
             className="cursor-pointer bg-[#94EE8F] text-black px-4 py-2 rounded hover:bg-green-200 transition-colors text-center w-max m-5"
           >
-            {"Browse Photos"}
+            {t("profile.browse")}
           </label>
           {photos.map((src, index) => (
             <img
