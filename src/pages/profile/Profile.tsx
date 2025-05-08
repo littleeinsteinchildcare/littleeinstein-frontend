@@ -1,9 +1,10 @@
-import { t } from "i18next";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const { t } = useTranslation();
   const [photos, setPhotos] = useState<string[]>([]);
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const files = Array.from(e.target.files);
 
@@ -16,6 +17,11 @@ const Profile = () => {
         alert("You can only upload up to 5 photos!");
       }
     }
+  }
+
+  function handleDelete(index: number) {
+    URL.revokeObjectURL(photos[index]);
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
   }
 
   return (
@@ -32,7 +38,7 @@ const Profile = () => {
           <input
             type="file"
             accept="image/*"
-            onChange={handleChange}
+            onChange={handleAdd}
             className="hidden"
             id="fileUpload"
           />
@@ -43,12 +49,20 @@ const Profile = () => {
             {t("profile.browse")}
           </label>
           {photos.map((src, index) => (
-            <img
-              key={index}
-              src={src}
-              alt={`Preview ${index + 1}`}
-              className="w-2/3 h-48 object-cover m-5"
-            />
+            <div key={index} className="relative">
+              <img
+                key={index}
+                src={src}
+                alt={`Preview ${index + 1}`}
+                className="w-2/3 h-48 object-cover m-5"
+              />
+              <button
+                onClick={() => handleDelete(index)}
+                className="absolute top-20 right-10 bg-[#94EE8F] text-black text-xs px-2 py-1 rounded hover:bg-green-200"
+              >
+                ✕
+              </button>
+            </div>
           ))}
         </div>
       </div>
