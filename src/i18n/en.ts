@@ -84,5 +84,6 @@ export const en = {
     title: "Profile",
     upload: "Contribute to our Gallery!",
     browse: "Browse Photos",
+    events: "Your Events",
   },
 };

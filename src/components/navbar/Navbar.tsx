@@ -5,7 +5,7 @@ import { useMsal } from "@azure/msal-react";
 import NavLinkItem from "./navLinkItem";
 import LanguageSelector from "./languageSelector";
 
-const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation();
   const { instance, accounts } = useMsal();
@@ -43,7 +43,7 @@ const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <NavLinkItem to="/calendar" label={t("calendar.title")} />
             <NavLinkItem to="/resources" label={t("navbar.resources")} />
             <NavLinkItem to="/contact" label={t("navbar.contact")} />
-            {isLoggedIn && (
+            {isAuthenticated && (
               <NavLinkItem to="/profile" label={t("navbar.profile")} />
             )}
 

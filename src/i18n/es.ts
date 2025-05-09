@@ -88,5 +88,6 @@ export const es = {
     title: "Perfil",
     upload: "Contribuye a Nuestra Galería",
     browse: "Buscar Fotos",
+    events: "Tus Eventos",
   },
 };
