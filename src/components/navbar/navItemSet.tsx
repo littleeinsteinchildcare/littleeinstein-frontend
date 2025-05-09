@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import NavLinkItem from "./navLinkItem";
 
-const NavItemSet = () => {
+const NavItemSet = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const { t } = useTranslation();
 
   return (
@@ -10,6 +10,10 @@ const NavItemSet = () => {
       <NavLinkItem to="/calendar" label={t("navbar.calendar")} />
       <NavLinkItem to="/resources" label={t("navbar.resources")} />
       <NavLinkItem to="/contact" label={t("navbar.contact")} />
+
+      {isAuthenticated && (
+        <NavLinkItem to="/profile" label={t("navbar.profile")} />
+      )}
 
       {/*
       <Link

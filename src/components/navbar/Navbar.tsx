@@ -63,7 +63,7 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex md:space-x-4 md:items-center">
-            <NavItemSet />
+            <NavItemSet isAuthenticated={isAuthenticated} />
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
@@ -117,7 +117,7 @@ const Navbar = () => {
                 : "opacity-0 -translate-y-2"
             } flex flex-col items-center bg-[#94EE8F] py-2`}
           >
-            <NavItemSet />
+            <NavItemSet isAuthenticated={isAuthenticated} />
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
