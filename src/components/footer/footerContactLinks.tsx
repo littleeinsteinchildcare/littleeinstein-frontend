@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { FiPhone, FiMail, FiGlobe, FiMapPin, FiClock } from "react-icons/fi";
 
 const FooterContactLinks = () => {
+  const { t } = useTranslation();
+
   return (
     <ul className="space-y-4 text-sm text-gray-800 mb-4">
       <li className="flex items-center gap-2">
@@ -21,7 +24,7 @@ const FooterContactLinks = () => {
       </li>
       <li className="flex items-center gap-2">
         <FiClock />
-        Mon–Fri: 7:00 am – 5:30 pm
+        {t("contact.hoursValue")}
       </li>
     </ul>
   );

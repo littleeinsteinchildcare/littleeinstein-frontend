@@ -12,14 +12,14 @@ const AboutUsPage = () => {
       </h2>
       <div className="w-36 h-1 bg-green-800 mx-auto mb-6"></div>
 
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 max-w-5xl mx-auto p-6">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-12 mb-22 max-w-5xl mx-auto p-6">
         <img
           src={soniaPic}
           alt="Owner"
           className="w-48 h-48 md:w-64 md:h-64 object-cover rounded-full"
         />
 
-        <p className="text-lg text-black font-semibold max-w-xl">
+        <p className="text-lg text-black font-semibold max-w-5xl md:ml-10 bg-[#94EE8F] rounded-3xl p-8 border-b-3 border-green-200">
           {t("aboutus.bio")
             .split("\n")
             .map((line, id) => (
@@ -36,7 +36,7 @@ const AboutUsPage = () => {
       </h2>
       <div className="w-48 h-1 bg-green-800 mx-auto mb-6"></div>
 
-      <div className="text-xl mt-8 mx-auto text-left font-semibold text-black max-w-5xl p-6">
+      <div className="text-lg mt-8 mx-auto text-left font-semibold text-black max-w-5xl bg-[#94EE8F] rounded-3xl p-8 border-b-3 border-green-200">
         {t("aboutus.philosophy")
           .split("\n")
           .map((line, id) => (

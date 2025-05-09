@@ -11,7 +11,7 @@ const FooterAccordion = ({ title, children }: FooterAccordionProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="border-t border-gray-700 p-4">
+    <div className="border-b border-gray-700 p-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex justify-between items-center py-4 text-left font-semibold text-lg"

@@ -1,6 +1,6 @@
 export const en = {
   navbar: {
-    about: "About us",
+    about: "About Us",
     calendar: "Calendar",
     resources: "Resources",
     signin: "Sign in",
@@ -14,7 +14,7 @@ export const en = {
     thissite: "This Site",
     connect: "Connect With Us",
     contactHeader: "Contact",
-    about: "About us",
+    about: "About Us",
     calendar: "Calendar",
     resources: "Resources",
     contact: "Contact Us",
@@ -26,8 +26,52 @@ export const en = {
     address: "1789 SE River RD Hillsboro OR 97123",
     hoursLabel: "Hours",
     hoursValue: "Monday - Friday, 7:00 am - 5:30 pm",
-    agesLabel: "Ages",
+    agesLabel: "Age Range",
     agesValue: "2 months to 4 years",
+    welcomeh1: "WELCOME TO",
+    welcomeh2: "LITTLE EINSTEIN CHILDCARE!",
+    welcomeMessage: `A nurturing environment where children learn, grow, and thrive – every
+        step of the way. At Little Einstein’s, we believe that early childhood
+        is a critical period for cognitive, social, and emotional development.
+        Our experienced and loving staff provide a safe, engaging, and inclusive
+        space for all children to explore, play, and discover.`,
+    feat1: "Enroll Ages: 2 months to 4 years",
+    feat2: "Creative Play & Art",
+    feat3: "Learning Through Fun",
+    feat4: "Safe Outdoor Play",
+    enroll: "ENROLL TODAY!",
+    ourSpace: "OUR SPACE",
+    aboutUs: "ABOUT US",
+    aboutHead: "We’re More Than a Daycare",
+    aboutMessage: `At Little Einstein Childcare, our mission is to provide a warm,
+            safe, and inspiring environment where each child can learn and grow
+            at their own pace. Our passionate educators foster creativity,
+            confidence, and kindness every step of the way.`,
+    aboutButton: "Learn More About Us",
+    expect: "WHAT TO EXPECT",
+    enrollHead: "📝 Enrollment Process",
+    step1: "Step 1: Schedule a tour",
+    step2: "Step 2: Meet with staff & ask questions",
+    step3: "Step 3: Complete enrollment forms",
+    step4: "Step 4: First day orientation",
+    startButton: "Start Enrollment",
+    day2day: "🕘 Day-to-Day Schedule",
+    hour1: "7:00  AM – Drop-off & Free Play",
+    hour2: "8:30  AM – Circle Time & Learning Activities",
+    hour3: "10:00 AM – Snack & Outdoor Play",
+    hour4: "12:00 PM – Lunch & Quiet Time",
+    hour5: "2:00  PM – Story Time & Creative Play",
+    hour6: "5:00  PM – Pick-up Begins",
+    scheduleButton: "View Full Schedule",
+    art: `OUR LITTLE ARTISTS' GALLERY`,
+    sayings: "WHAT FAMILIES ARE SAYING",
+    test1: `hello world`,
+    test2: `hello world`,
+    test3: `hello world`,
+    reviewMessage: `Loved by parents on Google! Read more 5-star reviews from families
+            just like yours.`,
+    reviewButton: "View Google Reviews",
+    getDirections: "Get Directions",
   },
 
   calendar: {
@@ -71,9 +115,12 @@ export const en = {
     send: "Send",
     hoursLabel: "Hours",
     hoursValue: "Monday - Friday, 7:00 am - 5:30 pm",
+    success: "Message sent successfully!",
+    error: "Message did not send",
   },
 
   resources: {
+    title: "Resources",
     header: "Forms Required by New Parents",
     NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
     ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
