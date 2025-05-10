@@ -72,7 +72,7 @@ const Navbar = () => {
                 </span>
                 <button
                   onClick={handleSignOut}
-                  className="block px-5 md:py-1 mt-2 md:mt-0 font-semibold whitespace-nowrap bg-green-200 text-black rounded-2xl shadow-sm hover:bg-green-100 hover:shadow-md hover:scale-105 transform transition duration-300"
+                  className="block px-5 md:py-1 mt-2 md:mt-0 font-semibold whitespace-nowrap bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white rounded-2xl shadow-sm hover:shadow-md hover:scale-105 transform transition duration-300"
                 >
                   Sign Out
                 </button>

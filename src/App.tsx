@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
+import { Navigate } from "react-router-dom";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
@@ -11,15 +13,25 @@ import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
 import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
+import AdminPage from "@/pages/admin/Admin.tsx";
 
 // components
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import Banner from "@/components/admin/Banner";
+
+import { useContext } from "react";
+import { BannerContext } from "@/context/BannerContext";
 
 const App = () => {
+  const { accounts } = useMsal();
+  const isAuthenticated = accounts.length > 0;
+  const { banner } = useContext(BannerContext);
+
   return (
     <Router>
       <Navbar />
+      {banner && <Banner type={banner.type} message={banner.message} />}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/resources/" element={<ResourcesPage />} />
@@ -37,6 +49,10 @@ const App = () => {
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactUsPage />} />
         <Route path="/docs" element={<DocsPage />} />
+        <Route
+          path="/admin"
+          element={isAuthenticated ? <AdminPage /> : <Navigate to="/signin" />}
+        />
         <Route
           path="*"
           element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
