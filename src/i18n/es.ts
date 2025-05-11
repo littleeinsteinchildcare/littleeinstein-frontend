@@ -162,7 +162,7 @@ export const es = {
   },
 
   banner: {
-    weather: "🌧️ ❄️ Mal Tiempo - ¡Manténgase a Salvo! 🌩️ 🌫️",
+    weather: "🌧️ ❄️ Cierre por mal Tiempo - ¡Manténgase a Salvo! 🌩️ 🌫️",
     closure:
       "🚫 Little Einstein Childcare está Cerrado Hoy. ¡Nos vemos pronto!",
     custom: "🔔 Anuncio Importante",

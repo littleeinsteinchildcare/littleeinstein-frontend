@@ -165,7 +165,7 @@ export const en = {
   },
 
   banner: {
-    weather: "🌧️ ❄️ Inclement Weather – Please Stay Safe! 🌩️ 🌫️",
+    weather: "🌧️ ❄️ Inclement Weather Closure – Please Stay Safe! 🌩️ 🌫️",
     closure: "🚫 Little Einstein Childcare is Closed today. See you soon!",
     custom: "🔔 Important Announcement",
     dismiss: "Dismiss",

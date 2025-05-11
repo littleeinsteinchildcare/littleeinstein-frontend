@@ -22,17 +22,17 @@ const Admin = () => {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="bg-[#FFFBCF] min-h-screen p-8">
       {/* Header */}
-      <h2 className="text-3xl font-bold text-black text-center mb-2">
+      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
         {t("admin.adminHeader")}
       </h2>
-      <div className="w-20 h-1 bg-green-800 mx-auto mb-10"></div>
+      <div className="w-30 h-1 bg-green-800 mx-auto mb-6"></div>
 
       {/* Dashboard Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-5xl mx-auto mt-10">
         {/* Banner Controls */}
-        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+        <section className="bg-[#94EE8F] rounded-xl shadow p-6">
           <h2 className="text-xl font-semibold mb-6">
             {t("admin.bannerControls")}
           </h2>
