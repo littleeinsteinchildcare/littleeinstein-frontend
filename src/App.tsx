@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useMsal } from "@azure/msal-react";
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
@@ -20,13 +21,21 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import Banner from "@/components/admin/Banner";
 
-import { useContext } from "react";
+// context
 import { BannerContext } from "@/context/BannerContext";
+
+// hooks
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const App = () => {
   const { accounts } = useMsal();
   const isAuthenticated = accounts.length > 0;
+
+  // banner state
   const { banner } = useContext(BannerContext);
+
+  // hook to check with backend to see if admin
+  const isAdmin = useAdminCheck();
 
   return (
     <Router>
@@ -51,7 +60,16 @@ const App = () => {
         <Route path="/docs" element={<DocsPage />} />
         <Route
           path="/admin"
-          element={isAuthenticated ? <AdminPage /> : <Navigate to="/signin" />}
+          element={
+            isAuthenticated && isAdmin === true ? (
+              <AdminPage />
+            ) : isAdmin === false ? (
+              <Navigate to="/" />
+            ) : (
+              // loading message
+              <p className="text-center p-60">Checking access</p>
+            )
+          }
         />
         <Route
           path="*"
