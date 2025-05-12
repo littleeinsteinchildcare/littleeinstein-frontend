@@ -1,10 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { auth } from "@/firebase";
 
-// auth stuff
-import { useMsal } from "@azure/msal-react";
-
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 // navbar components
 import NavItemSet from "./navItemSet";
 import Dog from "./dog";
@@ -16,15 +15,23 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = accounts.length > 0;
+  const [user, setUser] = useState<User | null>(null);
 
-  const handleSignOut = () => {
-    instance.logoutPopup().catch((error) => {
-      console.error("Logout failed: ", error);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
     });
-  };
+    return () => unsubscribe();
+  }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
   return (
     <div className="bg-[#FFFBCF] mt-8">
       {/* Turtle SVG Animation */}
@@ -63,12 +70,12 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex md:space-x-4 md:items-center">
-            <NavItemSet isAuthenticated={isAuthenticated} />
+            <NavItemSet isAuthenticated={!!user} />
 
-            {isAuthenticated ? (
+            {user ? (
               <div className="flex items-center space-x-2">
                 <span className="font-medium text-sm">
-                  {accounts[0]?.name || accounts[0]?.username || "User"}
+                  {user.displayName || user.email || "User"}
                 </span>
                 <button
                   onClick={handleSignOut}
@@ -117,12 +124,12 @@ const Navbar = () => {
                 : "opacity-0 -translate-y-2"
             } flex flex-col items-center bg-[#94EE8F] py-2`}
           >
-            <NavItemSet isAuthenticated={isAuthenticated} />
+            <NavItemSet isAuthenticated={!!user} />
 
-            {isAuthenticated ? (
+            {user ? (
               <div className="flex items-center space-x-2">
                 <span className="font-medium text-sm">
-                  {accounts[0]?.name || accounts[0]?.username || "User"}
+                  {user.displayName || user.email || "User"}
                 </span>
                 <button
                   onClick={handleSignOut}

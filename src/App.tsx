@@ -10,12 +10,13 @@ import AboutUsPage from "@/pages/aboutUs/AboutUs.tsx";
 import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
-import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
+// import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
 import Profile from "./pages/profile/Profile";
 
 // components
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
+import FinishSignIn from "./pages/signIn/FinishSignIn";
 
 const App = () => {
   return (
@@ -34,11 +35,12 @@ const App = () => {
           element={<ODEChildEnrollmentForm />}
         />
         <Route path="/signin" element={<SignInPage />} />
+        <Route path="/signin" element={<FinishSignIn />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/calendar/events" element={<EventsPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactUsPage />} />
-        <Route path="/docs" element={<DocsPage />} />
+        {/* <Route path="/docs" element={<DocsPage />} /> */}
         <Route
           path="*"
           element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
