@@ -89,7 +89,7 @@ export const en = {
     noEvents: "No events in this range",
     createEvent: "Create Event",
   },
-  
+
   events: {
     title: "Event Title",
     date: "Date",
@@ -146,6 +146,30 @@ export const en = {
     NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
     ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
     WicResources: "WiC Resources",
+  },
+
+  admin: {
+    adminHeader: "Admin Dashboard",
+    bannerControls: "Alert Controls",
+    selectBanner: "Select Type",
+    duration: "Duration (Hours)",
+    set: "Set Banner",
+    clear: "Clear Banner",
+    userManage: "User Management",
+    imageManage: "Image Management",
+    noneOption: "None",
+    weatherOption: "Inclement Weather Closure",
+    closeOption: "Regular Closure",
+    customOption: "Custom Message",
+    message: "Message ->",
+    place: "Custom Message",
+  },
+
+  banner: {
+    weather: "🌧️ ❄️ Inclement Weather Closure – Please Stay Safe! 🌩️ 🌫️",
+    closure: "🚫 Little Einstein Childcare is Closed today. See you soon!",
+    custom: "🔔 Important Announcement",
+    dismiss: "Dismiss",
   },
 
   profile: {
