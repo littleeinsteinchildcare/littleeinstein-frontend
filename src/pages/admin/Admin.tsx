@@ -121,7 +121,10 @@ const Admin = () => {
                 className="group relative p-2 rounded hover:bg-gray-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
               >
                 <p className="overflow-hidden text-ellipsis">{user}</p>
-                <button className="ml-2 text-red-500 opacity-0 hover:bg-gray-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm">
+                <button
+                  className="ml-2 text-red-500 opacity-0 hover:bg-gray-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm"
+                  onClick={() => alert(`Eliminate ${user}?`)}
+                >
                   {t("admin.removeUser")}
                 </button>
               </div>
