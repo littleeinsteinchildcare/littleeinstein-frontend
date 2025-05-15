@@ -21,6 +21,10 @@ const Admin = () => {
     });
   };
 
+  /*function handleEliminate(user: string): void {
+    throw new Error("Function not implemented.");
+  }*/
+
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
       {/* Header */}
@@ -103,7 +107,26 @@ const Admin = () => {
           <h2 className="text-xl font-semibold mb-2 text-gray-700">
             {t("admin.userManage")}
           </h2>
-          <p className="text-sm text-gray-500">For later</p>
+          <div className="text-sm text-gray-500">
+            {[
+              "User 1",
+              "User 2",
+              "User 3w745629837456928374569287569827346987324658972369582736495827897423",
+              "User 1",
+              "User 2",
+              "User 3",
+            ].map((user, idx) => (
+              <div
+                key={idx}
+                className="group relative p-2 rounded hover:bg-gray-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
+              >
+                <p className="overflow-hidden text-ellipsis">{user}</p>
+                <button className="ml-2 text-red-500 opacity-0 hover:bg-gray-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm">
+                  {t("admin.removeUser")}
+                </button>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Image Management */}

@@ -156,6 +156,7 @@ export const en = {
     set: "Set Banner",
     clear: "Clear Banner",
     userManage: "User Management",
+    removeUser: "Remove",
     imageManage: "Image Management",
     noneOption: "None",
     weatherOption: "Inclement Weather Closure",

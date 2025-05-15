@@ -153,6 +153,7 @@ export const es = {
     set: "Establecer Alerta",
     clear: "Borrar Alerta",
     userManage: "Gestión de Usuarios",
+    removeUser: "Borrar",
     imageManage: "Gestión de Imágenes",
     noneOption: "Ninguno",
     weatherOption: "Cierre por mal Tiempo",
