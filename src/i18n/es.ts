@@ -79,8 +79,17 @@ export const es = {
     event: "Evento",
     noEvents: "No hay eventos en este rango",
     createEvent: "Crear Evento",
+    modalEventPlace: "Título del Evento",
+    modalStart: "Hora de Inicio",
+    modalEnd: "Hora de Finalización",
+    modalAllDay: "Evento de todo el Día",
+    modalLocationPlace: "Ubicación",
+    modalCancel: "Cancelar",
+    modalSave: "Ahorrar",
+    signInWarn: "Inicie sesión para crear eventos.",
+    modalClose: "Cerca",
   },
-  
+
   events: {
     title: "Título del Evento",
     date: "Fecha",
@@ -95,7 +104,8 @@ export const es = {
     errorDate: "La fecha es obligatoria",
     errorStartTime: "La hora de inicio es obligatoria",
     errorEndTime: "La hora de finalización es obligatoria",
-    errorTimeRange: "La hora de finalización debe ser posterior a la hora de inicio",
+    errorTimeRange:
+      "La hora de finalización debe ser posterior a la hora de inicio",
     errorLocation: "La ubicación es obligatoria",
     successTitle: "¡Éxito!",
     successMessage: "Tu evento ha sido creado.",

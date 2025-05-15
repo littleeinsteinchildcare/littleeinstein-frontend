@@ -87,8 +87,17 @@ export const en = {
     event: "Event",
     noEvents: "No events in this range",
     createEvent: "Create Event",
+    modalEventPlace: "Event Title",
+    modalStart: "Start Time",
+    modalEnd: "End Time",
+    modalAllDay: "All Day Event",
+    modalLocationPlace: "Location",
+    modalCancel: "Cancel",
+    modalSave: "Save",
+    signInWarn: "Please sign in to create events.",
+    modalClose: "Close",
   },
-  
+
   events: {
     title: "Event Title",
     date: "Date",

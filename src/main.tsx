@@ -6,10 +6,15 @@ import "./i18n";
 //import { useAuthProvider } from "./auth/hooks/authProvider.tsx";
 import { AuthProvider } from "./auth/hooks/authProvider.tsx";
 //const { AuthProvider } = useAuthProvider();
+
+import { EventProvider } from "@/context/EventContext.tsx";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <EventProvider>
+        <App />
+      </EventProvider>
     </AuthProvider>
   </StrictMode>,
 );
