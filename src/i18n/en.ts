@@ -6,6 +6,7 @@ export const en = {
     signin: "Sign in",
     title: "Little Einstein Childcare",
     contact: "Contact Us",
+    profile: "Profile",
     selectLanguage: "Select Language",
   },
 
@@ -169,5 +170,12 @@ export const en = {
     closure: "🚫 Little Einstein Childcare is Closed today. See you soon!",
     custom: "🔔 Important Announcement",
     dismiss: "Dismiss",
+  },
+  
+  profile: {
+    title: "Profile",
+    upload: "Contribute to our Gallery!",
+    browse: "Browse Photos",
+    events: "Your Events",
   },
 };

@@ -15,6 +15,7 @@ import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
 import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
 import AdminPage from "@/pages/admin/Admin.tsx";
+import Profile from "./pages/profile/Profile";
 
 // components
 import Navbar from "@/components/navbar/Navbar";
@@ -43,6 +44,7 @@ const App = () => {
       {banner && <Banner type={banner.type} message={banner.message} />}
       <Routes>
         <Route path="/" element={<Homepage />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/resources/" element={<ResourcesPage />} />
         <Route
           path="/resources/NWChildEnrollmentForm"

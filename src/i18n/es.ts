@@ -7,6 +7,7 @@ export const es = {
     title: "Little Einstein Childcare",
     contact: "Contacta con Nosotros",
     selectLanguage: "Seleccionar Idioma",
+    profile: "Perfil",
   },
 
   footer: {
@@ -167,5 +168,13 @@ export const es = {
       "🚫 Little Einstein Childcare está Cerrado Hoy. ¡Nos vemos pronto!",
     custom: "🔔 Anuncio Importante",
     dismiss: "Despedir",
+
+  },
+  
+  profile: {
+    title: "Perfil",
+    upload: "Contribuye a Nuestra Galería",
+    browse: "Buscar Fotos",
+    events: "Tus Eventos",
   },
 };
