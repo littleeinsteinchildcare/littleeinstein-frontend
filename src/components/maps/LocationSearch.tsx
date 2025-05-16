@@ -22,12 +22,8 @@ const LocationSearch = ({ onSelectLocation, initialValue = '', placeholder }: Lo
   // Only load the API if key is available
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-    libraries: ['places'],
-    googleMapsLoaderOptions: {
-      // Skip loading if no API key
-      preventLoad: !apiKeyAvailable
-    }
+    googleMapsApiKey: apiKeyAvailable ? import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '' : '',
+    libraries: ['places']
   });
 
   // Log errors for debugging

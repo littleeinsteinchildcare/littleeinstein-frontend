@@ -19,11 +19,14 @@ const LocationPicker = ({ onSelectLocation, initialLocation }: LocationPickerPro
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(initialLocation || null);
   const [mapCenter, setMapCenter] = useState(initialLocation || defaultCenter);
   
+  // Check if API key is available
+  const apiKeyAvailable = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+
   // Load the Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-    libraries: ['places'],
+    googleMapsApiKey: apiKeyAvailable ? import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '' : '',
+    libraries: ['places']
   });
 
   // Log errors for debugging
