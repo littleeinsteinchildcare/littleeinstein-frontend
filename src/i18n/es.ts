@@ -7,6 +7,7 @@ export const es = {
     title: "Little Einstein Childcare",
     contact: "Contacta con Nosotros",
     selectLanguage: "Seleccionar Idioma",
+    profile: "Perfil",
   },
 
   footer: {
@@ -141,5 +142,12 @@ export const es = {
     ODEChildEnrollmentForm:
       "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
     WicResources: "Recursos de WiC",
+  },
+
+  profile: {
+    title: "Perfil",
+    upload: "Contribuye a Nuestra Galería",
+    browse: "Buscar Fotos",
+    events: "Tus Eventos",
   },
 };
