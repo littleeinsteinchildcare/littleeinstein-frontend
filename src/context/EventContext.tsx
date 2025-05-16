@@ -1,5 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { CalendarEvent, getEvents, addEvent as addEventService, resetEvents } from '@/services/eventService';
+import {
+  CalendarEvent,
+  getEvents,
+  addEvent as addEventService,
+  deleteEvent as deleteEventService,
+  updateEvent as updateEventService,
+  getEventById,
+  getUserEvents,
+  resetEvents
+} from '@/services/eventService';
 
 interface EventContextType {
   events: CalendarEvent[];
@@ -12,7 +21,12 @@ interface EventContextType {
     description: string;
     color: string;
     invitedParents: string[];
+    createdBy?: string;
   }) => CalendarEvent;
+  deleteEvent: (id: string) => boolean;
+  updateEvent: (event: CalendarEvent) => CalendarEvent | null;
+  getEvent: (id: string) => CalendarEvent | undefined;
+  getUserEvents: (userId: string) => CalendarEvent[];
   refreshEvents: () => void;
 }
 
@@ -34,10 +48,35 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
     description: string;
     color: string;
     invitedParents: string[];
+    createdBy?: string;
   }) => {
     const newEvent = addEventService(eventData);
     refreshEvents();
     return newEvent;
+  };
+
+  const deleteEvent = (id: string) => {
+    const result = deleteEventService(id);
+    if (result) {
+      refreshEvents();
+    }
+    return result;
+  };
+
+  const updateEvent = (event: CalendarEvent) => {
+    const result = updateEventService(event);
+    if (result) {
+      refreshEvents();
+    }
+    return result;
+  };
+
+  const getEvent = (id: string) => {
+    return getEventById(id);
+  };
+
+  const getUserEventsData = (userId: string) => {
+    return getUserEvents(userId);
   };
 
   // Load events when the provider mounts
@@ -51,7 +90,15 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <EventContext.Provider value={{ events, addEvent, refreshEvents }}>
+    <EventContext.Provider value={{
+      events,
+      addEvent,
+      deleteEvent,
+      updateEvent,
+      getEvent,
+      getUserEvents: getUserEventsData,
+      refreshEvents
+    }}>
       {children}
     </EventContext.Provider>
   );

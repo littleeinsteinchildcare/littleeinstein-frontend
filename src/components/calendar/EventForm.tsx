@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ParentSelector from "./ParentSelector";
+import LocationSearch from "../maps/LocationSearch";
+import LocationPicker from "../maps/LocationPicker";
+import { Location } from "@/services/eventService";
 
 interface EventFormProps {
   onSubmit?: (event: {
@@ -9,6 +12,7 @@ interface EventFormProps {
     startTime: string;
     endTime: string;
     location: string;
+    locationCoords?: Location;
     description: string;
     color: string;
     invitedParents: string[];
@@ -23,10 +27,13 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
     startTime: "",
     endTime: "",
     location: "",
+    locationCoords: undefined as Location | undefined,
     description: "",
     color: "#4CAF50", // Default green color
     invitedParents: [] as string[],
   });
+
+  const [showMap, setShowMap] = useState(false);
   
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -71,6 +78,22 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
     });
   };
 
+  const handleLocationSearch = (location: Location) => {
+    setFormData({
+      ...formData,
+      location: location.address,
+      locationCoords: location,
+    });
+  };
+
+  const handleMapLocation = (location: Location) => {
+    setFormData({
+      ...formData,
+      location: location.address || formData.location,
+      locationCoords: location,
+    });
+  };
+
   const handleColorChange = (color: string) => {
     setFormData({
       ...formData,
@@ -96,6 +119,7 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
         startTime: "",
         endTime: "",
         location: "",
+        locationCoords: undefined,
         description: "",
         color: "#4CAF50",
         invitedParents: [],
@@ -200,16 +224,43 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
           <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
             {t("events.location")}*
           </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md ${
-              errors.location ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring-2 focus:ring-green-500`}
+
+          {/* Location Search with Autocomplete - Falls back to regular input if no API key */}
+          <LocationSearch
+            onSelectLocation={handleLocationSearch}
+            initialValue={formData.location}
+            placeholder={t("events.searchLocation")}
           />
+
+          {/* Only show map toggle if API key is available */}
+          {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
+            <div className="flex justify-between items-center mt-2">
+              <button
+                type="button"
+                onClick={() => setShowMap(!showMap)}
+                className="text-sm text-green-600 hover:text-green-800"
+              >
+                {showMap ? t("maps.hideMap") : t("maps.showMap")}
+              </button>
+
+              {formData.locationCoords && (
+                <span className="text-xs text-green-600">
+                  ✓ {t("maps.locationSelected")}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Only show map if API key is available and user has toggled it on */}
+          {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && showMap && (
+            <div className="mt-3">
+              <LocationPicker
+                onSelectLocation={handleMapLocation}
+                initialLocation={formData.locationCoords}
+              />
+            </div>
+          )}
+
           {errors.location && (
             <p className="text-red-500 text-xs mt-1">{errors.location}</p>
           )}
