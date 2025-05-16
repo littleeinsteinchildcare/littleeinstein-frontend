@@ -245,18 +245,8 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
               {t("events.location")}*
             </label>
 
-            {/* Display current location map only in expanded view or if map is shown */}
-            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && formData.locationCoords && (!compact || showMap) && (
-              <div className="mb-3">
-                <LocationDisplay
-                  location={formData.locationCoords}
-                  height={compact ? "120px" : "150px"}
-                />
-              </div>
-            )}
-
             {/* Location Search with Autocomplete - Falls back to regular input if no API key */}
-            <div className="flex space-x-2 items-center">
+            <div className="flex space-x-2 items-center mb-2">
               <div className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "flex-grow" : "w-full"}>
                 <LocationSearch
                   onSelectLocation={handleLocationSearch}
@@ -265,44 +255,50 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
                 />
               </div>
 
-              {/* Only show map toggle if API key is available - compact layout */}
-              {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && compact && (
+              {/* Map toggle button - unified for both compact and non-compact layouts */}
+              {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
                 <button
                   type="button"
                   onClick={() => setShowMap(!showMap)}
-                  className="text-sm px-3 py-1 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
+                  className={`text-sm px-3 py-1 border rounded ${
+                    showMap
+                      ? "bg-green-50 border-green-200 text-green-700"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                  }`}
                 >
                   {showMap ? t("maps.hideMap") : t("maps.showMap")}
                 </button>
               )}
             </div>
 
-            {/* Only show map toggle in non-compact layout */}
-            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && !compact && (
-              <div className="flex justify-between items-center mt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowMap(!showMap)}
-                  className="text-sm text-green-600 hover:text-green-800"
-                >
-                  {showMap ? t("maps.hideMap") : t("maps.showMap")}
-                </button>
-
-                {formData.locationCoords && (
-                  <span className="text-xs text-green-600">
-                    ✓ {t("maps.locationSelected")}
-                  </span>
-                )}
+            {/* Show location status indicator */}
+            {formData.locationCoords && (
+              <div className="flex items-center mb-2">
+                <span className="text-xs text-green-600 flex items-center">
+                  <svg className="w-3 h-3 mr-1 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+                  </svg>
+                  {t("maps.locationSelected")}
+                </span>
               </div>
             )}
 
-            {/* Only show map picker in non-compact mode or if explicitly toggled */}
-            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && showMap && (
-              <div className="mt-3">
-                <LocationPicker
-                  onSelectLocation={handleMapLocation}
-                  initialLocation={formData.locationCoords}
-                />
+            {/* Display either the location picker map OR the current location display, not both */}
+            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
+              <div className="mt-1">
+                {showMap ? (
+                  // Interactive map picker when in edit mode
+                  <LocationPicker
+                    onSelectLocation={handleMapLocation}
+                    initialLocation={formData.locationCoords}
+                  />
+                ) : formData.locationCoords && (
+                  // Static map display when not in edit mode
+                  <LocationDisplay
+                    location={formData.locationCoords}
+                    height={compact ? "120px" : "150px"}
+                  />
+                )}
               </div>
             )}
 

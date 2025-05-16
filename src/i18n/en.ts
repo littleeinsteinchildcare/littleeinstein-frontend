@@ -140,11 +140,13 @@ export const en = {
     clickInstruction: "Click on the map to set a location",
     showMap: "Show Map",
     hideMap: "Hide Map",
+    editingMap: "Editing Map",
     locationSelected: "Location selected",
     searchPlaceholder: "Search for a location",
     manualLocationEntry: "Enter location address",
     getDirections: "Get Directions",
     apiError: "Could not load maps API. Enter location manually.",
+    errorLoading: "Error loading Google Maps",
   },
 
   signin: {

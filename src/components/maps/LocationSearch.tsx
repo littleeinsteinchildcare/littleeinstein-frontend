@@ -30,6 +30,15 @@ const LocationSearch = ({ onSelectLocation, initialValue = '', placeholder }: Lo
     }
   });
 
+  // Log errors for debugging
+  useEffect(() => {
+    if (loadError) {
+      console.error('Error loading Google Maps API in LocationSearch:', loadError);
+    }
+    console.log('Google Maps API loaded in LocationSearch:', isLoaded);
+    console.log('API Key available:', !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+  }, [loadError, isLoaded]);
+
   // Initialize autocomplete when the Google Maps API is loaded
   useEffect(() => {
     if (isLoaded && inputRef.current) {

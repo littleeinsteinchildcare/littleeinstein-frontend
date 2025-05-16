@@ -20,10 +20,22 @@ const LocationPicker = ({ onSelectLocation, initialLocation }: LocationPickerPro
   const [mapCenter, setMapCenter] = useState(initialLocation || defaultCenter);
   
   // Load the Google Maps API
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places'],
   });
+
+  // Log errors for debugging
+  useEffect(() => {
+    if (loadError) {
+      console.error('Error loading Google Maps API:', loadError);
+    }
+
+    // Log whether the API key is available
+    console.log('Google Maps API Key available:', !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+    console.log('Google Maps API loaded:', isLoaded);
+  }, [loadError, isLoaded]);
 
   // Get address from coordinates (reverse geocoding)
   const getAddressFromCoordinates = useCallback(async (lat: number, lng: number): Promise<string> => {
@@ -72,13 +84,26 @@ const LocationPicker = ({ onSelectLocation, initialLocation }: LocationPickerPro
     }
   }, [initialLocation]);
 
+  if (loadError) {
+    return (
+      <div className="h-64 bg-red-50 flex flex-col items-center justify-center p-4 border border-red-200 rounded-lg">
+        <p className="text-red-600 font-medium mb-2">{t('maps.errorLoading')}</p>
+        <p className="text-sm text-red-500">Error: {loadError.message}</p>
+        <p className="text-xs text-gray-500 mt-4">
+          Check browser console for details and verify your API key is correct.
+        </p>
+      </div>
+    );
+  }
+
   if (!isLoaded) {
     return <div className="h-64 bg-gray-100 flex items-center justify-center">{t('maps.loading')}</div>;
   }
 
-  return (
-    <div className="space-y-2">
-      <div className="h-64 rounded-lg overflow-hidden border border-gray-300">
+  // Wrap GoogleMap in a try-catch to prevent any rendering errors
+  const renderMap = () => {
+    try {
+      return (
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%' }}
           center={mapCenter}
@@ -87,6 +112,7 @@ const LocationPicker = ({ onSelectLocation, initialLocation }: LocationPickerPro
           options={{
             streetViewControl: false,
             mapTypeControl: false,
+            fullscreenControl: false,
           }}
         >
           {selectedLocation && (
@@ -95,6 +121,21 @@ const LocationPicker = ({ onSelectLocation, initialLocation }: LocationPickerPro
             />
           )}
         </GoogleMap>
+      );
+    } catch (error) {
+      console.error('Error rendering Google Map:', error);
+      return (
+        <div className="h-full flex items-center justify-center bg-red-50">
+          <p className="text-red-500">Error rendering map component</p>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="h-64 rounded-lg overflow-hidden border border-gray-300">
+        {renderMap()}
       </div>
       {selectedLocation?.address && (
         <div className="text-sm text-gray-600">

@@ -20,11 +20,20 @@ const LocationDisplay = ({ location, height = '200px' }: LocationDisplayProps) =
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places'],
     googleMapsLoaderOptions: {
       // Skip loading if no API key
       preventLoad: !apiKeyAvailable
     }
   });
+
+  // Log errors for debugging
+  useEffect(() => {
+    if (loadError) {
+      console.error('Error loading Google Maps API in LocationDisplay:', loadError);
+    }
+    console.log('Google Maps API loaded in LocationDisplay:', isLoaded);
+  }, [loadError, isLoaded]);
 
   // Update center if location changes
   useEffect(() => {
@@ -64,12 +73,10 @@ const LocationDisplay = ({ location, height = '200px' }: LocationDisplayProps) =
     return `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`;
   };
 
-  return (
-    <div className="space-y-2">
-      <div 
-        className="rounded-lg overflow-hidden border border-gray-300" 
-        style={{ height }}
-      >
+  // Wrap GoogleMap in a try-catch to prevent any rendering errors
+  const renderMap = () => {
+    try {
+      return (
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%' }}
           center={mapCenter}
@@ -79,17 +86,46 @@ const LocationDisplay = ({ location, height = '200px' }: LocationDisplayProps) =
             mapTypeControl: false,
             scrollwheel: false,
             zoomControl: true,
+            fullscreenControl: false,
           }}
         >
           <Marker position={location} />
         </GoogleMap>
+      );
+    } catch (error) {
+      console.error('Error rendering Google Map in display:', error);
+      return (
+        <div className="h-full flex items-center justify-center bg-gray-100">
+          <p className="text-gray-500">Unable to display map</p>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <div
+        className="rounded-lg overflow-hidden border border-gray-300"
+        style={{ height }}
+      >
+        {loadError ? (
+          <div className="h-full flex items-center justify-center bg-gray-100">
+            <p className="text-gray-500">Map unavailable</p>
+          </div>
+        ) : !isLoaded ? (
+          <div className="h-full flex items-center justify-center bg-gray-100">
+            <p className="text-gray-500">{t('maps.loading')}</p>
+          </div>
+        ) : (
+          renderMap()
+        )}
       </div>
       {location.address && (
         <div className="text-sm">
           <div className="font-medium text-gray-700">{location.address}</div>
-          <a 
-            href={getDirectionsUrl()} 
-            target="_blank" 
+          <a
+            href={getDirectionsUrl()}
+            target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline text-sm"
           >

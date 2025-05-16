@@ -226,34 +226,46 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
           </label>
 
           {/* Location Search with Autocomplete - Falls back to regular input if no API key */}
-          <LocationSearch
-            onSelectLocation={handleLocationSearch}
-            initialValue={formData.location}
-            placeholder={t("events.searchLocation")}
-          />
+          <div className="flex space-x-2 items-center mb-2">
+            <div className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "flex-grow" : "w-full"}>
+              <LocationSearch
+                onSelectLocation={handleLocationSearch}
+                initialValue={formData.location}
+                placeholder={t("events.searchLocation")}
+              />
+            </div>
 
-          {/* Only show map toggle if API key is available */}
-          {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
-            <div className="flex justify-between items-center mt-2">
+            {/* Map toggle button */}
+            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
               <button
                 type="button"
                 onClick={() => setShowMap(!showMap)}
-                className="text-sm text-green-600 hover:text-green-800"
+                className={`text-sm px-3 py-1 border rounded ${
+                  showMap
+                    ? "bg-green-50 border-green-200 text-green-700"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                }`}
               >
                 {showMap ? t("maps.hideMap") : t("maps.showMap")}
               </button>
+            )}
+          </div>
 
-              {formData.locationCoords && (
-                <span className="text-xs text-green-600">
-                  ✓ {t("maps.locationSelected")}
-                </span>
-              )}
+          {/* Show location status indicator */}
+          {formData.locationCoords && (
+            <div className="flex items-center mb-2">
+              <span className="text-xs text-green-600 flex items-center">
+                <svg className="w-3 h-3 mr-1 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+                </svg>
+                {t("maps.locationSelected")}
+              </span>
             </div>
           )}
 
-          {/* Only show map if API key is available and user has toggled it on */}
+          {/* Only show map when toggled on */}
           {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && showMap && (
-            <div className="mt-3">
+            <div className="mt-1">
               <LocationPicker
                 onSelectLocation={handleMapLocation}
                 initialLocation={formData.locationCoords}
