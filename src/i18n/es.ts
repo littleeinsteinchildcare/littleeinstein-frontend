@@ -81,7 +81,7 @@ export const es = {
     noEvents: "No hay eventos en este rango",
     createEvent: "Crear Evento",
   },
-  
+
   events: {
     title: "Título del Evento",
     date: "Fecha",
@@ -96,7 +96,8 @@ export const es = {
     errorDate: "La fecha es obligatoria",
     errorStartTime: "La hora de inicio es obligatoria",
     errorEndTime: "La hora de finalización es obligatoria",
-    errorTimeRange: "La hora de finalización debe ser posterior a la hora de inicio",
+    errorTimeRange:
+      "La hora de finalización debe ser posterior a la hora de inicio",
     errorLocation: "La ubicación es obligatoria",
     successTitle: "¡Éxito!",
     successMessage: "Tu evento ha sido creado.",
@@ -144,6 +145,32 @@ export const es = {
     WicResources: "Recursos de WiC",
   },
 
+  admin: {
+    adminHeader: "Panel de Administración",
+    bannerControls: "Controles de Alertas",
+    selectBanner: "Seleccionar tipo",
+    duration: "Duración (Horas)",
+    set: "Establecer Alerta",
+    clear: "Borrar Alerta",
+    userManage: "Gestión de Usuarios",
+    imageManage: "Gestión de Imágenes",
+    noneOption: "Ninguno",
+    weatherOption: "Cierre por mal Tiempo",
+    closeOption: "Cierre Regular",
+    customOption: "Mensaje Personalizado",
+    message: "Mensaje ->",
+    place: "Mensaje Personalizado",
+  },
+
+  banner: {
+    weather: "🌧️ ❄️ Cierre por mal Tiempo - ¡Manténgase a Salvo! 🌩️ 🌫️",
+    closure:
+      "🚫 Little Einstein Childcare está Cerrado Hoy. ¡Nos vemos pronto!",
+    custom: "🔔 Anuncio Importante",
+    dismiss: "Despedir",
+
+  },
+  
   profile: {
     title: "Perfil",
     upload: "Contribuye a Nuestra Galería",
