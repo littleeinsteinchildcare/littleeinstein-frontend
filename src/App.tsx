@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { EventProvider } from "@/context/EventContext";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
@@ -20,8 +21,9 @@ import Footer from "@/components/footer/Footer";
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
+      <EventProvider>
+        <Navbar />
+        <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/resources/" element={<ResourcesPage />} />
@@ -44,7 +46,8 @@ const App = () => {
           element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
         />
       </Routes>
-      <Footer />
+        <Footer />
+      </EventProvider>
     </Router>
   );
 };

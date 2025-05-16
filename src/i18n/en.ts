@@ -108,6 +108,16 @@ export const en = {
     errorLocation: "Location is required",
     successTitle: "Success!",
     successMessage: "Your event has been created.",
+    color: "Event Color",
+    invitedParents: "Invited Parents",
+    parentsSelected: "parents selected",
+    addInvitations: "Add invitations",
+    editInvitations: "Edit invitations",
+    inviteParents: "Invite Parents",
+    searchParents: "Search parents...",
+    noParentsFound: "No parents found",
+    selectedCount: "{{count}} selected",
+    done: "Done",
   },
 
   signin: {

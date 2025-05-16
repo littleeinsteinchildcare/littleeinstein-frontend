@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import ParentSelector from "./ParentSelector";
 
 interface EventFormProps {
   onSubmit?: (event: {
@@ -9,6 +10,8 @@ interface EventFormProps {
     endTime: string;
     location: string;
     description: string;
+    color: string;
+    invitedParents: string[];
   }) => void;
 }
 
@@ -21,6 +24,8 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
     endTime: "",
     location: "",
     description: "",
+    color: "#4CAF50", // Default green color
+    invitedParents: [] as string[],
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -57,12 +62,26 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
+    });
+  };
+
+  const handleColorChange = (color: string) => {
+    setFormData({
+      ...formData,
+      color,
+    });
+  };
+
+  const handleParentSelection = (selectedParents: string[]) => {
+    setFormData({
+      ...formData,
+      invitedParents: selectedParents,
     });
   };
 
@@ -78,17 +97,27 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
         endTime: "",
         location: "",
         description: "",
+        color: "#4CAF50",
+        invitedParents: [],
       });
     }
   };
+
+  const [showParentSelector, setShowParentSelector] = useState(false);
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
         {t("events.createEvent")}
       </h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
+
+      {showParentSelector ? (
+        <ParentSelector onSelect={(parents) => {
+          handleParentSelection(parents);
+          setShowParentSelector(false);
+        }} />
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
             {t("events.title")}*
@@ -200,6 +229,44 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
           />
         </div>
 
+        <div>
+          <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
+            {t("events.color")}
+          </label>
+          <div className="flex space-x-2 mt-2">
+            {["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0", "#607D8B"].map((color) => (
+              <div
+                key={color}
+                className={`w-8 h-8 rounded-full cursor-pointer transition-transform ${
+                  formData.color === color ? "ring-2 ring-offset-2 ring-gray-500 scale-110" : ""
+                }`}
+                style={{ backgroundColor: color }}
+                onClick={() => handleColorChange(color)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t("events.invitedParents")}
+          </label>
+          <div className="flex items-center">
+            <span className="text-sm text-gray-500 mr-2">
+              {formData.invitedParents.length} {t("events.parentsSelected")}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowParentSelector(true)}
+              className="text-sm text-green-600 hover:text-green-800"
+            >
+              {formData.invitedParents.length > 0
+                ? t("events.editInvitations")
+                : t("events.addInvitations")}
+            </button>
+          </div>
+        </div>
+
         <div className="flex justify-end space-x-3 pt-4">
           <button
             type="button"
@@ -216,6 +283,7 @@ const EventForm = ({ onSubmit }: EventFormProps) => {
           </button>
         </div>
       </form>
+      )}
     </div>
   );
 };

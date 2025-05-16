@@ -1,34 +1,27 @@
-import { useState } from "react";
-import { Calendar, momentLocalizer, Event, View } from "react-big-calendar";
+import { useState, useEffect } from "react";
+import { Calendar, momentLocalizer, View } from "react-big-calendar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment-timezone";
+import { CalendarEvent } from "@/services/eventService";
+import { useEventContext } from "@/context/EventContext";
 
 moment.tz.setDefault("America/Los_Angeles");
 const localizer = momentLocalizer(moment);
-
-const events: Event[] = [
-  {
-    title: "Intro",
-    start: new Date(2025, 2, 1, 10, 0),
-    end: new Date(2025, 2, 1, 10, 0),
-    allDay: false,
-  },
-  {
-    title: "Child care meet",
-    start: new Date(2025, 2, 11, 10, 0),
-    end: new Date(2025, 2, 11, 10, 0),
-    allDay: false,
-  },
-];
 
 const LittleCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>("month");
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { events, refreshEvents } = useEventContext();
+
+  // Refresh events when the component mounts
+  useEffect(() => {
+    refreshEvents();
+  }, [refreshEvents]);
 
   const messages = {
     today: t("calendar.today"),
@@ -44,13 +37,36 @@ const LittleCalendar = () => {
     noEventsInRange: t("calendar.noEvents"),
   };
 
+  // Custom event styling based on event color
+  const eventStyleGetter = (event: CalendarEvent) => {
+    const style = {
+      backgroundColor: event.color || '#4CAF50',
+      borderRadius: '5px',
+      opacity: 0.8,
+      color: 'white',
+      border: '0px',
+      display: 'block'
+    };
+    return {
+      style
+    };
+  };
+
+  // Custom tooltip for events
+  const tooltipAccessor = (event: CalendarEvent) => {
+    let tooltip = `${event.title}`;
+    if (event.location) tooltip += `\nLocation: ${event.location}`;
+    if (event.description) tooltip += `\n${event.description}`;
+    return tooltip;
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 w-[700px] h-[700px]">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-800">
           {t("calendar.title")}
         </h1>
-        <button 
+        <button
           onClick={() => navigate('/calendar/events')}
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition duration-200"
         >
@@ -68,6 +84,8 @@ const LittleCalendar = () => {
         view={view}
         onNavigate={(newDate) => setDate(newDate)}
         onView={(newView) => setView(newView)}
+        eventPropGetter={eventStyleGetter}
+        tooltipAccessor={tooltipAccessor}
         className="rounded-lg"
       />
     </div>
