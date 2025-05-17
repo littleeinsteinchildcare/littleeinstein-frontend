@@ -1,112 +1,196 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth } from "@/firebase";
-import {
-  GoogleAuthProvider,
-  OAuthProvider,
-  sendSignInLinkToEmail,
-  signInWithPopup,
-  onAuthStateChanged,
-  AuthProvider,
-} from "firebase/auth";
+// import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { auth } from "@/firebase";
+// import {
+//   GoogleAuthProvider,
+//   OAuthProvider,
+//   sendSignInLinkToEmail,
+//   onAuthStateChanged,
+//   AuthProvider,
+// } from "firebase/auth";
+// import { signInWithProvider } from "@/auth/signInWithProvider";
+// import { signInWithEmail } from "@/auth/signInWithEmail";
 
-const SignInPage = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+// const SignInPage = () => {
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) navigate("/");
-    });
-    return unsubscribe;
-  }, [navigate]);
+//   const navigate = useNavigate();
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
 
-  // was any
-  const handleSignInPopup = async (provider: AuthProvider) => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (user) => {
+//       const emailLinkUsed = window.localStorage.getItem("emailForSignIn");
 
-      if (user) {
-        const token = await user.getIdToken();
+//       if (user && emailLinkUsed) {
+//         window.localStorage.removeItem("emailForSignIn");
+//         navigate("/profile");
+//       }
+//     });
 
-        const response = await fetch("http://localhost:8080/auth/session", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-        console.log("this is the back end data");
-        console.log(data);
-        if (!response.ok) {
-          console.error("Failed to register session with backend");
-        }
+//     return unsubscribe;
+//   }, [navigate]);
 
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Sign-in failed:", error);
-    }
-  };
+//   const handleEmailPasswordSignIn = async () => {
+//   try {
+//     await signInWithEmail(email, password);
+//     navigate("/profile");
+//   } catch (error) {
+//     alert("Sign-in failed: " + (error as Error).message);
+//   }
+// };
 
-  const handleEmailLinkSignIn = async () => {
-    if (!email) {
-      alert("Please enter your email before continuing.");
-      return;
-    }
+//   const handleSignInPopup = async (provider: AuthProvider) => {
+//     try {
+//       const data = await signInWithProvider(provider);
+//       console.log("this is the back end data: ", data);
+//       navigate("/profile");
+//     } catch (error) {
+//       console.error("Sign-in failed:", error);
+//     }
+//   };
 
-    const actionCodeSettings = {
-      url: "http://localhost:5173/finishSignIn",
-      handleCodeInApp: true,
-    };
+//   const handleEmailLinkSignIn = async () => {
+//     if (!email) {
+//       alert("Please enter your email before continuing.");
+//       return;
+//     }
 
-    try {
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      window.localStorage.setItem("emailForSignIn", email);
-      alert("Email link sent! Please check your inbox.");
-    } catch (error) {
-      console.error("Failed to send email link:", error);
-    }
-  };
+//     const actionCodeSettings = {
+//       url: "http://localhost:5173/finishSignIn",
+//       handleCodeInApp: true,
+//     };
 
-  return (
-    <div className="h-screen flex justify-center items-start pt-20 bg-[#FFFBCF]">
-      <div className="bg-[#94EE8F] shadow-lg rounded-lg p-8 w-80 text-center space-y-4">
-        <h1 className="text-2xl font-bold">Sign In</h1>
+//     try {
+//       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+//       window.localStorage.setItem("emailForSignIn", email);
+//       alert("Email link sent! Please check your inbox.");
+//     } catch (error) {
+//       console.error("Failed to send email link:", error);
+//     }
+//   };
 
-        <button
-          onClick={() => handleSignInPopup(new OAuthProvider("microsoft.com"))}
-          className="bg-white text-black w-full py-2 rounded shadow hover:bg-gray-100"
-        >
-          Sign in with Microsoft
-        </button>
+//   //   return (
+//   //   <div className="h-screen flex justify-center items-center bg-[#FFFBCF] px-4">
+//   //     <div className="bg-[#94EE8F] shadow-2xl rounded-2xl p-10 w-full max-w-sm text-center space-y-6">
+//   //       {/* Logo */}
+//   //       <div className="flex justify-center">
+//   //         <img
+//   //           src="/logo.svg" // replace with your actual logo path
+//   //           alt="Logo"
+//   //           className="h-16 w-16"
+//   //         />
+//   //       </div>
 
-        <button
-          onClick={() => handleSignInPopup(new GoogleAuthProvider())}
-          className="bg-white text-black w-full py-2 rounded shadow hover:bg-gray-100"
-        >
-          Sign in with Google
-        </button>
+//   //       <h1 className="text-3xl font-bold text-black">Welcome Back</h1>
+//   //       <p className="text-sm text-black">Sign in to continue to your dashboard</p>
 
-        <div className="pt-4 border-t border-green-200">
-          <input
-            type="email"
-            placeholder="Your email"
-            className="w-full mb-2 p-2 rounded border border-white"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button
-            onClick={handleEmailLinkSignIn}
-            className="bg-green-300 text-black w-full py-2 rounded hover:bg-green-200"
-          >
-            Sign in via Email Link
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+//   //       {/* OAuth Buttons */}
+//   //       <div className="space-y-3">
+//   //         <button
+//   //           onClick={() => handleSignInPopup(new OAuthProvider("microsoft.com"))}
+//   //           className="bg-white text-black w-full py-2 rounded-xl shadow hover:bg-gray-100 transition"
+//   //         >
+//   //           Sign in with Microsoft
+//   //         </button>
 
-export default SignInPage;
+//   //         <button
+//   //           onClick={() => handleSignInPopup(new GoogleAuthProvider())}
+//   //           className="bg-white text-black w-full py-2 rounded-xl shadow hover:bg-gray-100 transition"
+//   //         >
+//   //           Sign in with Google
+//   //         </button>
+//   //       </div>
+
+//   //       {/* Email Sign-In */}
+//   //       <div className="pt-6 border-t border-green-200">
+//   //         <p className="text-sm text-black mb-2">Or sign in via email</p>
+//   //         <input
+//   //           type="email"
+//   //           placeholder="you@example.com"
+//   //           className="w-full mb-3 p-2 rounded-xl border border-white focus:outline-none focus:ring-2 focus:ring-green-400"
+//   //           value={email}
+//   //           onChange={(e) => setEmail(e.target.value)}
+//   //         />
+//   //         <button
+//   //           onClick={handleEmailLinkSignIn}
+//   //           className="bg-green-300 text-black w-full py-2 rounded-xl shadow hover:bg-green-200 transition"
+//   //         >
+//   //           Send Email Link
+//   //         </button>
+//   //       </div>
+//   //     </div>
+//   //   </div>
+//   // );
+//   return (
+//     <div className="h-screen flex justify-center items-center bg-[#FFFBCF] px-4">
+//       <div className="bg-[#94EE8F] shadow-2xl rounded-2xl p-10 w-full max-w-sm text-center space-y-6">
+//         {/* Logo */}
+//         {/* <div className="flex justify-center">
+//         <img src="/logo.svg" alt="Logo" className="h-16 w-16" />
+//       </div> */}
+
+//         <h1 className="text-3xl font-bold text-black">Welcome Back</h1>
+//         <p className="text-sm text-black">
+//           Sign in to continue to your dashboard
+//         </p>
+
+//         {/* Email + Password Form */}
+//         <div className="space-y-4">
+//           <input
+//             type="email"
+//             placeholder="Email"
+//             // className="w-full p-2 rounded-xl border border-white focus:outline-none focus:ring-2 focus:ring-green-400"
+//             className="w-full p-2 rounded-xl bg-white text-black border border-white focus:outline-none focus:ring-2 focus:ring-green-400"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//           />
+//           <input
+//             type="password"
+//             placeholder="Password"
+//             className="w-full p-2 rounded-xl bg-white text-black border border-white focus:outline-none focus:ring-2 focus:ring-green-400"
+//             value = {password}
+//             onChange={(e) => setPassword(e.target.value)}
+//           />
+//           <button
+//             className="bg-green-300 text-black w-full py-2 rounded-xl shadow hover:bg-green-200 transition"
+//             onClick={handleEmailPasswordSignIn}
+//           >
+//             Sign in
+//           </button>
+//         </div>
+
+//         {/* Divider */}
+//         <div className="border-t border-green-200 pt-4">
+//           <p className="text-sm text-black mb-3">Other sign-in options</p>
+
+//           <div className="space-y-3">
+//             <button
+//               onClick={() =>
+//                 handleSignInPopup(new OAuthProvider("microsoft.com"))
+//               }
+//               className="bg-white text-black w-full py-2 rounded-xl shadow hover:bg-gray-100 transition"
+//             >
+//               Sign in with Microsoft
+//             </button>
+
+//             <button
+//               onClick={() => handleSignInPopup(new GoogleAuthProvider())}
+//               className="bg-white text-black w-full py-2 rounded-xl shadow hover:bg-gray-100 transition"
+//             >
+//               Sign in with Google
+//             </button>
+
+//             <button
+//               onClick={handleEmailLinkSignIn}
+//               className="bg-green-200 text-black w-full py-2 rounded-xl shadow hover:bg-green-100 transition"
+//             >
+//               Send Email Link
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SignInPage;

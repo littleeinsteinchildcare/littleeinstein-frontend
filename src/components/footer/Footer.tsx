@@ -4,7 +4,7 @@ import FooterAccordion from "./footerDropdown";
 import FooterSiteLinks from "./footerSiteLinks";
 import FooterConnectLinks from "./footerConnectLinks";
 import FooterContactLinks from "./footerContactLinks";
-import Turtle from "../navbar/turtle";
+import AnimatedTurle from "./animations/AnimatedTurtle";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -12,11 +12,7 @@ const Footer = () => {
   return (
     <div className="relative">
       {/* Turtle SVG Animation */}
-      <div className="absolute bottom-0 left-0 z-50 animate-walk">
-        <div className="animate-bob">
-          <Turtle />
-        </div>
-      </div>
+      <AnimatedTurle />
       <footer className="bg-[#94EE8F] border-t-2 mt-20 border-green-200 md:pt-12 pb-4">
         {/* Desktop / non-mobile */}
         <div className="hidden mx-auto px-6 md:grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl">
