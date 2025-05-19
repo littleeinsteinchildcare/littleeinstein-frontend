@@ -164,6 +164,9 @@ export const en = {
     customOption: "Custom Message",
     message: "Message ->",
     place: "Custom Message",
+    inviteUser: "Invite Users",
+    email: "Enter Email",
+    send: "Send",
   },
 
   banner: {
