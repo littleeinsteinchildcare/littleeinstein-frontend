@@ -146,6 +146,9 @@ export const en = {
     NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
     ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
     WicResources: "WiC Resources",
+    familySupport: "Family Support and Connections Program",
+    nationalPartnership: "National Partnership for Women & Families",
+    parentTraining: "Resource Parent Training and Support",
   },
 
   admin: {

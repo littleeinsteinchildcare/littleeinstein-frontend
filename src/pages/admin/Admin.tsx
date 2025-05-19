@@ -152,11 +152,11 @@ const Admin = () => {
         </section>
 
         {/* User Management */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             {t("admin.userManage")}
           </h2>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-700">
             {[
               "User 1",
               "User 2",
@@ -167,11 +167,11 @@ const Admin = () => {
             ].map((user, idx) => (
               <div
                 key={idx}
-                className="group relative p-2 rounded hover:bg-gray-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
+                className="group relative p-2 rounded hover:bg-green-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
               >
                 <p className="overflow-hidden text-ellipsis">{user}</p>
                 <button
-                  className="ml-2 text-red-500 opacity-0 hover:bg-gray-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm"
+                  className="ml-2 text-red-500 opacity-0 hover:bg-green-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm"
                   onClick={() => alert(`Eliminate ${user}?`)}
                 >
                   {t("admin.removeUser")}
@@ -182,22 +182,22 @@ const Admin = () => {
         </section>
 
         {/* Image Management */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             {t("admin.imageManage")}
           </h2>
           <p className="text-sm text-gray-500">For later</p>
         </section>
 
-        {/* Temp */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+        {/* Email Invitation */}
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             {t("admin.inviteUser")}
           </h2>
           <div className="relative">
             <input
               type="text"
-              className="w-full border rounded p-2"
+              className="w-full border rounded p-2 bg-white focus:outline-none focus:ring-0"
               placeholder={t("admin.email")}
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}
@@ -218,7 +218,7 @@ const Admin = () => {
           </div>
           <button
             type="button"
-            className="mt-2 px-4 py-2 bg-blue-600 text-white hover:cursor-pointer rounded hover:bg-blue-700 transition"
+            className="bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] mt-3 px-4 py-2 rounded"
             onClick={() => {}}
           >
             {t("admin.send")}

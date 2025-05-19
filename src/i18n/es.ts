@@ -143,6 +143,9 @@ export const es = {
     ODEChildEnrollmentForm:
       "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
     WicResources: "Recursos de WiC",
+    familySupport: "Programa de Conexiones y Apoyo Familiares",
+    nationalPartnership: "Asociación Nacional para Mujeres y Familias",
+    parentTraining: "Recurso de Entrenamiento y Apoyo para Padres",
   },
 
   admin: {
