@@ -7,7 +7,7 @@ const SaveName = () => {
         <li>Karla Martinez</li>
         <li>Andres Gutierrez Bravo</li>
         <li>Kevin Phan</li>
-        <li>Amrit Thapa</li>
+        <li>Amrit </li>
         <li>Eddie Yefremov</li>
       </ul>
     </div>
