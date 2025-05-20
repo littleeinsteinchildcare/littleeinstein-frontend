@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import EventForm from "@/components/calendar/EventForm";
+import { useEventContext } from "@/context/EventContext";
 
 const EventsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
-  
+  const { addEvent } = useEventContext();
+
   const handleSubmit = (eventData: {
     title: string;
     date: string;
@@ -15,13 +17,16 @@ const EventsPage = () => {
     endTime: string;
     location: string;
     description: string;
+    color: string;
+    invitedParents: string[];
   }) => {
-    // In a real implementation, this would send the data to an API
-    console.log("Event submitted:", eventData);
-    
+    // Add the event using our context
+    const newEvent = addEvent(eventData);
+    console.log("Event submitted:", newEvent);
+
     // Show success message
     setShowSuccess(true);
-    
+
     // Hide success message after 3 seconds
     setTimeout(() => {
       setShowSuccess(false);

@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { EventProvider } from "@/context/EventContext";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
@@ -39,46 +40,50 @@ const App = () => {
   return (
     <>
       <Router>
-        <Navbar />
-        {banner && <Banner type={banner.type} message={banner.message} />}
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/resources/" element={<ResourcesPage />} />
-          <Route
-            path="/resources/NWChildEnrollmentForm"
-            element={<NWChildEnrollmentForm />}
-          />
-          <Route
-            path="/resources/ODEChildEnrollmentForm"
-            element={<ODEChildEnrollmentForm />}
-          />
-          {/* <Route path="/signin" element={<SignInPage />} /> */}
-          <Route path="/signin" element={<AuthPage />} />
-          {/* <Route path="/signin" element={<FinishSignIn />} /> */}
-          <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/calendar/events" element={<EventsPage />} />
-          <Route path="/about" element={<AboutUsPage />} />
-          <Route path="/contact" element={<ContactUsPage />} />
-          {/* <Route path="/docs" element={<DocsPage />} /> */}
-          <Route
-            path="/admin"
-            element={
-              isAdmin === true ? (
-                <AdminPage />
-              ) : isAdmin === false ? (
-                <Navigate to="/" />
-              ) : (
-                <p className="text-center p-60">Checking access</p>
-              )
-            }
-          />
-          <Route
-            path="*"
-            element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
-          />
-        </Routes>
-        <Footer />
+        <EventProvider>
+          <Navbar />
+          {banner && <Banner type={banner.type} message={banner.message} />}
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/resources/" element={<ResourcesPage />} />
+            <Route
+              path="/resources/NWChildEnrollmentForm"
+              element={<NWChildEnrollmentForm />}
+            />
+            <Route
+              path="/resources/ODEChildEnrollmentForm"
+              element={<ODEChildEnrollmentForm />}
+            />
+            {/* <Route path="/signin" element={<SignInPage />} /> */}
+            <Route path="/signin" element={<AuthPage />} />
+            {/* <Route path="/signin" element={<FinishSignIn />} /> */}
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/calendar/events" element={<EventsPage />} />
+            <Route path="/about" element={<AboutUsPage />} />
+            <Route path="/contact" element={<ContactUsPage />} />
+            {/* <Route path="/docs" element={<DocsPage />} /> */}
+            <Route
+              path="/admin"
+              element={
+                isAdmin === true ? (
+                  <AdminPage />
+                ) : isAdmin === false ? (
+                  <Navigate to="/" />
+                ) : (
+                  <p className="text-center p-60">Checking access</p>
+                )
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <h1 className="text-center p-60">404 - Page Not Found</h1>
+              }
+            />
+          </Routes>
+          <Footer />
+        </EventProvider>
       </Router>
       <ToastContainer position="top-center" />
     </>
