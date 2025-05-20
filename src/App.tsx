@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { EventProvider } from "@/context/EventContext";
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { useMsal } from "@azure/msal-react";
@@ -40,45 +41,47 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar />
-      {banner && <Banner type={banner.type} message={banner.message} />}
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/resources/" element={<ResourcesPage />} />
-        <Route
-          path="/resources/NWChildEnrollmentForm"
-          element={<NWChildEnrollmentForm />}
-        />
-        <Route
-          path="/resources/ODEChildEnrollmentForm"
-          element={<ODEChildEnrollmentForm />}
-        />
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/calendar/events" element={<EventsPage />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/contact" element={<ContactUsPage />} />
-        <Route path="/docs" element={<DocsPage />} />
-        <Route
-          path="/admin"
-          element={
-            isAuthenticated && isAdmin === true ? (
-              <AdminPage />
-            ) : isAdmin === false ? (
-              <Navigate to="/" />
-            ) : (
-              // loading message
-              <p className="text-center p-60">Checking access</p>
-            )
-          }
-        />
-        <Route
-          path="*"
-          element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
-        />
-      </Routes>
-      <Footer />
+      <EventProvider>
+        <Navbar />
+        {banner && <Banner type={banner.type} message={banner.message} />}
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/resources/" element={<ResourcesPage />} />
+          <Route
+            path="/resources/NWChildEnrollmentForm"
+            element={<NWChildEnrollmentForm />}
+          />
+          <Route
+            path="/resources/ODEChildEnrollmentForm"
+            element={<ODEChildEnrollmentForm />}
+          />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/calendar/events" element={<EventsPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route
+            path="/admin"
+            element={
+              isAuthenticated && isAdmin === true ? (
+                <AdminPage />
+              ) : isAdmin === false ? (
+                <Navigate to="/" />
+              ) : (
+                // loading message
+                <p className="text-center p-60">Checking access</p>
+              )
+            }
+          />
+          <Route
+            path="*"
+            element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
+          />
+        </Routes>
+        <Footer />
+      </EventProvider>
     </Router>
   );
 };
