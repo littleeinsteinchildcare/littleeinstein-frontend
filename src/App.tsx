@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { useMsal } from "@azure/msal-react";
+import { EventProvider } from "@/context/EventContext";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
@@ -14,35 +12,18 @@ import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
 import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
-import AdminPage from "@/pages/admin/Admin.tsx";
 import Profile from "./pages/profile/Profile";
 
 // components
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
-import Banner from "@/components/admin/Banner";
-
-// context
-import { BannerContext } from "@/context/BannerContext";
-
-// hooks
-import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const App = () => {
-  const { accounts } = useMsal();
-  const isAuthenticated = accounts.length > 0;
-
-  // banner state
-  const { banner } = useContext(BannerContext);
-
-  // hook to check with backend to see if admin
-  const isAdmin = useAdminCheck();
-
   return (
     <Router>
-      <Navbar />
-      {banner && <Banner type={banner.type} message={banner.message} />}
-      <Routes>
+      <EventProvider>
+        <Navbar />
+        <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/resources/" element={<ResourcesPage />} />
@@ -61,24 +42,12 @@ const App = () => {
         <Route path="/contact" element={<ContactUsPage />} />
         <Route path="/docs" element={<DocsPage />} />
         <Route
-          path="/admin"
-          element={
-            isAuthenticated && isAdmin === true ? (
-              <AdminPage />
-            ) : isAdmin === false ? (
-              <Navigate to="/" />
-            ) : (
-              // loading message
-              <p className="text-center p-60">Checking access</p>
-            )
-          }
-        />
-        <Route
           path="*"
           element={<h1 className="text-center p-60">404 - Page Not Found</h1>}
         />
       </Routes>
-      <Footer />
+        <Footer />
+      </EventProvider>
     </Router>
   );
 };
