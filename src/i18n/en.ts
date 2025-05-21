@@ -185,6 +185,9 @@ export const en = {
     NWChildEnrollmentForm: "Northwest Nutrition Service Child Enrollment Form",
     ODEChildEnrollmentForm: "ODE Child Enrollment Authorization Form",
     WicResources: "WiC Resources",
+    familySupport: "Family Support and Connections Program",
+    nationalPartnership: "National Partnership for Women & Families",
+    parentTraining: "Resource Parent Training and Support",
   },
 
   admin: {
@@ -195,6 +198,7 @@ export const en = {
     set: "Set Banner",
     clear: "Clear Banner",
     userManage: "User Management",
+    removeUser: "Remove",
     imageManage: "Image Management",
     noneOption: "None",
     weatherOption: "Inclement Weather Closure",
@@ -202,6 +206,9 @@ export const en = {
     customOption: "Custom Message",
     message: "Message ->",
     place: "Custom Message",
+    inviteUser: "Invite Users",
+    email: "Enter Email",
+    send: "Send",
   },
 
   banner: {
@@ -210,7 +217,7 @@ export const en = {
     custom: "🔔 Important Announcement",
     dismiss: "Dismiss",
   },
-  
+
   profile: {
     title: "Profile",
     upload: "Contribute to our Gallery!",
