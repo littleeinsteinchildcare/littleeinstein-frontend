@@ -1,29 +1,3 @@
-// import { auth } from "@/firebase";
-// import { AuthProvider, signInWithPopup } from "firebase/auth";
-
-// export const signInWithProvider = async (provider: AuthProvider) => {
-//   const result = await signInWithPopup(auth, provider);
-// //   const user = result.user;
-
-// //   if (!user) throw new Error("No user found from signInWithPopup");
-
-// //   const token = await user.getIdToken();
-
-// //   const response = await fetch("http://localhost:8080/auth/session", {
-// //     method: "GET",
-// //     headers: {
-// //       Authorization: `Bearer ${token}`,
-// //     },
-// //   });
-
-// //   if (!response.ok) {
-// //     throw new Error("Failed to register session with backend");
-// //   }
-
-// //   const data = await response.json();
-//   return result;
-// };
-
 import { auth, db } from "@/firebase";
 import { AuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
