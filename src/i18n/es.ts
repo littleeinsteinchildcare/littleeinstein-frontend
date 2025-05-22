@@ -143,6 +143,9 @@ export const es = {
     ODEChildEnrollmentForm:
       "Formulario de Authorización de Niño del Departamento de Educación de Oregon",
     WicResources: "Recursos de WiC",
+    familySupport: "Programa de Conexiones y Apoyo Familiares",
+    nationalPartnership: "Asociación Nacional para Mujeres y Familias",
+    parentTraining: "Recurso de Entrenamiento y Apoyo para Padres",
   },
 
   admin: {
@@ -153,6 +156,7 @@ export const es = {
     set: "Establecer Alerta",
     clear: "Borrar Alerta",
     userManage: "Gestión de Usuarios",
+    removeUser: "Borrar",
     imageManage: "Gestión de Imágenes",
     noneOption: "Ninguno",
     weatherOption: "Cierre por mal Tiempo",
@@ -160,6 +164,9 @@ export const es = {
     customOption: "Mensaje Personalizado",
     message: "Mensaje ->",
     place: "Mensaje Personalizado",
+    inviteUser: "Invitar Usuarios",
+    email: "Igresar Correo Electronico",
+    send: "Enviar",
   },
 
   banner: {
@@ -168,9 +175,8 @@ export const es = {
       "🚫 Little Einstein Childcare está Cerrado Hoy. ¡Nos vemos pronto!",
     custom: "🔔 Anuncio Importante",
     dismiss: "Despedir",
-
   },
-  
+
   profile: {
     title: "Perfil",
     upload: "Contribuye a Nuestra Galería",

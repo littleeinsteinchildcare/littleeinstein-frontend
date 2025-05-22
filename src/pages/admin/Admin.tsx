@@ -1,6 +1,11 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BannerContext } from "@/context/BannerContext";
+
+type User = {
+  _id: string;
+  email: string;
+};
 
 const Admin = () => {
   const { t } = useTranslation();
@@ -9,6 +14,50 @@ const Admin = () => {
   const [bannerType, setBannerType] = useState("none");
   const [customMessage, setCustomMessage] = useState("");
   const [duration, setDuration] = useState(24);
+
+  const [emailInput, setEmailInput] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+
+  //Testing purposes
+  const exampleUsers: User[] = [
+    { _id: "1", email: "test1@gmail.com" },
+    { _id: "2", email: "test2@gmail.com" },
+    { _id: "3", email: "test3@gmail.com" },
+    { _id: "4", email: "test4@gmail.com" },
+    { _id: "5", email: "test5@gmail.com" },
+    { _id: "6", email: "test6@gmail.com" },
+  ];
+
+  const isSelectingRef = useRef(false);
+
+  useEffect(() => {
+    setAllUsers(exampleUsers);
+  }, []);
+
+  useEffect(() => {
+    if (isSelectingRef.current) {
+      isSelectingRef.current = false;
+      return;
+    }
+
+    if (emailInput.length > 1) {
+      const filtered = allUsers
+        .filter((user) =>
+          user.email.toLowerCase().includes(emailInput.toLowerCase()),
+        )
+        .slice(0, 5);
+      setSuggestions(filtered);
+    } else {
+      setSuggestions([]);
+    }
+  }, [emailInput, allUsers]);
+
+  const handleSelect = (email: string) => {
+    isSelectingRef.current = true;
+    setSuggestions([]);
+    setEmailInput(email);
+  };
 
   const handleSetBanner = () => {
     const expiresAt = new Date(
@@ -20,6 +69,10 @@ const Admin = () => {
       expiresAt,
     });
   };
+
+  /*function handleEliminate(user: string): void {
+    throw new Error("Function not implemented.");
+  }*/
 
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
@@ -99,24 +152,77 @@ const Admin = () => {
         </section>
 
         {/* User Management */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             {t("admin.userManage")}
           </h2>
-          <p className="text-sm text-gray-500">For later</p>
+          <div className="text-sm text-gray-700">
+            {[
+              "User 1",
+              "User 2",
+              "User 3w745629837456928374569287569827346987324658972369582736495827897423",
+              "User 1",
+              "User 2",
+              "User 3",
+            ].map((user, idx) => (
+              <div
+                key={idx}
+                className="group relative p-2 rounded hover:bg-green-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
+              >
+                <p className="overflow-hidden text-ellipsis">{user}</p>
+                <button
+                  className="ml-2 text-red-500 opacity-0 hover:bg-green-100 hover:cursor-pointer rounded pl-2 pr-2 opacity-0 group-hover:opacity-100 transition duration-200 text-sm"
+                  onClick={() => alert(`Eliminate ${user}?`)}
+                >
+                  {t("admin.removeUser")}
+                </button>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Image Management */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-700">
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
             {t("admin.imageManage")}
           </h2>
           <p className="text-sm text-gray-500">For later</p>
         </section>
 
-        {/* Temp */}
-        <section className="bg-white rounded-lg flex items-center justify-center">
-          For later
+        {/* Email Invitation */}
+        <section className="bg-[#94EE8F] rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-2 text-black">
+            {t("admin.inviteUser")}
+          </h2>
+          <div className="relative">
+            <input
+              type="text"
+              className="w-full border rounded p-2 bg-white focus:outline-none focus:ring-0"
+              placeholder={t("admin.email")}
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+            />
+            {suggestions.length > 0 && (
+              <ul className="absolute bg-white border rounded mt-1 w-full z-10 max-h-48 overflow-y-auto shadow">
+                {suggestions.map((user) => (
+                  <li
+                    key={user._id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelect(user.email)}
+                  >
+                    {user.email}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <button
+            type="button"
+            className="bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] mt-3 px-4 py-2 rounded"
+            onClick={() => {}}
+          >
+            {t("admin.send")}
+          </button>
         </section>
       </div>
     </div>
