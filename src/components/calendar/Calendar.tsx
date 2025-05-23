@@ -7,6 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment-timezone";
 import { CalendarEvent } from "@/services/eventService";
 import { useEventContext } from "@/context/EventContext";
+import { useAuthListener } from "@/auth/useAuthListener";
 import EventsSidebar from "./EventsSidebar";
 import EventEditForm from "./EventEditForm";
 
@@ -18,9 +19,11 @@ const LittleCalendar = () => {
   const [view, setView] = useState<View>("month");
   const [showSidebar, setShowSidebar] = useState(false);
   const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
+  const [showMyEventsOnly, setShowMyEventsOnly] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { events, refreshEvents, updateEvent } = useEventContext();
+  const user = useAuthListener();
+  const { events, refreshEvents, updateEvent, getUserEvents } = useEventContext();
 
   // Refresh events when the component mounts
   useEffect(() => {
@@ -43,6 +46,14 @@ const LittleCalendar = () => {
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
+
+  // Filter events based on the toggle
+  const displayedEvents = showMyEventsOnly && user 
+    ? events.filter(event => 
+        event.createdBy === user.uid || 
+        event.invitedParents?.includes(user.uid)
+      )
+    : events;
 
   const messages = {
     today: t("calendar.today"),
@@ -113,6 +124,18 @@ const LittleCalendar = () => {
           {t("calendar.title")}
         </h1>
         <div className="flex space-x-2">
+          {user && (
+            <button
+              onClick={() => setShowMyEventsOnly(!showMyEventsOnly)}
+              className={`px-4 py-2 rounded-md transition duration-200 ${
+                showMyEventsOnly 
+                  ? "bg-purple-500 hover:bg-purple-600 text-white" 
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+              }`}
+            >
+              {showMyEventsOnly ? "Show All Events" : "My Events Only"}
+            </button>
+          )}
           <button
             onClick={toggleSidebar}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
@@ -133,7 +156,7 @@ const LittleCalendar = () => {
           <Calendar
             localizer={localizer}
             messages={messages}
-            events={events}
+            events={displayedEvents}
             startAccessor="start"
             endAccessor="end"
             style={{ height: 600 }}

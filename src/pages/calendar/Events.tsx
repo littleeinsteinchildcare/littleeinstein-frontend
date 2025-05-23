@@ -10,7 +10,7 @@ const EventsPage = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const { addEvent } = useEventContext();
 
-  const handleSubmit = (eventData: {
+  const handleSubmit = async (eventData: {
     title: string;
     date: string;
     startTime: string;
@@ -20,19 +20,24 @@ const EventsPage = () => {
     color: string;
     invitedParents: string[];
   }) => {
-    // Add the event using our context
-    const newEvent = addEvent(eventData);
-    console.log("Event submitted:", newEvent);
+    try {
+      // Add the event using our context
+      const newEvent = await addEvent(eventData);
+      console.log("Event submitted:", newEvent);
 
-    // Show success message
-    setShowSuccess(true);
+      // Show success message
+      setShowSuccess(true);
 
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      setShowSuccess(false);
-      // Navigate back to calendar
-      navigate("/calendar");
-    }, 3000);
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+        // Navigate back to calendar
+        navigate("/calendar");
+      }, 3000);
+    } catch (error) {
+      console.error("Failed to submit event:", error);
+      // You could show an error message here
+    }
   };
   
   return (

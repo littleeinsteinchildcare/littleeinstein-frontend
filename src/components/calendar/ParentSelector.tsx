@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { getUsers, BackendUser } from "@/api/client";
 
 interface Parent {
   id: string;
@@ -11,7 +12,7 @@ interface ParentSelectorProps {
   onSelect: (selectedParents: string[]) => void;
 }
 
-// Normally this data would come from an API
+// Mock data for testing
 const mockParents: Parent[] = [
   { id: "1", name: "Maria Rodriguez", email: "maria.r@example.com" },
   { id: "2", name: "John Smith", email: "john.s@example.com" },
@@ -24,6 +25,30 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   const { t } = useTranslation();
   const [selectedParents, setSelectedParents] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [parents, setParents] = useState<Parent[]>(mockParents);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchParents = async () => {
+      try {
+        setLoading(true);
+        const users = await getUsers();
+        const parentUsers = users.filter(user => user.role === "parent" || user.role === "user").map(user => ({
+          id: user.id,
+          name: user.name,
+          email: user.email
+        }));
+        setParents(parentUsers);
+      } catch (err) {
+        console.error("Failed to fetch users, using mock data:", err);
+        setParents(mockParents);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParents();
+  }, []);
 
   const handleToggleParent = (parentId: string) => {
     setSelectedParents((prev) => {
@@ -39,7 +64,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredParents = mockParents.filter((parent) =>
+  const filteredParents = parents.filter((parent) =>
     parent.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -62,7 +87,11 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
       </div>
       
       <div className="max-h-60 overflow-y-auto mb-4">
-        {filteredParents.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="text-gray-500">Loading parents...</div>
+          </div>
+        ) : filteredParents.length > 0 ? (
           filteredParents.map((parent) => (
             <div 
               key={parent.id}

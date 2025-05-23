@@ -2,13 +2,17 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import {
   CalendarEvent,
   getEvents,
+  getEventsSync,
   addEvent as addEventService,
+  addEventSync,
   deleteEvent as deleteEventService,
   updateEvent as updateEventService,
   getEventById,
   getUserEvents,
+  getUserEventsSync,
   resetEvents
 } from '@/services/eventService';
+import { useAuthListener } from '@/auth/useAuthListener';
 
 interface EventContextType {
   events: CalendarEvent[];
@@ -34,12 +38,19 @@ const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const user = useAuthListener();
 
-  const refreshEvents = () => {
-    setEvents(getEvents());
+  const refreshEvents = async () => {
+    try {
+      const fetchedEvents = await getEvents();
+      setEvents(fetchedEvents);
+    } catch (error) {
+      console.error("Failed to refresh events:", error);
+      setEvents(getEventsSync());
+    }
   };
 
-  const addEvent = (eventData: {
+  const addEvent = async (eventData: {
     title: string;
     date: string;
     startTime: string;
@@ -50,9 +61,22 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
     invitedParents: string[];
     createdBy?: string;
   }) => {
-    const newEvent = addEventService(eventData);
-    refreshEvents();
-    return newEvent;
+    try {
+      const newEvent = await addEventService({
+        ...eventData,
+        createdBy: user?.uid || eventData.createdBy || 'current-user'
+      });
+      await refreshEvents();
+      return newEvent;
+    } catch (error) {
+      console.error("Failed to add event:", error);
+      const newEvent = addEventSync({
+        ...eventData,
+        createdBy: user?.uid || eventData.createdBy || 'current-user'
+      });
+      setEvents(getEventsSync());
+      return newEvent;
+    }
   };
 
   const deleteEvent = (id: string) => {
@@ -75,8 +99,13 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
     return getEventById(id);
   };
 
-  const getUserEventsData = (userId: string) => {
-    return getUserEvents(userId);
+  const getUserEventsData = async (userId: string) => {
+    try {
+      return await getUserEvents(userId);
+    } catch (error) {
+      console.error("Failed to get user events:", error);
+      return getUserEventsSync(userId);
+    }
   };
 
   // Load events when the provider mounts
