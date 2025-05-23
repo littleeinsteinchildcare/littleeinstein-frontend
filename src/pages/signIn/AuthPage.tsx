@@ -9,6 +9,8 @@ import { forgotPassword } from "@/auth/forgotPassword";
 import googleIcon from "@/assets/googleIcon.svg";
 import microsoftIcon from "@/assets/microsoftIcon.svg";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
 const AuthPage = () => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
@@ -18,6 +20,8 @@ const AuthPage = () => {
 
   const [mode, setMode] = useState<"signup" | "signin">("signup");
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const toggleMode = () => {
     setMode(mode === "signup" ? "signin" : "signup");
@@ -133,36 +137,40 @@ const AuthPage = () => {
             style={{ left: 0 }}
           >
             <h2 className="text-3xl font-bold text-black mb-4">
-              {mode === "signup" ? "Welcome Back!" : "Welcome!"}
+              {mode === "signup"
+                ? t("signin.welcomeBack")
+                : t("signin.welcome")}
             </h2>
             <p className="text-sm text-black mb-6">
               {mode === "signup"
-                ? "Don't have an account?"
-                : "Already have an account?"}
+                ? t("signin.dontHaveAccount")
+                : t("signin.haveAccount")}
             </p>
             <button
               onClick={toggleMode}
               className="px-5 py-1 font-semibold whitespace-nowrap bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white rounded-2xl shadow-sm hover:shadow-md hover:scale-105 transition"
             >
-              {mode === "signup" ? "Sign Up" : "Sign In"}
+              {mode === "signup" ? t("signin.signUp") : t("signin.signin")}
             </button>
           </motion.div>
 
           {/* Signup Form */}
           <div
-            className={`w-1/2 flex flex-col justify-center items-center p-8 ${mode === "signup" ? "z-20" : "z-10"}`}
+            className={`w-1/2 flex flex-col justify-center items-center p-8 ${
+              mode === "signup" ? "z-20" : "z-10"
+            }`}
           >
-            <h3 className="text-xl font-bold mb-4">Sign Up</h3>
+            <h3 className="text-xl font-bold mb-4">{t("signin.signUp")}</h3>
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t("signin.email")}
               value={signUpEmail}
               onChange={(e) => setSignUpEmail(e.target.value)}
               className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
             />
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              placeholder={t("signin.password")}
               value={signUpPassword}
               onChange={(e) => setSignUpPassword(e.target.value)}
               className="w-full mb-4 p-2 rounded-xl bg-white text-black border border-gray-300"
@@ -174,17 +182,17 @@ const AuthPage = () => {
                 onChange={() => setShowPassword((prev) => !prev)}
                 className="form-checkbox text-green-500"
               />
-              <span>Show password</span>
+              <span>{t("signin.showPassword")}</span>
             </label>
             <button
-              className="w-full py-2 font-semibold whitespace-nowrap bg-[#2A9D8F] text-white border hover:bg-white hover:text-black rounded-2xl shadow-sm hover:shadow-md hover:scale-101 transition"
+              className="w-full py-2 font-semibold whitespace-nowrap bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] rounded-2xl hover:shadow-md hover:scale-101 transition"
               onClick={handleEmailPasswordSignUp}
             >
-              Create Account
+              {t("signin.createAccount")}
             </button>
             <div className="mt-6 w-full">
               <p className="text-sm text-center text-black mb-2">
-                Or continue with
+                {t("signin.orContinue")}
               </p>
               <div className="flex justify-center gap-3">
                 <button
@@ -211,19 +219,21 @@ const AuthPage = () => {
 
           {/* Signin Form */}
           <div
-            className={`w-1/2 flex flex-col justify-center items-center p-8 ${mode === "signin" ? "z-20" : "z-10"}`}
+            className={`w-1/2 flex flex-col justify-center items-center p-8 ${
+              mode === "signin" ? "z-20" : "z-10"
+            }`}
           >
-            <h3 className="text-xl font-bold mb-4">Sign in</h3>
+            <h3 className="text-xl font-bold mb-4">{t("signin.signin")}</h3>
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t("signin.email")}
               className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
               value={signInEmail}
               onChange={(e) => setSignInEmail(e.target.value)}
             />
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              placeholder={t("signin.password")}
               className="w-full mb-4 p-2 rounded-xl bg-white text-black border border-gray-300"
               value={signInPassword}
               onChange={(e) => setSignInPassword(e.target.value)}
@@ -233,7 +243,7 @@ const AuthPage = () => {
               className="text-sm text-blue-700 hover:underline cursor-pointer text-right w-full mb-3"
               onClick={handleForgotPassword}
             >
-              Forgot password?{" "}
+              {t("signin.forgotPassword")}{" "}
             </p>
             <label className="text-sm text-black flex items-center space-x-2 mb-4">
               <input
@@ -242,17 +252,17 @@ const AuthPage = () => {
                 onChange={() => setShowPassword((prev) => !prev)}
                 className="form-checkbox text-green-500"
               />
-              <span>Show password</span>
+              <span>{t("signin.showPassword")}</span>
             </label>
             <button
-              className="w-full py-2 font-semibold whitespace-nowrap bg-[#2A9D8F] text-white border hover:bg-white hover:text-black rounded-2xl shadow-sm hover:shadow-md hover:scale-101 transition"
+              className="w-full py-2 font-semibold whitespace-nowrap bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] rounded-2xl hover:shadow-md hover:scale-101 transition"
               onClick={handleEmailPasswordSignIn}
             >
-              Log In
+              {t("signin.logIn")}
             </button>
             <div className="mt-6 w-full">
               <p className="text-sm text-center text-black mb-2">
-                Or continue with
+                {t("signin.orContinue")}
               </p>
               <div className="flex justify-center gap-3">
                 <button

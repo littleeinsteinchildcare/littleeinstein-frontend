@@ -1,6 +1,8 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BannerContext } from "@/context/BannerContext";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 type User = {
   _id: string;
@@ -59,15 +61,24 @@ const Admin = () => {
     setEmailInput(email);
   };
 
-  const handleSetBanner = () => {
+  const handleSetBanner = async () => {
     const expiresAt = new Date(
       Date.now() + duration * 3600 * 1000,
     ).toISOString();
+
     setBanner({
       type: bannerType as "weather" | "closure" | "custom",
       message: bannerType === "custom" ? customMessage : "",
       expiresAt,
     });
+
+    try {
+      await setDoc(doc(db, "signals", "bannerUpdate"), {
+        updatedAt: new Date().toISOString(), // send time banner was set
+      });
+    } catch (error) {
+      console.error("Failed to signal banner to Firestore:", error);
+    }
   };
 
   /*function handleEliminate(user: string): void {
