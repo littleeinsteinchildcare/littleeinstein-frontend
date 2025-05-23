@@ -46,11 +46,11 @@ const LocationInfo = () => {
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiPhone />
-                (123) 345-7890
+                (971) 275-2815
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiMail />
-                temp_email_@gmail.com
+                littleeinstein77@yahoo.com
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiClock />
