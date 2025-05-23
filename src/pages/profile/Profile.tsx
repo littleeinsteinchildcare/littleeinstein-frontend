@@ -82,9 +82,50 @@ const Profile = () => {
     setPhotos((prev) => [...prev, ...uploadedUrls]);
   }
 
-  function handleDelete(index: number) {
-    URL.revokeObjectURL(photos[index]);
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  async function handleDelete(index: number) {
+    const account = instance.getActiveAccount();
+    if (!account) {
+      alert("User is not logged in");
+      return;
+    }
+
+    let accessToken: string;
+    try {
+      const response = await instance.acquireTokenSilent({
+        scopes: apiScopes.scopes,
+        account: account,
+      });
+      accessToken = response.accessToken;
+    } catch (error) {
+      console.error("Error acquiring token silently:", error);
+      return;
+    }
+
+    const imageUrl = photos[index];
+    const fileName = imageUrl.split("/").pop();
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/image/${fileName}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Delete failed:", res.status, text);
+        alert("Failed to delete image.");
+        return;
+      }
+
+      // On success, update state
+      setPhotos((prev) => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      alert("Error deleting image.");
+    }
   }
 
   return (
