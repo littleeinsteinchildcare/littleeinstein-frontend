@@ -44,5 +44,6 @@
   "engines": {
     "react": "18.x",
     "react-dom": "18.x"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

@@ -1,22 +1,85 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMsal } from "@azure/msal-react";
+import { apiScopes } from "@/auth/authConfig";
 
 const Profile = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<string[]>([]);
-  function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
+  const { instance } = useMsal();
 
-      if (photos.length + files.length <= 5) {
-        const newPhotos = files.map((file) =>
-          URL.createObjectURL(file as Blob),
-        );
-        setPhotos((prev) => [...prev, ...newPhotos]);
-      } else {
-        alert("You can only upload up to 5 photos!");
+  async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) {
+      return;
+    }
+    const files = Array.from(e.target.files);
+
+    if (photos.length + files.length > 2) {
+      alert("You can only upload up to 2 photos!");
+      return;
+    }
+    const uploadedUrls: string[] = [];
+
+    const account = instance.getActiveAccount();
+    if (!account) {
+      alert("User is not logged in");
+      return;
+    }
+    console.log("account", account);
+    let accessToken: string;
+    try {
+      const response = await instance.acquireTokenSilent({
+        scopes: apiScopes.scopes,
+        account: account,
+      });
+      accessToken = response.accessToken;
+    } catch (error) {
+      console.error("Error acquiring token silently:", error);
+      return;
+    }
+
+    //const userId = account.homeAccountId;
+    console.log("accesstoken", accessToken);
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("image", file);
+      console.log("Form data:", formData);
+
+      try {
+        const res = await fetch("http://localhost:8080/api/image", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const text = await res.text(); // Read the raw text
+
+        if (!res.ok) {
+          console.error(
+            "Upload failed. Status:",
+            res.status,
+            "Response:",
+            text,
+          );
+          alert("Upload failed. Check console for details.");
+          continue;
+        }
+
+        const data = JSON.parse(text);
+
+        if (data.success && data.image?.url) {
+          uploadedUrls.push(data.image.url);
+        } else {
+          console.error("Unexpected structure:", data);
+        }
+      } catch (err) {
+        console.error("Error uploading image:", err);
       }
     }
+    setPhotos((prev) => [...prev, ...uploadedUrls]);
   }
 
   function handleDelete(index: number) {
