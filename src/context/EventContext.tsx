@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import {
   CalendarEvent,
   getEvents,
@@ -27,6 +27,8 @@ interface EventContextType {
   getEvent: (id: string) => CalendarEvent | undefined;
   getUserEvents: (userId: string) => Promise<CalendarEvent[]>;
   refreshEvents: () => Promise<void>;
+  canEditEvent: (event: CalendarEvent) => boolean;
+  canDeleteEvent: (event: CalendarEvent) => boolean;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -35,15 +37,21 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const user = useAuthListener();
 
-  const refreshEvents = async () => {
+  const refreshEvents = useCallback(async () => {
     try {
-      const fetchedEvents = await getEvents();
-      setEvents(fetchedEvents);
+      if (user?.uid) {
+        // Fetch events specific to the authenticated user (creator or invitee)
+        const fetchedEvents = await getUserEvents(user.uid);
+        setEvents(fetchedEvents);
+      } else {
+        // No user authenticated, clear events
+        setEvents([]);
+      }
     } catch (error) {
       console.error("Failed to refresh events:", error);
       setEvents([]);
     }
-  };
+  }, [user?.uid]);
 
   const addEvent = async (eventData: {
     title: string;
@@ -84,10 +92,18 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
     return await getUserEvents(userId);
   };
 
-  // Load events when the provider mounts
+  const canEditEvent = (event: CalendarEvent) => {
+    return user?.uid === event.createdBy;
+  };
+
+  const canDeleteEvent = (event: CalendarEvent) => {
+    return user?.uid === event.createdBy;
+  };
+
+  // Load events when the provider mounts or user changes
   useEffect(() => {
     refreshEvents();
-  }, []);
+  }, [refreshEvents]);
 
   return (
     <EventContext.Provider value={{
@@ -97,7 +113,9 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
       updateEvent,
       getEvent,
       getUserEvents: getUserEventsData,
-      refreshEvents
+      refreshEvents,
+      canEditEvent,
+      canDeleteEvent
     }}>
       {children}
     </EventContext.Provider>

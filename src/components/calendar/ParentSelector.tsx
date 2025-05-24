@@ -13,68 +13,49 @@ interface ParentSelectorProps {
   onSelect: (selectedParents: string[]) => void;
 }
 
-// Mock data for testing - will be replaced by real data when backend is connected
-const mockParents: Parent[] = [
-  { id: "mock1", name: "Maria Rodriguez (Mock)", email: "maria.r@example.com" },
-  { id: "mock2", name: "John Smith (Mock)", email: "john.s@example.com" },
-  { id: "mock3", name: "Sarah Johnson (Mock)", email: "sarah.j@example.com" },
-  { id: "mock4", name: "David Chen (Mock)", email: "david.c@example.com" },
-  { id: "mock5", name: "Fatima Ali (Mock)", email: "fatima.a@example.com" },
-];
 
 const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   const { t } = useTranslation();
   const [selectedParents, setSelectedParents] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [parents, setParents] = useState<Parent[]>(mockParents);
+  const [parents, setParents] = useState<Parent[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const user = useAuthListener();
 
   useEffect(() => {
     const fetchParents = async () => {
-      // Only try to fetch from backend if user is authenticated
       if (!user) {
-        console.log("No authenticated user, using mock data");
-        setParents(mockParents);
+        setParents([]);
+        setError("Please sign in to view other parents");
         return;
       }
 
       try {
         setLoading(true);
-        console.log("User authenticated, attempting to fetch users from backend...");
-        console.log("Current user:", user.uid, user.email);
+        setError(null);
         
         const users = await getUsers();
-        console.log("Fetched users from backend:", users);
         
-        // Handle case where backend returns empty array (no users created yet)
+        // Filter out the current user and convert to Parent format
         if (users && Array.isArray(users) && users.length > 0) {
           const parentUsers = users.filter(user => 
             user.Role === "parent" || user.Role === "user" || user.Role === "admin"
           ).map(user => ({
             id: user.ID,
-            name: user.Username || user.Email.split('@')[0] || 'Unknown User', // Use email prefix if username is empty
+            name: user.Username || user.Email.split('@')[0] || 'Unknown User',
             email: user.Email
           }));
           
-          if (parentUsers.length > 0) {
-            console.log("✅ Using backend parent data:", parentUsers);
-            setParents(parentUsers);
-          } else {
-            console.log("⚠️ No valid parent users found in backend data, using mock data");
-            setParents(mockParents);
-          }
-        } else if (users && Array.isArray(users) && users.length === 0) {
-          console.log("⚠️ Backend returned empty users array (no users created yet), using mock data");
-          setParents(mockParents);
+          setParents(parentUsers);
         } else {
-          console.log("⚠️ No valid users array returned from backend, using mock data");
-          setParents(mockParents);
+          setParents([]);
+          setError("No users found. Please contact an administrator to create user accounts.");
         }
       } catch (err) {
         console.error("❌ Failed to fetch users from backend:", err);
-        console.log("🔄 Falling back to mock data");
-        setParents(mockParents);
+        setParents([]);
+        setError("Failed to load users. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -105,16 +86,14 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
     onSelect(selectedParents);
   };
 
-  const usingMockData = parents.some(parent => parent.id.startsWith('mock'));
-
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto mt-4">
       <h3 className="text-xl font-semibold mb-4">{t("events.inviteParents")}</h3>
       
-      {usingMockData && (
-        <div className="mb-4 p-3 bg-yellow-100 border border-yellow-400 rounded-md">
-          <p className="text-sm text-yellow-800">
-            ⚠️ Using mock data. {!user ? "Please sign in to load real users." : "No users found in backend - create some users first via the API."}
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded-md">
+          <p className="text-sm text-red-800">
+            {error}
           </p>
         </div>
       )}
@@ -153,6 +132,8 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
               </div>
             </div>
           ))
+        ) : error ? (
+          <p className="text-gray-500 text-center py-4">{error}</p>
         ) : (
           <p className="text-gray-500 text-center py-4">{t("events.noParentsFound")}</p>
         )}

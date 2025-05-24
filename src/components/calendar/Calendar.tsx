@@ -23,15 +23,19 @@ const LittleCalendar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthListener();
-  const { events, refreshEvents, updateEvent, getUserEvents } = useEventContext();
+  const { events, updateEvent, getUserEvents, canEditEvent } = useEventContext();
 
-  // Refresh events when the component mounts
-  useEffect(() => {
-    refreshEvents();
-  }, [refreshEvents]);
+  // Events are automatically loaded by the EventContext, no need to refresh here
 
   const handleEditEvent = (event: CalendarEvent) => {
-    setEventToEdit(event);
+    // Only allow editing if user is the creator
+    if (canEditEvent(event)) {
+      setEventToEdit(event);
+    } else {
+      // Show a message or just view the event details without editing
+      console.log("You can only edit events you created");
+      // Could show a toast notification here instead
+    }
   };
 
   const handleUpdateEvent = (updatedEvent: CalendarEvent) => {
@@ -47,29 +51,10 @@ const LittleCalendar = () => {
     setShowSidebar(!showSidebar);
   };
 
-  // Filter events based on the toggle
-  const [userEvents, setUserEvents] = useState<CalendarEvent[]>([]);
-  
-  useEffect(() => {
-    if (showMyEventsOnly && user) {
-      const fetchUserEvents = async () => {
-        try {
-          const userEventsData = await getUserEvents(user.uid);
-          setUserEvents(userEventsData);
-        } catch (error) {
-          console.error("Failed to fetch user events:", error);
-          // Fallback to filtering current events
-          setUserEvents(events.filter(event => 
-            event.createdBy === user.uid || 
-            event.invitedParents?.includes(user.uid)
-          ));
-        }
-      };
-      fetchUserEvents();
-    }
-  }, [showMyEventsOnly, user, getUserEvents, events]);
-
-  const displayedEvents = showMyEventsOnly && user ? userEvents : events;
+  // Filter events to show only created events vs all events (created + invited)
+  const displayedEvents = showMyEventsOnly 
+    ? events.filter(event => event.createdBy === user?.uid)
+    : events;
 
   const messages = {
     today: t("calendar.today"),
@@ -149,7 +134,7 @@ const LittleCalendar = () => {
                   : "bg-gray-200 hover:bg-gray-300 text-gray-700"
               }`}
             >
-              {showMyEventsOnly ? "Show All Events" : "My Events Only"}
+              {showMyEventsOnly ? "Show All My Events" : "My Created Events Only"}
             </button>
           )}
           <button

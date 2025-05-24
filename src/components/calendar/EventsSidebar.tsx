@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CalendarEvent } from '@/services/eventService';
 import { useEventContext } from '@/context/EventContext';
+import { useAuthListener } from '@/auth/useAuthListener';
 import { format } from 'date-fns';
 
 interface EventsSidebarProps {
@@ -12,26 +13,23 @@ interface EventsSidebarProps {
 const EventsSidebar: React.FC<EventsSidebarProps> = ({ onEditEvent }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { events, deleteEvent, getUserEvents } = useEventContext();
-  const [userEvents, setUserEvents] = useState<CalendarEvent[]>([]);
+  const { events, deleteEvent, canEditEvent, canDeleteEvent } = useEventContext();
   const [showConfirmDelete, setShowConfirmDelete] = useState<string | null>(null);
+  const user = useAuthListener();
 
-  // In a real app, this would be the authenticated user's ID
-  const currentUserId = 'current-user';
-
-  useEffect(() => {
-    // Get events created by the current user
-    setUserEvents(getUserEvents(currentUserId));
-  }, [events, getUserEvents]);
+  // Use the events from context which are already user-specific
+  const displayedEvents = events;
 
   const handleEdit = (event: CalendarEvent) => {
-    if (onEditEvent) {
+    if (canEditEvent(event) && onEditEvent) {
       onEditEvent(event);
     }
   };
 
-  const handleDelete = (id: string) => {
-    setShowConfirmDelete(id);
+  const handleDelete = (event: CalendarEvent) => {
+    if (canDeleteEvent(event)) {
+      setShowConfirmDelete(event.id);
+    }
   };
 
   const confirmDelete = (id: string) => {
@@ -57,11 +55,11 @@ const EventsSidebar: React.FC<EventsSidebarProps> = ({ onEditEvent }) => {
         {t('events.yourEvents')}
       </h2>
       
-      {userEvents.length === 0 ? (
+      {displayedEvents.length === 0 ? (
         <p className="text-gray-500 text-center py-4">{t('events.noEvents')}</p>
       ) : (
         <div className="space-y-3">
-          {userEvents.map((event) => (
+          {displayedEvents.map((event) => (
             <div 
               key={event.id} 
               className="p-3 bg-gray-50 rounded-md border-l-4 hover:bg-gray-100 transition-colors" 
@@ -79,18 +77,27 @@ const EventsSidebar: React.FC<EventsSidebarProps> = ({ onEditEvent }) => {
                 </div>
                 
                 <div className="flex space-x-2">
-                  <button 
-                    onClick={() => handleEdit(event)}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
-                  >
-                    {t('events.edit')}
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(event.id)}
-                    className="text-red-600 hover:text-red-800 text-sm"
-                  >
-                    {t('events.delete')}
-                  </button>
+                  {canEditEvent(event) && (
+                    <button 
+                      onClick={() => handleEdit(event)}
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      {t('events.edit')}
+                    </button>
+                  )}
+                  {canDeleteEvent(event) && (
+                    <button 
+                      onClick={() => handleDelete(event)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      {t('events.delete')}
+                    </button>
+                  )}
+                  {!canEditEvent(event) && (
+                    <span className="text-xs text-gray-500 italic">
+                      Invited
+                    </span>
+                  )}
                 </div>
               </div>
               

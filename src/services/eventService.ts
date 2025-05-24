@@ -3,12 +3,6 @@ import { getAllEvents, getUserEvents as getBackendUserEvents, createEvent as cre
 import { auth } from "@/firebase";
 
 // Define our custom event type that includes color and invitedParents
-export interface Location {
-  lat: number;
-  lng: number;
-  address: string;
-}
-
 export interface CalendarEvent extends Event {
   id: string;
   title: string;
@@ -18,7 +12,6 @@ export interface CalendarEvent extends Event {
   color?: string;
   invitedParents?: string[];
   location?: string;
-  locationCoords?: Location;
   description?: string;
   createdBy?: string; // To track who created the event
 }
@@ -37,6 +30,11 @@ const convertBackendEvent = (backendEvent: BackendEvent): CalendarEvent => {
   const start = new Date(year, month - 1, day, startHours, startMinutes);
   const end = new Date(year, month - 1, day, endHours, endMinutes);
 
+  // Handle invitees safely - they might be null, undefined, or an empty array
+  const invitedParents = Array.isArray(backendEvent.invitees) 
+    ? backendEvent.invitees.map(user => user.ID)
+    : [];
+
   return {
     id: backendEvent.id,
     title: backendEvent.eventname,
@@ -44,7 +42,7 @@ const convertBackendEvent = (backendEvent: BackendEvent): CalendarEvent => {
     end,
     allDay: false,
     color: "#4CAF50", // Default color since backend doesn't store this yet
-    invitedParents: backendEvent.invitees.map(user => user.ID),
+    invitedParents,
     location: "", // Backend doesn't store location yet
     description: "", // Backend doesn't store description yet
     createdBy: backendEvent.creator.ID,

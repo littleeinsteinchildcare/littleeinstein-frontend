@@ -7,33 +7,11 @@ import { CalendarEvent } from "@/services/eventService";
 const Profile = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<string[]>([]);
-  const [userEvents, setUserEvents] = useState<CalendarEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { getUserEvents } = useEventContext();
+  const { events } = useEventContext();
   const user = useAuthListener();
 
-  useEffect(() => {
-    const fetchUserEvents = async () => {
-      if (!user) {
-        setUserEvents([]);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const events = await getUserEvents(user.uid);
-        setUserEvents(events);
-      } catch (error) {
-        console.error("Failed to fetch user events:", error);
-        setUserEvents([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserEvents();
-  }, [user, getUserEvents]);
+  // Use events from context which are already user-specific
+  const userEvents = events;
   function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -102,11 +80,7 @@ const Profile = () => {
             {t("profile.events")}
           </h2>
           
-          {loading ? (
-            <div className="text-center py-8 text-gray-600">
-              Loading your events...
-            </div>
-          ) : !user ? (
+          {!user ? (
             <div className="text-center py-8 text-gray-600">
               Please sign in to view your events
             </div>
