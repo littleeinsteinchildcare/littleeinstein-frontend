@@ -20,7 +20,7 @@ const LanguageSelector = () => {
     <div className="relative inline-block">
       <button
         onClick={() => setOpen(!open)}
-        className="text-sm block p-2 md:py-1.5 mt-2 md:mt-0 bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white shadow-sm  font-semibold whitespace-nowrap"
+        className="text-xs block p-2 md:py-2 mt-2 md:mt-0 bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white shadow-sm  font-semibold whitespace-nowrap"
       >
         {t("navbar.selectLanguage")}{" "}
         <VscChevronDown
