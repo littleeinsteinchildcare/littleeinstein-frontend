@@ -15,7 +15,9 @@ export async function apiGet(path: string) {
   });
 
   if (!response.ok) {
-    throw new Error("API request failed");
+    const errorData = await response.text();
+    console.error(`API GET ${path} failed with status ${response.status}:`, errorData);
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
@@ -37,18 +39,20 @@ export async function apiPost(path: string, data: any) {
   });
 
   if (!response.ok) {
-    throw new Error("API request failed");
+    const errorData = await response.text();
+    console.error(`API POST ${path} failed with status ${response.status}:`, errorData);
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
 }
 
 export interface BackendUser {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  images: string[];
+  ID: string;
+  Username: string;
+  Email: string;
+  Role: string;
+  Images: string[];
 }
 
 export interface BackendEvent {
@@ -62,7 +66,14 @@ export interface BackendEvent {
 }
 
 export async function getUsers(): Promise<BackendUser[]> {
-  return apiGet("/api/users");
+  try {
+    const result = await apiGet("/api/users");
+    console.log("API call successful, received users:", result);
+    return result;
+  } catch (error) {
+    console.error("API call failed:", error);
+    throw error;
+  }
 }
 
 export async function getUserEvents(userId: string): Promise<BackendEvent[]> {
@@ -82,4 +93,13 @@ export async function createEvent(eventData: {
   invitees: string;
 }): Promise<BackendEvent> {
   return apiPost("/api/event", eventData);
+}
+
+export async function syncFirebaseUser(userData: {
+  uid: string;
+  email: string;
+  name?: string;
+  displayName?: string;
+}): Promise<BackendUser> {
+  return apiPost("/api/user/sync", userData);
 }

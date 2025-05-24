@@ -48,12 +48,28 @@ const LittleCalendar = () => {
   };
 
   // Filter events based on the toggle
-  const displayedEvents = showMyEventsOnly && user 
-    ? events.filter(event => 
-        event.createdBy === user.uid || 
-        event.invitedParents?.includes(user.uid)
-      )
-    : events;
+  const [userEvents, setUserEvents] = useState<CalendarEvent[]>([]);
+  
+  useEffect(() => {
+    if (showMyEventsOnly && user) {
+      const fetchUserEvents = async () => {
+        try {
+          const userEventsData = await getUserEvents(user.uid);
+          setUserEvents(userEventsData);
+        } catch (error) {
+          console.error("Failed to fetch user events:", error);
+          // Fallback to filtering current events
+          setUserEvents(events.filter(event => 
+            event.createdBy === user.uid || 
+            event.invitedParents?.includes(user.uid)
+          ));
+        }
+      };
+      fetchUserEvents();
+    }
+  }, [showMyEventsOnly, user, getUserEvents, events]);
+
+  const displayedEvents = showMyEventsOnly && user ? userEvents : events;
 
   const messages = {
     today: t("calendar.today"),

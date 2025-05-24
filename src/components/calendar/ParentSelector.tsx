@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getUsers, BackendUser } from "@/api/client";
+import { useAuthListener } from "@/auth/useAuthListener";
 
 interface Parent {
   id: string;
@@ -12,13 +13,13 @@ interface ParentSelectorProps {
   onSelect: (selectedParents: string[]) => void;
 }
 
-// Mock data for testing
+// Mock data for testing - will be replaced by real data when backend is connected
 const mockParents: Parent[] = [
-  { id: "1", name: "Maria Rodriguez", email: "maria.r@example.com" },
-  { id: "2", name: "John Smith", email: "john.s@example.com" },
-  { id: "3", name: "Sarah Johnson", email: "sarah.j@example.com" },
-  { id: "4", name: "David Chen", email: "david.c@example.com" },
-  { id: "5", name: "Fatima Ali", email: "fatima.a@example.com" },
+  { id: "mock1", name: "Maria Rodriguez (Mock)", email: "maria.r@example.com" },
+  { id: "mock2", name: "John Smith (Mock)", email: "john.s@example.com" },
+  { id: "mock3", name: "Sarah Johnson (Mock)", email: "sarah.j@example.com" },
+  { id: "mock4", name: "David Chen (Mock)", email: "david.c@example.com" },
+  { id: "mock5", name: "Fatima Ali (Mock)", email: "fatima.a@example.com" },
 ];
 
 const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
@@ -27,20 +28,52 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [parents, setParents] = useState<Parent[]>(mockParents);
   const [loading, setLoading] = useState(false);
+  const user = useAuthListener();
 
   useEffect(() => {
     const fetchParents = async () => {
+      // Only try to fetch from backend if user is authenticated
+      if (!user) {
+        console.log("No authenticated user, using mock data");
+        setParents(mockParents);
+        return;
+      }
+
       try {
         setLoading(true);
+        console.log("User authenticated, attempting to fetch users from backend...");
+        console.log("Current user:", user.uid, user.email);
+        
         const users = await getUsers();
-        const parentUsers = users.filter(user => user.role === "parent" || user.role === "user").map(user => ({
-          id: user.id,
-          name: user.name,
-          email: user.email
-        }));
-        setParents(parentUsers);
+        console.log("Fetched users from backend:", users);
+        
+        // Handle case where backend returns empty array (no users created yet)
+        if (users && Array.isArray(users) && users.length > 0) {
+          const parentUsers = users.filter(user => 
+            user.Role === "parent" || user.Role === "user" || user.Role === "admin"
+          ).map(user => ({
+            id: user.ID,
+            name: user.Username || user.Email.split('@')[0] || 'Unknown User', // Use email prefix if username is empty
+            email: user.Email
+          }));
+          
+          if (parentUsers.length > 0) {
+            console.log("✅ Using backend parent data:", parentUsers);
+            setParents(parentUsers);
+          } else {
+            console.log("⚠️ No valid parent users found in backend data, using mock data");
+            setParents(mockParents);
+          }
+        } else if (users && Array.isArray(users) && users.length === 0) {
+          console.log("⚠️ Backend returned empty users array (no users created yet), using mock data");
+          setParents(mockParents);
+        } else {
+          console.log("⚠️ No valid users array returned from backend, using mock data");
+          setParents(mockParents);
+        }
       } catch (err) {
-        console.error("Failed to fetch users, using mock data:", err);
+        console.error("❌ Failed to fetch users from backend:", err);
+        console.log("🔄 Falling back to mock data");
         setParents(mockParents);
       } finally {
         setLoading(false);
@@ -48,7 +81,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
     };
 
     fetchParents();
-  }, []);
+  }, [user]);
 
   const handleToggleParent = (parentId: string) => {
     setSelectedParents((prev) => {
@@ -72,9 +105,19 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
     onSelect(selectedParents);
   };
 
+  const usingMockData = parents.some(parent => parent.id.startsWith('mock'));
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto mt-4">
       <h3 className="text-xl font-semibold mb-4">{t("events.inviteParents")}</h3>
+      
+      {usingMockData && (
+        <div className="mb-4 p-3 bg-yellow-100 border border-yellow-400 rounded-md">
+          <p className="text-sm text-yellow-800">
+            ⚠️ Using mock data. {!user ? "Please sign in to load real users." : "No users found in backend - create some users first via the API."}
+          </p>
+        </div>
+      )}
       
       <div className="mb-4">
         <input

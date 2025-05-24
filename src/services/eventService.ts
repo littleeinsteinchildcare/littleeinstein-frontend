@@ -44,72 +44,22 @@ const convertBackendEvent = (backendEvent: BackendEvent): CalendarEvent => {
     end,
     allDay: false,
     color: "#4CAF50", // Default color since backend doesn't store this yet
-    invitedParents: backendEvent.invitees.map(user => user.id),
+    invitedParents: backendEvent.invitees.map(user => user.ID),
     location: "", // Backend doesn't store location yet
     description: "", // Backend doesn't store description yet
-    createdBy: backendEvent.creator.id,
+    createdBy: backendEvent.creator.ID,
   };
 };
 
-// Mock events data
-const initialEvents: CalendarEvent[] = [
-  {
-    id: generateId(),
-    title: "Intro",
-    start: new Date(2025, 2, 1, 10, 0),
-    end: new Date(2025, 2, 1, 12, 0),
-    allDay: false,
-    color: "#4CAF50",
-    location: "Main Room",
-    locationCoords: {
-      lat: 45.522894,
-      lng: -122.989827,
-      address: "1789 SE River RD Hillsboro OR 97123"
-    },
-    description: "Introduction to childcare services",
-    createdBy: "admin",
-  },
-  {
-    id: generateId(),
-    title: "Child care meet",
-    start: new Date(2025, 2, 11, 10, 0),
-    end: new Date(2025, 2, 11, 11, 30),
-    allDay: false,
-    color: "#2196F3",
-    location: "Conference Room",
-    description: "Meeting with parents to discuss childcare program",
-    createdBy: "admin",
-  },
-  {
-    id: generateId(),
-    title: "Playtime",
-    start: new Date(2025, 2, 11, 10, 0), // Same time as child care meet
-    end: new Date(2025, 2, 11, 12, 0),
-    allDay: false,
-    color: "#FF9800",
-    location: "Playground",
-    description: "Outdoor play activities for children",
-    createdBy: "admin",
-  },
-];
-
-// In-memory storage for events
-let events: CalendarEvent[] = [...initialEvents];
-
-// Event service functions
-export const getEvents = async (): Promise<CalendarEvent[]> => {
-  try {
-    const backendEvents = await getAllEvents();
-    return backendEvents.map(convertBackendEvent);
-  } catch (error) {
-    console.error("Failed to fetch events from backend, using mock data:", error);
-    return events;
-  }
+// Event service functions - only use backend, no local storage
+export const getEvents = async (userId?: string): Promise<CalendarEvent[]> => {
+  const backendEvents = await getAllEvents();
+  return backendEvents.map(convertBackendEvent);
 };
 
-// Synchronous version for backwards compatibility
-export const getEventsSync = (): CalendarEvent[] => {
-  return events;
+export const getUserEvents = async (userId: string): Promise<CalendarEvent[]> => {
+  const backendEvents = await getBackendUserEvents(userId);
+  return backendEvents.map(convertBackendEvent);
 };
 
 export const addEvent = async (event: {
@@ -125,127 +75,35 @@ export const addEvent = async (event: {
 }): Promise<CalendarEvent> => {
   const eventId = generateId();
   
-  try {
-    // Try to create event on backend
-    const backendEvent = await createBackendEvent({
-      id: eventId,
-      eventname: event.title,
-      date: event.date,
-      starttime: event.startTime,
-      endtime: event.endTime,
-      invitees: event.invitedParents.join(",")
-    });
-    
-    return convertBackendEvent(backendEvent);
-  } catch (error) {
-    console.error("Failed to create event on backend, using local storage:", error);
-    
-    // Fallback to local storage
-    const [year, month, day] = event.date.split("-").map(Number);
-    const [startHours, startMinutes] = event.startTime.split(":").map(Number);
-    const [endHours, endMinutes] = event.endTime.split(":").map(Number);
-
-    const start = new Date(year, month - 1, day, startHours, startMinutes);
-    const end = new Date(year, month - 1, day, endHours, endMinutes);
-
-    const newEvent: CalendarEvent = {
-      id: eventId,
-      title: event.title,
-      start,
-      end,
-      allDay: false,
-      color: event.color,
-      invitedParents: event.invitedParents,
-      location: event.location,
-      description: event.description,
-      createdBy: event.createdBy || 'current-user',
-    };
-
-    events = [...events, newEvent];
-    return newEvent;
-  }
+  console.log("Attempting to create event on backend:", {
+    id: eventId,
+    eventname: event.title,
+    date: event.date,
+    starttime: event.startTime,
+    endtime: event.endTime,
+    invitees: event.invitedParents.join(",")
+  });
+  
+  const backendEvent = await createBackendEvent({
+    id: eventId,
+    eventname: event.title,
+    date: event.date,
+    starttime: event.startTime,
+    endtime: event.endTime,
+    invitees: event.invitedParents.join(",")
+  });
+  
+  console.log("✅ Event created successfully on backend:", backendEvent);
+  return convertBackendEvent(backendEvent);
 };
 
-// Synchronous version for backwards compatibility
-export const addEventSync = (event: {
-  title: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  description: string;
-  color: string;
-  invitedParents: string[];
-  createdBy?: string;
-}): CalendarEvent => {
-  const [year, month, day] = event.date.split("-").map(Number);
-  const [startHours, startMinutes] = event.startTime.split(":").map(Number);
-  const [endHours, endMinutes] = event.endTime.split(":").map(Number);
-
-  const start = new Date(year, month - 1, day, startHours, startMinutes);
-  const end = new Date(year, month - 1, day, endHours, endMinutes);
-
-  const newEvent: CalendarEvent = {
-    id: generateId(),
-    title: event.title,
-    start,
-    end,
-    allDay: false,
-    color: event.color,
-    invitedParents: event.invitedParents,
-    location: event.location,
-    description: event.description,
-    createdBy: event.createdBy || 'current-user',
-  };
-
-  events = [...events, newEvent];
-  return newEvent;
+// Remove all other functions that dealt with local storage
+export const updateEvent = async (updatedEvent: CalendarEvent): Promise<CalendarEvent | null> => {
+  // TODO: Implement backend update when the API is ready
+  throw new Error("Event updating not implemented yet - backend API needed");
 };
 
-export const updateEvent = (updatedEvent: CalendarEvent): CalendarEvent | null => {
-  const index = events.findIndex(event => event.id === updatedEvent.id);
-
-  if (index === -1) {
-    return null; // Event not found
-  }
-
-  // Update the event in the array
-  events[index] = updatedEvent;
-
-  // Create a new array to trigger state updates
-  events = [...events];
-
-  return updatedEvent;
-};
-
-export const deleteEvent = (id: string): boolean => {
-  const initialLength = events.length;
-  events = events.filter(event => event.id !== id);
-
-  // Return true if an event was removed
-  return events.length < initialLength;
-};
-
-export const getEventById = (id: string): CalendarEvent | undefined => {
-  return events.find(event => event.id === id);
-};
-
-// Get events created by a specific user
-export const getUserEvents = async (userId: string): Promise<CalendarEvent[]> => {
-  try {
-    const backendEvents = await getBackendUserEvents(userId);
-    return backendEvents.map(convertBackendEvent);
-  } catch (error) {
-    console.error("Failed to fetch user events from backend, using mock data:", error);
-    return events.filter(event => event.createdBy === userId);
-  }
-};
-
-// Synchronous version for backwards compatibility
-export const getUserEventsSync = (userId: string): CalendarEvent[] => {
-  return events.filter(event => event.createdBy === userId);
-};
-
-export const resetEvents = (): void => {
-  events = [...initialEvents];
+export const removeEvent = async (eventId: string): Promise<void> => {
+  // TODO: Implement backend delete when the API is ready
+  throw new Error("Event deletion not implemented yet - backend API needed");
 };

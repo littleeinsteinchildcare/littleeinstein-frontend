@@ -2,15 +2,10 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import {
   CalendarEvent,
   getEvents,
-  getEventsSync,
   addEvent as addEventService,
-  addEventSync,
-  deleteEvent as deleteEventService,
   updateEvent as updateEventService,
-  getEventById,
-  getUserEvents,
-  getUserEventsSync,
-  resetEvents
+  removeEvent as removeEventService,
+  getUserEvents
 } from '@/services/eventService';
 import { useAuthListener } from '@/auth/useAuthListener';
 
@@ -26,12 +21,12 @@ interface EventContextType {
     color: string;
     invitedParents: string[];
     createdBy?: string;
-  }) => CalendarEvent;
-  deleteEvent: (id: string) => boolean;
-  updateEvent: (event: CalendarEvent) => CalendarEvent | null;
+  }) => Promise<CalendarEvent>;
+  deleteEvent: (id: string) => Promise<boolean>;
+  updateEvent: (event: CalendarEvent) => Promise<CalendarEvent | null>;
   getEvent: (id: string) => CalendarEvent | undefined;
-  getUserEvents: (userId: string) => CalendarEvent[];
-  refreshEvents: () => void;
+  getUserEvents: (userId: string) => Promise<CalendarEvent[]>;
+  refreshEvents: () => Promise<void>;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -46,7 +41,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
       setEvents(fetchedEvents);
     } catch (error) {
       console.error("Failed to refresh events:", error);
-      setEvents(getEventsSync());
+      setEvents([]);
     }
   };
 
@@ -61,61 +56,37 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
     invitedParents: string[];
     createdBy?: string;
   }) => {
-    try {
-      const newEvent = await addEventService({
-        ...eventData,
-        createdBy: user?.uid || eventData.createdBy || 'current-user'
-      });
-      await refreshEvents();
-      return newEvent;
-    } catch (error) {
-      console.error("Failed to add event:", error);
-      const newEvent = addEventSync({
-        ...eventData,
-        createdBy: user?.uid || eventData.createdBy || 'current-user'
-      });
-      setEvents(getEventsSync());
-      return newEvent;
-    }
+    const newEvent = await addEventService({
+      ...eventData,
+      createdBy: user?.uid || eventData.createdBy || 'current-user'
+    });
+    await refreshEvents();
+    return newEvent;
   };
 
-  const deleteEvent = (id: string) => {
-    const result = deleteEventService(id);
-    if (result) {
-      refreshEvents();
-    }
-    return result;
+  const deleteEvent = async (id: string) => {
+    await removeEventService(id);
+    await refreshEvents();
+    return true;
   };
 
-  const updateEvent = (event: CalendarEvent) => {
-    const result = updateEventService(event);
-    if (result) {
-      refreshEvents();
-    }
+  const updateEvent = async (event: CalendarEvent) => {
+    const result = await updateEventService(event);
+    await refreshEvents();
     return result;
   };
 
   const getEvent = (id: string) => {
-    return getEventById(id);
+    return events.find(event => event.id === id);
   };
 
   const getUserEventsData = async (userId: string) => {
-    try {
-      return await getUserEvents(userId);
-    } catch (error) {
-      console.error("Failed to get user events:", error);
-      return getUserEventsSync(userId);
-    }
+    return await getUserEvents(userId);
   };
 
   // Load events when the provider mounts
   useEffect(() => {
     refreshEvents();
-    
-    // Reset events when the provider unmounts (for demo purposes)
-    return () => {
-      resetEvents();
-    };
   }, []);
 
   return (
