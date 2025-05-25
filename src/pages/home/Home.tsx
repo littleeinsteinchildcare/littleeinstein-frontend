@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { useMsal } from "@azure/msal-react";
-
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
 // home page components
 import WelcomeSection from "@/components/home/welcome";
 import LocationInfo from "@/components/home/location";
@@ -9,20 +9,23 @@ import About from "@/components/home/about";
 import Expect from "@/components/home/expect";
 import Art from "@/components/home/art";
 import Testimonials from "@/components/home/testimonials";
-
 const Homepage = () => {
-  const { instance } = useMsal();
-  useEffect(() => {
-    const activeAccount = instance.getActiveAccount();
-    if (activeAccount) {
-      console.log("Full idTokenClaims:", activeAccount.idTokenClaims);
+  const [userId, setUserId] = useState<string | null>(null);
+  console.log(userId);
 
-      const objectId = activeAccount.idTokenClaims?.oid;
-      console.log("User Object ID:", objectId);
-    } else {
-      console.log("No active account. User is not signed in.");
-    }
-  }, [instance]);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Logged in Firebase user:", user);
+        setUserId(user.uid);
+      } else {
+        console.log("User not signed in");
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">

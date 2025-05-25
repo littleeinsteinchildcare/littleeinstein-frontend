@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMsal } from "@azure/msal-react";
-import { apiScopes } from "@/auth/authConfig";
+import { auth } from "@/firebase";
 
 const Profile = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<string[]>([]);
-  const { instance } = useMsal();
+  let accessToken: string;
+
+  async function getToken() {
+    const user = auth.currentUser;
+    if (!user) throw new Error("User is not logged in");
+    return await user.getIdToken();
+  }
 
   async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
@@ -20,25 +25,13 @@ const Profile = () => {
     }
     const uploadedUrls: string[] = [];
 
-    const account = instance.getActiveAccount();
-    if (!account) {
+    try {
+      accessToken = await getToken();
+    } catch {
       alert("User is not logged in");
       return;
     }
-    console.log("account", account);
-    let accessToken: string;
-    try {
-      const response = await instance.acquireTokenSilent({
-        scopes: apiScopes.scopes,
-        account: account,
-      });
-      accessToken = response.accessToken;
-    } catch (error) {
-      console.error("Error acquiring token silently:", error);
-      return;
-    }
 
-    //const userId = account.homeAccountId;
     console.log("accesstoken", accessToken);
     for (const file of files) {
       const formData = new FormData();
@@ -83,21 +76,11 @@ const Profile = () => {
   }
 
   async function handleDelete(index: number) {
-    const account = instance.getActiveAccount();
-    if (!account) {
-      alert("User is not logged in");
-      return;
-    }
-
     let accessToken: string;
     try {
-      const response = await instance.acquireTokenSilent({
-        scopes: apiScopes.scopes,
-        account: account,
-      });
-      accessToken = response.accessToken;
-    } catch (error) {
-      console.error("Error acquiring token silently:", error);
+      accessToken = await getToken();
+    } catch {
+      alert("User is not logged in");
       return;
     }
 
