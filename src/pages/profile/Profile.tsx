@@ -1,11 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { auth } from "@/firebase";
 
+type Photo = {
+  id: string;
+  name: string;
+  url: string;
+};
+
 const Profile = () => {
   const { t } = useTranslation();
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   let accessToken: string;
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      let token: string;
+      try {
+        token = await getToken();
+      } catch {
+        alert("User not logged in");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:8080/api/images", {
+          headers: {
+            method: "GET",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        const data = await res.json();
+        console.log("Fetched images data:", data);
+
+        /*const response2 = await fetch(`http://localhost:8080/api/image/${data.imageId}/${data.image}`,  {
+        headers: {
+          method: "GET",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      })
+
+      const userImages = await response2.json();
+      console.log("User images:", userImages);*/
+
+        if (data.success && Array.isArray(data.images)) {
+          setPhotos(
+            data.images.map((img: Photo) => ({
+              id: img.id,
+              name: img.name,
+              url: img.url,
+            })),
+          );
+        } else {
+          console.error("Unexpected structure:", data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch images:", err);
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   async function getToken() {
     const user = auth.currentUser;
@@ -23,7 +81,6 @@ const Profile = () => {
       alert("You can only upload up to 2 photos!");
       return;
     }
-    const uploadedUrls: string[] = [];
 
     try {
       accessToken = await getToken();
@@ -62,17 +119,23 @@ const Profile = () => {
         }
 
         const data = JSON.parse(text);
+        console.log("Upload response data:", data);
 
-        if (data.success && data.image?.url) {
-          uploadedUrls.push(data.image.url);
-        } else {
-          console.error("Unexpected structure:", data);
+        if (data.success) {
+          const uploadedPhoto = {
+            id: data.image.id,
+            name: data.image.name, // adjust according to actual key
+            url: data.image.url,
+          };
+          photos.push(uploadedPhoto);
+          console.log("Image uploaded successfully:", photos);
         }
       } catch (err) {
         console.error("Error uploading image:", err);
       }
     }
-    setPhotos((prev) => [...prev, ...uploadedUrls]);
+
+    setPhotos((prev) => [...prev, ...photos]);
   }
 
   async function handleDelete(index: number) {
@@ -84,17 +147,21 @@ const Profile = () => {
       return;
     }
 
-    const imageUrl = photos[index];
-    const fileName = imageUrl.split("/").pop();
+    console.log("Deleting image:", photos[index]);
+    const photoId = photos[index].id;
+    const name = photos[index].name;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/image/${fileName}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      const res = await fetch(
+        `http://localhost:8080/api/image/${photoId}/${name}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         const text = await res.text();
@@ -129,6 +196,7 @@ const Profile = () => {
             onChange={handleAdd}
             className="hidden"
             id="fileUpload"
+            multiple={false}
           />
           <label
             htmlFor="fileUpload"
@@ -140,7 +208,7 @@ const Profile = () => {
             <div key={index} className="relative">
               <img
                 key={index}
-                src={src}
+                src={src.url}
                 alt={`Preview ${index + 1}`}
                 className="w-2/3 h-48 object-cover m-5"
               />
