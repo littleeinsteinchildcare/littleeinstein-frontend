@@ -13,6 +13,12 @@ const Profile = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   let accessToken: string;
 
+  async function getToken() {
+    const user = auth.currentUser;
+    if (!user) throw new Error("User is not logged in");
+    return await user.getIdToken();
+  }
+
   useEffect(() => {
     const fetchImages = async () => {
       let token: string;
@@ -29,7 +35,6 @@ const Profile = () => {
             method: "GET",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
         });
 
         const data = await res.json();
@@ -65,12 +70,6 @@ const Profile = () => {
     fetchImages();
   }, []);
 
-  async function getToken() {
-    const user = auth.currentUser;
-    if (!user) throw new Error("User is not logged in");
-    return await user.getIdToken();
-  }
-
   async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
       return;
@@ -89,11 +88,11 @@ const Profile = () => {
       return;
     }
 
-    console.log("accesstoken", accessToken);
+    const newPhotos: Photo[] = [];
+
     for (const file of files) {
       const formData = new FormData();
       formData.append("image", file);
-      console.log("Form data:", formData);
 
       try {
         const res = await fetch("http://localhost:8080/api/image", {
@@ -119,7 +118,6 @@ const Profile = () => {
         }
 
         const data = JSON.parse(text);
-        console.log("Upload response data:", data);
 
         if (data.success) {
           const uploadedPhoto = {
@@ -127,15 +125,15 @@ const Profile = () => {
             name: data.image.name, // adjust according to actual key
             url: data.image.url,
           };
-          photos.push(uploadedPhoto);
-          console.log("Image uploaded successfully:", photos);
+          newPhotos.push(uploadedPhoto);
         }
       } catch (err) {
         console.error("Error uploading image:", err);
       }
     }
 
-    setPhotos((prev) => [...prev, ...photos]);
+    setPhotos((prev) => [...prev, ...newPhotos]);
+    console.log("Image uploaded successfully:", newPhotos);
   }
 
   async function handleDelete(index: number) {
@@ -147,7 +145,6 @@ const Profile = () => {
       return;
     }
 
-    console.log("Deleting image:", photos[index]);
     const photoId = photos[index].id;
     const name = photos[index].name;
 
