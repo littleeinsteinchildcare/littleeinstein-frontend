@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EventProvider } from "@/context/EventContext";
-//import { useMsal } from "@azure/msal-react";
 
 // pages
 import CalendarPage from "@/pages/calendar/Calendar";
