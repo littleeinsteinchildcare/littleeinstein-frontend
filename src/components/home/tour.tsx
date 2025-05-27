@@ -23,10 +23,12 @@ const Tour = () => {
   return (
     <>
       {/* Header */}
-      <h2 className="text-2xl font-semibold text-center text-black mb-2 mt-20">
-        {t("homepage.ourSpace")}
-      </h2>
-      <div className="w-45 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mb-6 mt-20">
+        <h2 className="text-2xl font-semibold inline-block relative">
+          {t("homepage.ourSpace")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
 
       {/* Tour slideshow + Video */}
       <div className="flex flex-col md:flex-row gap-8 justify-center items-center max-w-6xl mx-auto">

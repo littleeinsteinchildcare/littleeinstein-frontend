@@ -5,7 +5,7 @@ export const es = {
     resources: "Recursos",
     signin: "Iniciar Sesión",
     title: "Little Einstein Childcare",
-    contact: "Contacta con Nosotros",
+    contact: "Contacto",
     selectLanguage: "Seleccionar Idioma",
     profile: "Perfil",
     myProfile: "Mi Perfil",

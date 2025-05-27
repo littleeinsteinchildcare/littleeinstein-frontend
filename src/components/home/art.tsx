@@ -11,10 +11,12 @@ const Art = () => {
   return (
     <>
       {/* Header */}
-      <h2 className="text-2xl font-semibold text-center text-black mb-2 mt-20">
-        {t("homepage.art")}
-      </h2>
-      <div className="w-60 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mb-6 mt-20">
+        <h2 className="text-2xl font-semibold inline-block relative">
+          {t("homepage.art")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
 
       {/* Art Slideshow */}
       <div className="overflow-hidden bg-[#94EE8F] min-h-[200px] border-b-3 border-green-200 items-center justify-center mt-10 p-6 rounded-4xl mx-auto md:max-w-6xl">
