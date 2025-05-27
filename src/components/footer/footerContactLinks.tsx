@@ -12,15 +12,23 @@ const FooterContactLinks = () => {
       </li>
       <li className="flex items-center gap-2">
         <FiPhone />
-        (971) 275-2815
+        <a href="tel:+19712752815">(971) 275-2815</a>
       </li>
       <li className="flex items-center gap-2">
         <FiMail />
-        littleeinstein77@yahoo.com
+        <a href="mailto:littleeinstein77@yahoo.com">
+          littleeinstein77@yahoo.com
+        </a>
       </li>
       <li className="flex items-center gap-2">
         <FiGlobe />
-        <a href="littleeinsteinchildcare.org">littleeinsteinchildcare.org</a>
+        <a
+          href="https://littleeinsteinchildcare.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          littleeinsteinchildcare.org
+        </a>
       </li>
       <li className="flex items-center gap-2">
         <FiClock />
