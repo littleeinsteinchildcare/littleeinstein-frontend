@@ -41,10 +41,10 @@ const convertBackendEvent = (backendEvent: BackendEvent): CalendarEvent => {
     start,
     end,
     allDay: false,
-    color: "#4CAF50", // Default color since backend doesn't store this yet
+    color: backendEvent.color || "#4CAF50", // Use backend color or default
     invitedParents,
-    location: "", // Backend doesn't store location yet
-    description: "", // Backend doesn't store description yet
+    location: backendEvent.location || "", // Use backend location
+    description: backendEvent.description || "", // Use backend description
     createdBy: backendEvent.creator.ID,
   };
 };
@@ -88,6 +88,9 @@ export const addEvent = async (event: {
     date: event.date,
     starttime: event.startTime,
     endtime: event.endTime,
+    location: event.location,
+    description: event.description,
+    color: event.color,
     invitees: event.invitedParents.join(",")
   });
   

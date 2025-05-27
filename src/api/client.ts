@@ -61,6 +61,9 @@ export interface BackendEvent {
   date: string;
   starttime: string;
   endtime: string;
+  location: string;
+  description: string;
+  color: string;
   creator: BackendUser;
   invitees: BackendUser[];
 }
@@ -90,6 +93,9 @@ export async function createEvent(eventData: {
   date: string;
   starttime: string;
   endtime: string;
+  location: string;
+  description: string;
+  color: string;
   invitees: string;
 }): Promise<BackendEvent> {
   return apiPost("/api/event", eventData);
