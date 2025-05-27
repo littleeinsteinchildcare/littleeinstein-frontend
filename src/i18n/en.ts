@@ -8,6 +8,8 @@ export const en = {
     contact: "Contact Us",
     profile: "Profile",
     selectLanguage: "Select Language",
+    myProfile: "My Profile",
+    signOut: "Sign Out",
   },
 
   footer: {
@@ -25,7 +27,7 @@ export const en = {
   homepage: {
     address: "1789 SE River RD Hillsboro OR 97123",
     hoursLabel: "Hours",
-    hoursValue: "Monday - Friday, 7:00 am - 5:30 pm",
+    hoursValue: "Monday - Friday, 7:00 AM - 5:30 PM",
     agesLabel: "Age Range",
     agesValue: "2 months to 4 years",
     welcomeh1: "WELCOME TO",
@@ -71,7 +73,7 @@ export const en = {
     reviewMessage: `Loved by parents on Google! Read more 5-star reviews from families
             just like yours.`,
     reviewButton: "View Google Reviews",
-    getDirections: "Get Directions",
+    getDirections: "Directions",
   },
 
   calendar: {
@@ -151,6 +153,19 @@ export const en = {
 
   signin: {
     signin: "Sign In",
+    welcomeBack: "Welcome Back!",
+    haveAccount: "Already have an account?",
+    welcome: "Welcome!",
+    dontHaveAccount: "Don't have an account?",
+    signUp: "Sign Up",
+    fullName: "Full Name",
+    email: "Email",
+    password: "Password",
+    forgotPassword: "Forgot password?",
+    showPassword: "Show password",
+    logIn: "Log In",
+    orContinue: "Or continue with",
+    createAccount: "Create Account",
   },
 
   aboutus: {
@@ -174,7 +189,7 @@ export const en = {
     message: "Message",
     send: "Send",
     hoursLabel: "Hours",
-    hoursValue: "Monday - Friday, 7:00 am - 5:30 pm",
+    hoursValue: "Monday - Friday, 7:00 AM - 5:30 PM",
     success: "Message sent successfully!",
     error: "Message did not send",
   },

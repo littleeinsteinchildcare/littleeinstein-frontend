@@ -1,4 +1,8 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode, useRef } from "react";
+import { auth } from "@/firebase";
+import { useAuthListener } from "@/auth/useAuthListener";
+import { onSnapshot, doc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 type BannerData = {
   type: "weather" | "closure" | "custom";
@@ -18,33 +22,146 @@ export const BannerContext = createContext<BannerContextType>({
   clearBanner: () => {},
 });
 
+const API_BASE_URL = "http://localhost:8080";
+const ENDPOINT = "/api/banner";
+
 export const BannerProvider = ({ children }: { children: ReactNode }) => {
   const [banner, setBannerState] = useState<BannerData | null>(null);
+  const user = useAuthListener();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // load banner from local
-    const raw = localStorage.getItem("activeBanner");
-    if (!raw) return;
+    const loadBanner = async () => {
+      if (!user) return;
 
-    const data = JSON.parse(raw) as BannerData;
-    // use if not expired
-    if (new Date(data.expiresAt) > new Date()) {
-      setBannerState(data);
-    } else {
-      localStorage.removeItem("activeBanner");
-    }
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch(`${API_BASE_URL}${ENDPOINT}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          const data: BannerData = await res.json();
+          setBannerState(data);
+        } else {
+          setBannerState(null);
+        }
+      } catch (err) {
+        console.error("Failed to load banner:", err);
+        setBannerState(null);
+      }
+    };
+
+    loadBanner();
+  }, [user]);
+
+  useEffect(() => {
+    // listen for changes in signals/bannerUpdate doc
+    const unsub = onSnapshot(doc(db, "signals", "bannerUpdate"), (snapshot) => {
+      const data = snapshot.data();
+
+      // if 'updatedAt' changes - get banner from backend
+      if (data?.updatedAt && auth.currentUser) {
+        auth.currentUser.getIdToken().then((token) => {
+          fetch(`${API_BASE_URL}${ENDPOINT}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+            .then((res) => res.ok && res.json())
+            .then((data: BannerData) => {
+              setBannerState(data);
+            })
+            .catch((err) => {
+              console.error("Failed to sync banner from backend:", err);
+              setBannerState(null);
+            });
+        });
+      }
+    });
+
+    return () => unsub();
   }, []);
 
-  // save banner to local and state
-  const setBanner = (newBanner: BannerData) => {
-    localStorage.setItem("activeBanner", JSON.stringify(newBanner));
-    setBannerState(newBanner);
+  useEffect(() => {
+    // Clear any timeout already set
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (!banner) return;
+
+    const expiryTime = new Date(banner.expiresAt).getTime();
+    const now = Date.now();
+    const msUntilExpire = expiryTime - now;
+
+    if (msUntilExpire <= 0) {
+      setBannerState(null);
+      return;
+    }
+
+    // Set timeout to clear the banner when it expires
+    timeoutRef.current = setTimeout(() => {
+      setBannerState(null);
+    }, msUntilExpire);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [banner]);
+
+  const setBanner = async (newBanner: BannerData) => {
+    console.log("Sending POST to /api/banner", newBanner);
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+      const token = await user.getIdToken();
+
+      const res = await fetch(`${API_BASE_URL}${ENDPOINT}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newBanner),
+      });
+
+      if (res.ok) {
+        setBannerState(newBanner);
+      } else {
+        console.error("Failed to save banner");
+      }
+    } catch (err) {
+      console.error("Banner set failed:", err);
+    }
   };
 
-  // clear from local and state
-  const clearBanner = () => {
-    localStorage.removeItem("activeBanner");
-    setBannerState(null);
+  const clearBanner = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+      const token = await user.getIdToken();
+
+      const res = await fetch(`${API_BASE_URL}${ENDPOINT}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setBannerState(null);
+
+        await setDoc(doc(db, "signals", "bannerUpdate"), {
+          updatedAt: new Date().toISOString(),
+        });
+      } else {
+        console.error("Failed to clear banner");
+      }
+    } catch (err) {
+      console.error("Banner clear failed:", err);
+    }
   };
 
   return (

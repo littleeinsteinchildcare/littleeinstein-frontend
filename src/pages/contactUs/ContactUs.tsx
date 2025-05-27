@@ -128,10 +128,10 @@ const ContactUsPage = () => {
           </div>
 
           <p className="flex items-center gap-2 mt-10">
-            <FiPhone /> (123) 345-7890
+            <FiPhone /> (971) 275-2815
           </p>
           <p className="flex items-center gap-2">
-            <FiMail /> temp_email_@gmail.com
+            <FiMail /> littleeinstein77@yahoo.com
           </p>
           <p className="flex items-center gap-2">
             <FiGlobe />
@@ -141,7 +141,7 @@ const ContactUsPage = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              http://localhost:5173/
+              littleeinsteinchildcare.org
             </a>
           </p>
 

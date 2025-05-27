@@ -33,7 +33,7 @@ const LocationInfo = () => {
               href="https://www.google.com/maps/dir/?api=1&destination=1789+SE+River+RD,+Hillsboro"
               target="_blank"
               rel="noopener noreferrer"
-              className="absolute top-2 right-2 bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] px-1 py-1 text-xs rounded shadow transition"
+              className="absolute top-1 right-1 bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] px-1 py-1 text-xs rounded shadow transition"
             >
               {t("homepage.getDirections")}
             </a>
@@ -46,14 +46,14 @@ const LocationInfo = () => {
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiPhone />
-                (123) 345-7890
+                (971) 275-2815
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiMail />
-                temp_email_@gmail.com
+                littleeinstein77@yahoo.com
               </li>
-              <li className="flex items-center gap-2 font-semibold">
-                <FiClock />
+              <li className="flex items-center gap-2 font-semibold text-xs md:text-sm">
+                <FiClock className="text-sm" />
                 {t("contact.hoursValue")}
               </li>
             </ul>
