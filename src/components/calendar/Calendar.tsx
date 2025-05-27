@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Calendar, momentLocalizer, View } from "react-big-calendar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const LittleCalendar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthListener();
-  const { events, updateEvent, getUserEvents, canEditEvent } = useEventContext();
+  const { events, updateEvent, deleteEvent, canEditEvent } = useEventContext();
 
   // Events are automatically loaded by the EventContext, no need to refresh here
 
@@ -44,6 +44,11 @@ const LittleCalendar = () => {
   };
 
   const handleCancelEdit = () => {
+    setEventToEdit(null);
+  };
+
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEvent(eventId);
     setEventToEdit(null);
   };
 
@@ -111,6 +116,7 @@ const LittleCalendar = () => {
             event={eventToEdit}
             onSubmit={handleUpdateEvent}
             onCancel={handleCancelEdit}
+            onDelete={canEditEvent(eventToEdit) ? handleDeleteEvent : undefined}
             compact={true}
           />
         </div>

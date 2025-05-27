@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { getUsers, BackendUser } from "@/api/client";
+import { getUsers } from "@/api/client";
 import { useAuthListener } from "@/auth/useAuthListener";
 
 interface Parent {

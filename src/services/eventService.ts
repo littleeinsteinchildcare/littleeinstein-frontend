@@ -1,6 +1,5 @@
 import { Event } from "react-big-calendar";
-import { getAllEvents, getUserEvents as getBackendUserEvents, createEvent as createBackendEvent, BackendEvent, BackendUser } from "@/api/client";
-import { auth } from "@/firebase";
+import { getAllEvents, getUserEvents as getBackendUserEvents, createEvent as createBackendEvent, updateEvent as updateBackendEvent, deleteEvent as deleteBackendEvent, BackendEvent } from "@/api/client";
 
 // Define our custom event type that includes color and invitedParents
 export interface CalendarEvent extends Event {
@@ -50,7 +49,7 @@ const convertBackendEvent = (backendEvent: BackendEvent): CalendarEvent => {
 };
 
 // Event service functions - only use backend, no local storage
-export const getEvents = async (userId?: string): Promise<CalendarEvent[]> => {
+export const getEvents = async (): Promise<CalendarEvent[]> => {
   const backendEvents = await getAllEvents();
   return backendEvents.map(convertBackendEvent);
 };
@@ -94,17 +93,55 @@ export const addEvent = async (event: {
     invitees: event.invitedParents.join(",")
   });
   
-  console.log("✅ Event created successfully on backend:", backendEvent);
+  console.log("Event created successfully on backend:", backendEvent);
   return convertBackendEvent(backendEvent);
 };
 
-// Remove all other functions that dealt with local storage
 export const updateEvent = async (updatedEvent: CalendarEvent): Promise<CalendarEvent | null> => {
-  // TODO: Implement backend update when the API is ready
-  throw new Error("Event updating not implemented yet - backend API needed");
+  try {
+    // Format the event data for the backend
+    const eventData = {
+      id: updatedEvent.id,
+      eventname: updatedEvent.title,
+      date: formatDateForBackend(updatedEvent.start),
+      starttime: formatTimeForBackend(updatedEvent.start),
+      endtime: formatTimeForBackend(updatedEvent.end),
+      location: updatedEvent.location || "",
+      description: updatedEvent.description || "",
+      color: updatedEvent.color || "#4CAF50",
+      invitees: updatedEvent.invitedParents?.join(",") || ""
+    };
+
+    console.log("Updating event on backend:", eventData);
+    
+    const backendEvent = await updateBackendEvent(updatedEvent.id, eventData);
+    
+    console.log("Event updated successfully on backend:", backendEvent);
+    return convertBackendEvent(backendEvent);
+  } catch (error) {
+    console.error("Failed to update event:", error);
+    throw error;
+  }
 };
 
 export const removeEvent = async (eventId: string): Promise<void> => {
-  // TODO: Implement backend delete when the API is ready
-  throw new Error("Event deletion not implemented yet - backend API needed");
+  try {
+    console.log("Deleting event from backend:", eventId);
+    
+    await deleteBackendEvent(eventId);
+    
+    console.log("Event deleted successfully from backend");
+  } catch (error) {
+    console.error("Failed to delete event:", error);
+    throw error;
+  }
+};
+
+// Helper functions to format dates and times for backend
+const formatDateForBackend = (date: Date): string => {
+  return date.toISOString().split('T')[0]; // YYYY-MM-DD
+};
+
+const formatTimeForBackend = (date: Date): string => {
+  return date.toTimeString().slice(0, 5); // HH:MM
 };

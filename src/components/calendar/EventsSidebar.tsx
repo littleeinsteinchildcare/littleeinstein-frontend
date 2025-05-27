@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CalendarEvent } from '@/services/eventService';
 import { useEventContext } from '@/context/EventContext';
-import { useAuthListener } from '@/auth/useAuthListener';
 import { format } from 'date-fns';
 
 interface EventsSidebarProps {
@@ -15,7 +14,6 @@ const EventsSidebar: React.FC<EventsSidebarProps> = ({ onEditEvent }) => {
   const navigate = useNavigate();
   const { events, deleteEvent, canEditEvent, canDeleteEvent } = useEventContext();
   const [showConfirmDelete, setShowConfirmDelete] = useState<string | null>(null);
-  const user = useAuthListener();
 
   // Use the events from context which are already user-specific
   const displayedEvents = events;

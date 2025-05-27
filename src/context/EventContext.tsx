@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import {
   CalendarEvent,
-  getEvents,
   addEvent as addEventService,
   updateEvent as updateEventService,
   removeEvent as removeEventService,
