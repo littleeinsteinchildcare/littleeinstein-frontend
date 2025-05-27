@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EventProvider } from "@/context/EventContext";
@@ -16,7 +15,6 @@ import ContactUsPage from "@/pages/contactUs/ContactUs.tsx";
 import NWChildEnrollmentForm from "@/pages/resources/NwChildEnrollment";
 import ODEChildEnrollmentForm from "@/pages/resources/ODEChildEnrollment";
 // import DocsPage from "@/pages/docs/Docs.tsx"; // Import the new DocsPage component
-import AdminPage from "@/pages/admin/Admin.tsx";
 import Profile from "./pages/profile/Profile";
 
 // components
@@ -28,7 +26,6 @@ import Banner from "@/components/admin/Banner";
 import { BannerContext } from "@/context/BannerContext";
 
 // hooks
-import { useAdminCheck } from "@/hooks/useAdminCheck";
 import AuthPage from "./pages/signIn/AuthPage";
 
 const App = () => {
@@ -36,7 +33,6 @@ const App = () => {
   const { banner } = useContext(BannerContext);
 
   // hook to check with backend to see if admin
-  const isAdmin = useAdminCheck();
 
   return (
     <>
@@ -56,32 +52,12 @@ const App = () => {
               path="/resources/ODEChildEnrollmentForm"
               element={<ODEChildEnrollmentForm />}
             />
-            {/* <Route path="/signin" element={<SignInPage />} /> */}
             <Route path="/signin" element={<AuthPage />} />
-            {/* <Route path="/signin" element={<FinishSignIn />} /> */}
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/calendar/events" element={<EventsPage />} />
             <Route path="/about" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactUsPage />} />
             {/* <Route path="/docs" element={<DocsPage />} /> */}
-            <Route
-              path="/admin"
-              element={
-                isAdmin === true ? (
-                  <AdminPage />
-                ) : isAdmin === false ? (
-                  <Navigate to="/" />
-                ) : (
-                  <p className="text-center p-60">Checking access</p>
-                )
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <h1 className="text-center p-60">404 - Page Not Found</h1>
-              }
-            />
           </Routes>
           <Footer />
         </EventProvider>

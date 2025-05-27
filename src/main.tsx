@@ -11,8 +11,8 @@ import "./i18n";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/*<BannerProvider>*/}
+    {/* <BannerProvider> */}
     <App />
-    {/*</StrictMode>*/}
+    {/* </BannerProvider> */}
   </StrictMode>,
 );

@@ -158,6 +158,7 @@ export const en = {
     welcome: "Welcome!",
     dontHaveAccount: "Don't have an account?",
     signUp: "Sign Up",
+    fullName: "Full Name",
     email: "Email",
     password: "Password",
     forgotPassword: "Forgot password?",
