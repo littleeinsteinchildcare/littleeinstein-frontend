@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { auth } from "@/firebase";
 
@@ -11,6 +11,7 @@ type Photo = {
 const Profile = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   let accessToken: string;
 
   async function getToken() {
@@ -19,56 +20,51 @@ const Profile = () => {
     return await user.getIdToken();
   }
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      let token: string;
-      try {
-        token = await getToken();
-      } catch {
-        alert("User not logged in");
-        return;
-      }
-
-      try {
-        const res = await fetch("http://localhost:8080/api/images", {
-          headers: {
-            method: "GET",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await res.json();
-        console.log("Fetched images data:", data);
-
-        /*const response2 = await fetch(`http://localhost:8080/api/image/${data.imageId}/${data.image}`,  {
+  const fetchImages = async () => {
+    let token: string;
+    try {
+      token = await getToken();
+    } catch {
+      alert("User not logged in");
+      return;
+    }
+    console.log("Fetching images with token:", token);
+    try {
+      const res = await fetch("http://localhost:8080/api/images", {
+        method: "GET",
+        credentials: "include",
         headers: {
-          method: "GET",
           Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
-      })
+      });
 
-      const userImages = await response2.json();
-      console.log("User images:", userImages);*/
+      const data = await res.json();
+      console.log("Fetched images data:", data);
+      console.log(Array.isArray(data));
 
-        if (data.success && Array.isArray(data.images)) {
-          setPhotos(
-            data.images.map((img: Photo) => ({
-              id: img.id,
-              name: img.name,
-              url: img.url,
-            })),
-          );
-        } else {
-          console.error("Unexpected structure:", data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch images:", err);
+      if (Array.isArray(data)) {
+        setPhotos(
+          data.map((path: string) => {
+            console.log("Processing path:", path);
+            const name = path.split("/").pop() || path;
+            const id = path; // or extract an ID if needed
+            const url = `http://localhost:8080/api/image/${path}`;
+            console.log("Processed image:", { id, name, url });
+            return { id, name, url };
+          }),
+        );
+        setImagesLoaded(true);
+      } else if (data === null) {
+        console.log("No images found.");
+        setPhotos([]);
+        setImagesLoaded(true);
+      } else {
+        console.error("Unexpected structure:", data);
       }
-    };
-
-    fetchImages();
-  }, []);
+    } catch (err) {
+      console.error("Failed to fetch images:", err);
+    }
+  };
 
   async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
@@ -120,10 +116,16 @@ const Profile = () => {
         const data = JSON.parse(text);
 
         if (data.success) {
+          const userId = auth.currentUser?.uid;
+          if (!userId) throw new Error("No user ID found");
+
+          const fullPath = `${userId}/${data.image.name}`;
+
           const uploadedPhoto = {
-            id: data.image.id,
-            name: data.image.name, // adjust according to actual key
-            url: data.image.url,
+            id: fullPath,
+            name: data.image.name,
+            url: data.image
+              .url /*.replace("host.docker.internal:10000", "localhost:10000")*/,
           };
           newPhotos.push(uploadedPhoto);
         }
@@ -146,19 +148,15 @@ const Profile = () => {
     }
 
     const photoId = photos[index].id;
-    const name = photos[index].name;
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/image/${photoId}/${name}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const res = await fetch(`http://localhost:8080/api/image/${photoId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-      );
+      });
 
       if (!res.ok) {
         const text = await res.text();
@@ -187,36 +185,47 @@ const Profile = () => {
           <h2 className="text-2xl text-black font-bold mx-auto mb-5">
             {t("profile.upload")}
           </h2>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleAdd}
-            className="hidden"
-            id="fileUpload"
-            multiple={false}
-          />
-          <label
-            htmlFor="fileUpload"
-            className="cursor-pointer bg-[#94EE8F] text-black px-4 py-2 rounded hover:bg-green-200 transition-colors text-center w-max m-5"
-          >
-            {t("profile.browse")}
-          </label>
-          {photos.map((src, index) => (
-            <div key={index} className="relative">
-              <img
-                key={index}
-                src={src.url}
-                alt={`Preview ${index + 1}`}
-                className="w-2/3 h-48 object-cover m-5"
+          {!imagesLoaded ? (
+            <label
+              onClick={fetchImages}
+              className="cursor-pointer bg-[#94EE8F] text-black px-4 py-2 rounded hover:bg-green-200 transition-colors text-center w-max m-5"
+            >
+              {t("profile.load")}
+            </label>
+          ) : (
+            <>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAdd}
+                className="hidden"
+                id="fileUpload"
+                multiple={false}
               />
-              <button
-                onClick={() => handleDelete(index)}
-                className="absolute top-20 right-10 bg-[#94EE8F] text-black text-xs px-2 py-1 rounded hover:bg-green-200"
+              <label
+                htmlFor="fileUpload"
+                className="cursor-pointer bg-[#94EE8F] text-black px-4 py-2 rounded hover:bg-green-200 transition-colors text-center w-max m-5"
               >
-                ✕
-              </button>
-            </div>
-          ))}
+                {t("profile.browse")}
+              </label>
+              {photos.map((src, index) => (
+                <div key={index} className="relative">
+                  <img
+                    key={index}
+                    src={src.url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-2/3 h-48 object-cover m-5"
+                  />
+                  <button
+                    onClick={() => handleDelete(index)}
+                    className="absolute top-20 right-10 bg-[#94EE8F] text-black text-xs px-2 py-1 rounded hover:bg-green-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </>
+          )}
         </div>
         {/*Events Section */}
         <div className="shadow-md rounded flex-col p-5">
