@@ -47,7 +47,7 @@ const Profile = () => {
           data.map((path: string) => {
             console.log("Processing path:", path);
             const name = path.split("/").pop() || path;
-            const id = path; // or extract an ID if needed
+            const id = path;
             const url = `http://localhost:8080/api/image/${path}`;
             console.log("Processed image:", { id, name, url });
             return { id, name, url };
@@ -100,7 +100,7 @@ const Profile = () => {
           },
         });
 
-        const text = await res.text(); // Read the raw text
+        const text = await res.text();
 
         if (!res.ok) {
           console.error(
