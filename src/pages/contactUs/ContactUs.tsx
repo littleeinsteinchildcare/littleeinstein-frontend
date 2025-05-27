@@ -12,10 +12,12 @@ const ContactUsPage = () => {
 
     const formData = new FormData(formRef.current!);
 
-    //public key - fine to show - this key is to my school email
-    //we can change it to litteleinstein email when it registers on web3forms
+    //public key - safe to show
     //https://web3forms.com/
-    formData.append("access_key", "92ff9739-f5eb-4206-91a2-8c41cf2e55d0");
+    //currently very basic "honeypot" bot check
+    //https://docs.web3forms.com/getting-started/customizations/spam-protection/spam-protection
+    //not sure if we want to do captcha or hcaptcha
+    formData.append("access_key", "e3ceef3e-76cc-4bca-af43-39c644888a6a");
     formData.append("subject", "New Message from Little Einstein Childcare");
 
     const res = await fetch("https://api.web3forms.com/submit", {
@@ -38,10 +40,13 @@ const ContactUsPage = () => {
 
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
-      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
-        {t("contact.title")}
-      </h2>
-      <div className="w-20 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mt-6 mb-12">
+        <h2 className="text-3xl font-bold text-black inline-block relative">
+          {t("contact.title")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
+
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 text-gray-700">
         {/* Form */}
         <form
@@ -53,28 +58,57 @@ const ContactUsPage = () => {
             {t("contact.heading")}
           </h2>
           <p className="text-sm font-semibold">{t("contact.sub")}</p>
+
+          <label htmlFor="botcheck" className="sr-only">
+            botcheck
+          </label>
           <input
+            id="botcheck"
+            type="text"
+            name="botcheck"
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+
+          <label htmlFor="contact-name" className="sr-only">
+            {t("contact.name")}
+          </label>
+          <input
+            id="contact-name"
             name="name"
             type="text"
             placeholder={t("contact.name")}
             className="w-full p-3 border border-gray-400 bg-gray-100 rounded"
             required
           />
+          <label htmlFor="contact-email" className="sr-only">
+            {t("contact.email")}
+          </label>
           <input
+            id="contact-email"
             name="email"
             type="email"
             placeholder={t("contact.email")}
             className="w-full p-3 border border-gray-400 bg-gray-100 rounded"
             required
           />
+          <label htmlFor="contact-phone" className="sr-only">
+            {t("contact.phone")}
+          </label>
           <input
+            id="contact-phone"
             name="phone"
             type="tel"
             placeholder={t("contact.phone")}
             className="w-full p-3 border border-gray-400 bg-gray-100 rounded"
             required
           />
+          <label htmlFor="contact-message" className="sr-only">
+            {t("contact.message")}
+          </label>
           <textarea
+            id="contact-message"
             name="message"
             placeholder={t("contact.message")}
             className="w-full p-3 border border-gray-400 bg-gray-100 rounded min-h-[150px]"
@@ -104,7 +138,15 @@ const ContactUsPage = () => {
             Little Einstein Childcare
           </h2>
           <p className="flex items-center gap-2">
-            <FiMapPin /> 1789 SE River RD, Hillsboro, OR 97123
+            <FiMapPin />
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=1789+SE+River+RD,+Hillsboro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-base"
+            >
+              1789 SE River RD, Hillsboro, OR 97123
+            </a>
           </p>
 
           <div className="relative rounded overflow-hidden shadow-md mb-4">
@@ -128,16 +170,19 @@ const ContactUsPage = () => {
           </div>
 
           <p className="flex items-center gap-2 mt-10">
-            <FiPhone /> (971) 275-2815
+            <FiPhone />
+            <a href="tel:+19712752815">(971) 275-2815</a>
           </p>
           <p className="flex items-center gap-2">
-            <FiMail /> littleeinstein77@yahoo.com
+            <FiMail />
+            <a href="mailto:littleeinstein77@yahoo.com">
+              littleeinstein77@yahoo.com
+            </a>
           </p>
           <p className="flex items-center gap-2">
             <FiGlobe />
             <a
-              href="http://localhost:5173/"
-              className="hover:underline"
+              href="https://littleeinsteinchildcare.org"
               target="_blank"
               rel="noopener noreferrer"
             >

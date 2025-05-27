@@ -161,14 +161,22 @@ const AuthPage = () => {
             }`}
           >
             <h3 className="text-xl font-bold mb-4">{t("signin.signUp")}</h3>
+            <label htmlFor="signUpEmail" className="sr-only">
+              {t("signin.email")}
+            </label>
             <input
+              id="signUpEmail"
               type="email"
               placeholder={t("signin.email")}
               value={signUpEmail}
               onChange={(e) => setSignUpEmail(e.target.value)}
               className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
             />
+            <label htmlFor="signUpPassword" className="sr-only">
+              {t("signin.password")}
+            </label>
             <input
+              id="signUpPassword"
               type={showPassword ? "text" : "password"}
               placeholder={t("signin.password")}
               value={signUpPassword}
@@ -224,14 +232,22 @@ const AuthPage = () => {
             }`}
           >
             <h3 className="text-xl font-bold mb-4">{t("signin.signin")}</h3>
+            <label htmlFor="signInEmail" className="sr-only">
+              {t("signin.email")}
+            </label>
             <input
+              id="signInEmail"
               type="email"
               placeholder={t("signin.email")}
               className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
               value={signInEmail}
               onChange={(e) => setSignInEmail(e.target.value)}
             />
+            <label htmlFor="signInPassword" className="sr-only">
+              {t("signin.password")}
+            </label>
             <input
+              id="signInPassword"
               type={showPassword ? "text" : "password"}
               placeholder={t("signin.password")}
               className="w-full mb-4 p-2 rounded-xl bg-white text-black border border-gray-300"
