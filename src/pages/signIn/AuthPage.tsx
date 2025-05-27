@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { GoogleAuthProvider, OAuthProvider } from "firebase/auth";
+import {
+  updateProfile,
+  GoogleAuthProvider,
+  OAuthProvider,
+  signOut,
+  getAuth,
+} from "firebase/auth";
 import { signInWithProvider } from "@/auth/signInWithProvider";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmail } from "@/auth/signInWithEmail";
@@ -12,6 +18,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
 const AuthPage = () => {
+  const [signUpName, setSignUpName] = useState("");
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
@@ -46,25 +53,39 @@ const AuthPage = () => {
   const handleEmailPasswordSignUp = async () => {
     try {
       const user = await signUpWithEmail(signUpEmail, signUpPassword);
+
+      if (user && signUpName) {
+        await updateProfile(user, {
+          displayName: signUpName,
+        });
+      }
       console.log("user: ", user);
 
       if (user) {
         const token = await user.getIdToken();
 
-        const response = await fetch("http://localhost:8080/test", {
-          method: "GET",
+        const response = await fetch("http://localhost:8080/api/user", {
+          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const data = await response.json();
-        console.log("this is the back end data");
-        console.log(data);
+
         if (!response.ok) {
-          console.error("Failed to register session with backend");
+          const errorText = await response.text();
+          console.error("Failed to create user in backend:", errorText);
+        }
+        const data = await response.json();
+        if (data.role == "admin") {
+          await signOut(getAuth());
+          toast.info(
+            "You're signed up as admin. Please sign in again to activate admin access.",
+          );
+          navigate("/signin");
+        } else {
+          navigate("/profile");
         }
       }
-      navigate("/profile");
     } catch (error: unknown) {
       let errorMessage = "Sign-up failed";
 
@@ -166,6 +187,13 @@ const AuthPage = () => {
             </label>
             <input
               id="signUpEmail"
+              type="text"
+              placeholder={t("signin.fullName") || "Full Name"}
+              value={signUpName}
+              onChange={(e) => setSignUpName(e.target.value)}
+              className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
+            />
+            <input
               type="email"
               placeholder={t("signin.email")}
               value={signUpEmail}
