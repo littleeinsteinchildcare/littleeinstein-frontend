@@ -39,20 +39,23 @@ const Profile = () => {
       });
 
       const data = await res.json();
-      console.log("Fetched images data:", data);
-      console.log(Array.isArray(data));
+      const userId = auth.currentUser?.uid;
+      if (!userId) {
+        alert("User ID not available");
+        return;
+      }
 
       if (Array.isArray(data)) {
-        setPhotos(
-          data.map((path: string) => {
-            console.log("Processing path:", path);
+        const userImages = data
+          .filter((path: string) => path.startsWith(`${userId}/`))
+          .map((path: string) => {
             const name = path.split("/").pop() || path;
             const id = path;
             const url = `http://localhost:8080/api/image/${path}`;
-            console.log("Processed image:", { id, name, url });
             return { id, name, url };
-          }),
-        );
+          });
+
+        setPhotos(userImages);
         setImagesLoaded(true);
       } else if (data === null) {
         console.log("No images found.");
