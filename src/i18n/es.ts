@@ -193,7 +193,8 @@ export const es = {
 
   profile: {
     title: "Perfil",
-    upload: "Contribuye a Nuestra Galería",
+    upload: "¡Contribuye a Nuestra Galería!",
+    load: "Cargar Mis Imágenes",
     browse: "Buscar Fotos",
     events: "Tus Eventos",
   },

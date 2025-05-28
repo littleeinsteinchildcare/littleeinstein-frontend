@@ -236,6 +236,7 @@ export const en = {
   profile: {
     title: "Profile",
     upload: "Contribute to our Gallery!",
+    load: "Load My Images",
     browse: "Browse Photos",
     events: "Your Events",
   },
