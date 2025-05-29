@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Calendar, momentLocalizer, View } from "react-big-calendar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment-timezone";
 import { CalendarEvent } from "@/services/eventService";
 import { useEventContext } from "@/context/EventContext";
+import { useAuthListener } from "@/auth/useAuthListener";
 import EventsSidebar from "./EventsSidebar";
 import EventEditForm from "./EventEditForm";
 
@@ -18,17 +19,23 @@ const LittleCalendar = () => {
   const [view, setView] = useState<View>("month");
   const [showSidebar, setShowSidebar] = useState(false);
   const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
+  const [showMyEventsOnly, setShowMyEventsOnly] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { events, refreshEvents, updateEvent } = useEventContext();
+  const user = useAuthListener();
+  const { events, updateEvent, deleteEvent, canEditEvent } = useEventContext();
 
-  // Refresh events when the component mounts
-  useEffect(() => {
-    refreshEvents();
-  }, [refreshEvents]);
+  // Events are automatically loaded by the EventContext, no need to refresh here
 
   const handleEditEvent = (event: CalendarEvent) => {
-    setEventToEdit(event);
+    // Only allow editing if user is the creator
+    if (canEditEvent(event)) {
+      setEventToEdit(event);
+    } else {
+      // Show a message or just view the event details without editing
+      console.log("You can only edit events you created");
+      // Could show a toast notification here instead
+    }
   };
 
   const handleUpdateEvent = (updatedEvent: CalendarEvent) => {
@@ -40,9 +47,19 @@ const LittleCalendar = () => {
     setEventToEdit(null);
   };
 
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEvent(eventId);
+    setEventToEdit(null);
+  };
+
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
+
+  // Filter events to show only created events vs all events (created + invited)
+  const displayedEvents = showMyEventsOnly 
+    ? events.filter(event => event.createdBy === user?.uid)
+    : events;
 
   const messages = {
     today: t("calendar.today"),
@@ -99,6 +116,7 @@ const LittleCalendar = () => {
             event={eventToEdit}
             onSubmit={handleUpdateEvent}
             onCancel={handleCancelEdit}
+            onDelete={canEditEvent(eventToEdit) ? handleDeleteEvent : undefined}
             compact={true}
           />
         </div>
@@ -113,6 +131,18 @@ const LittleCalendar = () => {
           {t("calendar.title")}
         </h1>
         <div className="flex space-x-2">
+          {user && (
+            <button
+              onClick={() => setShowMyEventsOnly(!showMyEventsOnly)}
+              className={`px-4 py-2 rounded-md transition duration-200 ${
+                showMyEventsOnly 
+                  ? "bg-purple-500 hover:bg-purple-600 text-white" 
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+              }`}
+            >
+              {showMyEventsOnly ? "Show All My Events" : "My Created Events Only"}
+            </button>
+          )}
           <button
             onClick={toggleSidebar}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
@@ -133,7 +163,7 @@ const LittleCalendar = () => {
           <Calendar
             localizer={localizer}
             messages={messages}
-            events={events}
+            events={displayedEvents}
             startAccessor="start"
             endAccessor="end"
             style={{ height: 600 }}

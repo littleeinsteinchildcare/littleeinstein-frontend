@@ -194,6 +194,7 @@ const AuthPage = () => {
               className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"
             />
             <input
+              id="signUpEmail"
               type="email"
               placeholder={t("signin.email")}
               value={signUpEmail}
