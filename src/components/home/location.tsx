@@ -42,15 +42,24 @@ const LocationInfo = () => {
             <ul className="space-y-4 text-sm text-gray-800">
               <li className="flex items-center gap-2 font-semibold">
                 <FiMapPin />
-                1789 SE River RD, Hillsboro
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=1789+SE+River+RD,+Hillsboro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm"
+                >
+                  1789 SE River RD, Hillsboro
+                </a>
               </li>
               <li className="flex items-center gap-2 font-semibold">
                 <FiPhone />
-                (971) 275-2815
+                <a href="tel:+19712752815">(971) 275-2815</a>
               </li>
-              <li className="flex items-center gap-2 font-semibold">
-                <FiMail />
-                littleeinstein77@yahoo.com
+              <li className="flex items-center gap-2 font-semibold text-xs md:text-sm">
+                <FiMail className="text-sm" />
+                <a href="mailto:littleeinstein77@yahoo.com">
+                  littleeinstein77@yahoo.com
+                </a>
               </li>
               <li className="flex items-center gap-2 font-semibold text-xs md:text-sm">
                 <FiClock className="text-sm" />

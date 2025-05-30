@@ -25,7 +25,7 @@ import Banner from "@/components/admin/Banner";
 import { BannerContext } from "@/context/BannerContext";
 
 // hooks
-import AuthPage from "./pages/signIn/AuthPage";
+import AuthPage from "./pages/authentication/AuthPage";
 
 const App = () => {
   // banner state

@@ -3,6 +3,7 @@ import { auth } from "@/firebase";
 import { useAuthListener } from "@/auth/useAuthListener";
 import { onSnapshot, doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { API_BASE_URL } from "@/utils/api";
 
 type BannerData = {
   type: "weather" | "closure" | "custom";
@@ -22,7 +23,6 @@ export const BannerContext = createContext<BannerContextType>({
   clearBanner: () => {},
 });
 
-const API_BASE_URL = "http://localhost:8080";
 const ENDPOINT = "/api/banner";
 
 export const BannerProvider = ({ children }: { children: ReactNode }) => {

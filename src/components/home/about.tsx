@@ -9,10 +9,12 @@ const About = () => {
   return (
     <>
       {/* Header */}
-      <h2 className="text-2xl font-semibold text-center text-black mb-2 mt-20">
-        {t("homepage.aboutUs")}
-      </h2>
-      <div className="w-20 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mb-6 mt-20">
+        <h2 className="text-2xl font-semibold inline-block relative">
+          {t("homepage.aboutUs")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
 
       {/* Image + Message */}
       <div className="flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto bg-[#94EE8F] p-6 rounded-4xl border-b-3 border-green-200">
