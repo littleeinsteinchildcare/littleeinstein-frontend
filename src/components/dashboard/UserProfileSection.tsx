@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { auth } from "@/firebase";
+import { useAuthListener } from "@/auth/useAuthListener";
 import { API_BASE_URL } from "@/utils/api";
+import { useEventContext } from "@/context/EventContext";
 
 type Photo = {
   id: string;
@@ -13,6 +15,9 @@ const UserProfileSection = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const { events } = useEventContext();
+  const user = useAuthListener();
+  const userEvents = events;
   let accessToken: string;
 
   async function getToken() {
@@ -231,41 +236,55 @@ const UserProfileSection = () => {
             </>
           )}
         </div>
+
         {/*Events Section */}
         <div className="shadow-md rounded flex-col p-5">
           <h2 className="text-2xl text-black font-bold mx-auto mb-5">
             {t("profile.events")}
           </h2>
-          {/*To be mapped later */}
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 1</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
-            </div>
-          </div>
 
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 2</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
+          {!user ? (
+            <div className="text-center py-8 text-gray-600">
+              Please sign in to view your events
             </div>
-          </div>
-
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 3</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
+          ) : userEvents.length === 0 ? (
+            <div className="text-center py-8 text-gray-600">
+              You haven't created any events yet
             </div>
-          </div>
+          ) : (
+            userEvents.map((event) => (
+              <div
+                key={event.id}
+                className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative"
+              >
+                <h3 className="text-md font-bold wrap-break-word">
+                  {event.title}
+                </h3>
+                <div className="absolute right-5 top-4 font-normal">
+                  {event.createdBy === user?.uid ? "Created by you" : "Invited"}
+                </div>
+                <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
+                <div className="font-light text-gray-600">
+                  <p>{event.start.toLocaleDateString()}</p>
+                  <p>
+                    {event.start.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}{" "}
+                    -{" "}
+                    {event.end.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  {event.location && <p>📍 {event.location}</p>}
+                  {event.description && (
+                    <p className="mt-2 text-sm">{event.description}</p>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
