@@ -1,20 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ParentSelector from "./ParentSelector";
-import { CalendarEvent, Location } from "@/services/eventService";
+import { CalendarEvent } from "@/services/eventService";
 import { format } from "date-fns";
-import LocationSearch from "../maps/LocationSearch";
-import LocationPicker from "../maps/LocationPicker";
-import LocationDisplay from "../maps/LocationDisplay";
 
 interface EventEditFormProps {
   event: CalendarEvent;
   onSubmit?: (event: CalendarEvent) => void;
   onCancel?: () => void;
+  onDelete?: (eventId: string) => void;
   compact?: boolean; // Optional prop for compact layout
 }
 
-const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEditFormProps) => {
+const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }: EventEditFormProps) => {
   const { t } = useTranslation();
   
   // Convert dates back to form format
@@ -33,14 +31,12 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
     startTime: formatTimeForInput(event.start),
     endTime: formatTimeForInput(event.end),
     location: event.location || "",
-    locationCoords: event.locationCoords,
     description: event.description || "",
     color: event.color || "#4CAF50",
     invitedParents: event.invitedParents || [],
     createdBy: event.createdBy
   });
 
-  const [showMap, setShowMap] = useState(false);
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showParentSelector, setShowParentSelector] = useState(false);
@@ -86,21 +82,6 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
     });
   };
 
-  const handleLocationSearch = (location: Location) => {
-    setFormData({
-      ...formData,
-      location: location.address,
-      locationCoords: location,
-    });
-  };
-
-  const handleMapLocation = (location: Location) => {
-    setFormData({
-      ...formData,
-      location: location.address || formData.location,
-      locationCoords: location,
-    });
-  };
   
   const handleColorChange = (color: string) => {
     setFormData({
@@ -137,7 +118,6 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
         color: formData.color,
         invitedParents: formData.invitedParents,
         location: formData.location,
-        locationCoords: formData.locationCoords,
         description: formData.description,
         createdBy: formData.createdBy
       };
@@ -244,63 +224,17 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
             <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
               {t("events.location")}*
             </label>
-
-            {/* Location Search with Autocomplete - Falls back to regular input if no API key */}
-            <div className="flex space-x-2 items-center mb-2">
-              <div className={import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? "flex-grow" : "w-full"}>
-                <LocationSearch
-                  onSelectLocation={handleLocationSearch}
-                  initialValue={formData.location}
-                  placeholder={t("events.searchLocation")}
-                />
-              </div>
-
-              {/* Map toggle button - unified for both compact and non-compact layouts */}
-              {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
-                <button
-                  type="button"
-                  onClick={() => setShowMap(!showMap)}
-                  className={`text-sm px-3 py-1 border rounded ${
-                    showMap
-                      ? "bg-green-50 border-green-200 text-green-700"
-                      : "border-gray-300 text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {showMap ? t("maps.hideMap") : t("maps.showMap")}
-                </button>
-              )}
-            </div>
-
-            {/* Show location status indicator */}
-            {formData.locationCoords && (
-              <div className="flex items-center mb-2">
-                <span className="text-xs text-green-600 flex items-center">
-                  <svg className="w-3 h-3 mr-1 fill-current" viewBox="0 0 20 20">
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
-                  </svg>
-                  {t("maps.locationSelected")}
-                </span>
-              </div>
-            )}
-
-            {/* Display either the location picker map OR the current location display, not both */}
-            {import.meta.env.VITE_GOOGLE_MAPS_API_KEY && (
-              <div className="mt-1">
-                {showMap ? (
-                  // Interactive map picker when in edit mode
-                  <LocationPicker
-                    onSelectLocation={handleMapLocation}
-                    initialLocation={formData.locationCoords}
-                  />
-                ) : formData.locationCoords && (
-                  // Static map display when not in edit mode
-                  <LocationDisplay
-                    location={formData.locationCoords}
-                    height={compact ? "120px" : "150px"}
-                  />
-                )}
-              </div>
-            )}
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className={`w-full px-3 py-2 border rounded-md ${
+                errors.location ? "border-red-500" : "border-gray-300"
+              } focus:outline-none focus:ring-2 focus:ring-green-500`}
+              placeholder={t("events.enterLocation")}
+            />
 
             {errors.location && (
               <p className="text-red-500 text-xs mt-1">{errors.location}</p>
@@ -368,6 +302,15 @@ const EventEditForm = ({ event, onSubmit, onCancel, compact = false }: EventEdit
                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 {t("events.cancel")}
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={() => onDelete(event.id)}
+                className={`${compact ? "px-3 py-1" : "px-4 py-2"} bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500`}
+              >
+                {t("events.delete")}
               </button>
             )}
             <button

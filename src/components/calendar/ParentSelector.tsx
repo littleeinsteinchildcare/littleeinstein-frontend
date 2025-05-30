@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { getUsers } from "@/api/client";
+import { useAuthListener } from "@/auth/useAuthListener";
 
 interface Parent {
   id: string;
@@ -11,19 +13,56 @@ interface ParentSelectorProps {
   onSelect: (selectedParents: string[]) => void;
 }
 
-// Normally this data would come from an API
-const mockParents: Parent[] = [
-  { id: "1", name: "Maria Rodriguez", email: "maria.r@example.com" },
-  { id: "2", name: "John Smith", email: "john.s@example.com" },
-  { id: "3", name: "Sarah Johnson", email: "sarah.j@example.com" },
-  { id: "4", name: "David Chen", email: "david.c@example.com" },
-  { id: "5", name: "Fatima Ali", email: "fatima.a@example.com" },
-];
 
 const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   const { t } = useTranslation();
   const [selectedParents, setSelectedParents] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [parents, setParents] = useState<Parent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const user = useAuthListener();
+
+  useEffect(() => {
+    const fetchParents = async () => {
+      if (!user) {
+        setParents([]);
+        setError("Please sign in to view other parents");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const users = await getUsers();
+        
+        // Filter out the current user and convert to Parent format
+        if (users && Array.isArray(users) && users.length > 0) {
+          const parentUsers = users.filter(user => 
+            user.Role === "parent" || user.Role === "user" || user.Role === "admin"
+          ).map(user => ({
+            id: user.ID,
+            name: user.Username || user.Email.split('@')[0] || 'Unknown User',
+            email: user.Email
+          }));
+          
+          setParents(parentUsers);
+        } else {
+          setParents([]);
+          setError("No users found. Please contact an administrator to create user accounts.");
+        }
+      } catch (err) {
+        console.error("❌ Failed to fetch users from backend:", err);
+        setParents([]);
+        setError("Failed to load users. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParents();
+  }, [user]);
 
   const handleToggleParent = (parentId: string) => {
     setSelectedParents((prev) => {
@@ -39,7 +78,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredParents = mockParents.filter((parent) =>
+  const filteredParents = parents.filter((parent) =>
     parent.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -50,6 +89,14 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto mt-4">
       <h3 className="text-xl font-semibold mb-4">{t("events.inviteParents")}</h3>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded-md">
+          <p className="text-sm text-red-800">
+            {error}
+          </p>
+        </div>
+      )}
       
       <div className="mb-4">
         <input
@@ -62,7 +109,11 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
       </div>
       
       <div className="max-h-60 overflow-y-auto mb-4">
-        {filteredParents.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="text-gray-500">Loading parents...</div>
+          </div>
+        ) : filteredParents.length > 0 ? (
           filteredParents.map((parent) => (
             <div 
               key={parent.id}
@@ -81,6 +132,8 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
               </div>
             </div>
           ))
+        ) : error ? (
+          <p className="text-gray-500 text-center py-4">{error}</p>
         ) : (
           <p className="text-gray-500 text-center py-4">{t("events.noParentsFound")}</p>
         )}
