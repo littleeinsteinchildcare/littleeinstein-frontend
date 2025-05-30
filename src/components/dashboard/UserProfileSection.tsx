@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { auth } from "@/firebase";
+import { API_BASE_URL } from "@/utils/api";
 
 type Photo = {
   id: string;
@@ -30,7 +31,7 @@ const UserProfileSection = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:8080/api/images", {
+      const res = await fetch(`${API_BASE_URL}/api/images`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -51,7 +52,7 @@ const UserProfileSection = () => {
           .map((path: string) => {
             const name = path.split("/").pop() || path;
             const id = path;
-            const url = `http://localhost:8080/api/image/${path}`;
+            const url = `${API_BASE_URL}/api/image/${path}`;
             return { id, name, url };
           });
 
@@ -94,7 +95,7 @@ const UserProfileSection = () => {
       formData.append("image", file);
 
       try {
-        const res = await fetch("http://localhost:8080/api/image", {
+        const res = await fetch(`${API_BASE_URL}/api/image`, {
           method: "POST",
           body: formData,
           credentials: "include",
@@ -153,7 +154,7 @@ const UserProfileSection = () => {
     const photoId = photos[index].id;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/image/${photoId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/image/${photoId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {

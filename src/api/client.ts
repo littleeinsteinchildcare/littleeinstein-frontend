@@ -1,4 +1,5 @@
 import { auth } from "@/firebase";
+import { API_BASE_URL } from "@/utils/api";
 
 export async function apiGet(path: string) {
   const user = auth.currentUser;
@@ -6,7 +7,7 @@ export async function apiGet(path: string) {
 
   const token = await user.getIdToken();
 
-  const response = await fetch(`http://localhost:8080${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -16,8 +17,13 @@ export async function apiGet(path: string) {
 
   if (!response.ok) {
     const errorData = await response.text();
-    console.error(`API GET ${path} failed with status ${response.status}:`, errorData);
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    console.error(
+      `API GET ${path} failed with status ${response.status}:`,
+      errorData,
+    );
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   return response.json();
@@ -29,7 +35,7 @@ export async function apiPost(path: string, data: any) {
 
   const token = await user.getIdToken();
 
-  const response = await fetch(`http://localhost:8080${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -40,8 +46,13 @@ export async function apiPost(path: string, data: any) {
 
   if (!response.ok) {
     const errorData = await response.text();
-    console.error(`API POST ${path} failed with status ${response.status}:`, errorData);
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    console.error(
+      `API POST ${path} failed with status ${response.status}:`,
+      errorData,
+    );
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   return response.json();
@@ -53,7 +64,7 @@ export async function apiPut(path: string, data: any) {
 
   const token = await user.getIdToken();
 
-  const response = await fetch(`http://localhost:8080${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -64,8 +75,13 @@ export async function apiPut(path: string, data: any) {
 
   if (!response.ok) {
     const errorData = await response.text();
-    console.error(`API PUT ${path} failed with status ${response.status}:`, errorData);
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    console.error(
+      `API PUT ${path} failed with status ${response.status}:`,
+      errorData,
+    );
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   return response.json();
@@ -77,7 +93,7 @@ export async function apiDelete(path: string) {
 
   const token = await user.getIdToken();
 
-  const response = await fetch(`http://localhost:8080${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -87,8 +103,13 @@ export async function apiDelete(path: string) {
 
   if (!response.ok) {
     const errorData = await response.text();
-    console.error(`API DELETE ${path} failed with status ${response.status}:`, errorData);
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    console.error(
+      `API DELETE ${path} failed with status ${response.status}:`,
+      errorData,
+    );
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   // DELETE typically returns 204 No Content, so don't parse JSON
@@ -152,17 +173,20 @@ export async function createEvent(eventData: {
   return apiPost("/api/event", eventData);
 }
 
-export async function updateEvent(eventId: string, eventData: {
-  id: string;
-  eventname: string;
-  date: string;
-  starttime: string;
-  endtime: string;
-  location: string;
-  description: string;
-  color: string;
-  invitees: string;
-}): Promise<BackendEvent> {
+export async function updateEvent(
+  eventId: string,
+  eventData: {
+    id: string;
+    eventname: string;
+    date: string;
+    starttime: string;
+    endtime: string;
+    location: string;
+    description: string;
+    color: string;
+    invitees: string;
+  },
+): Promise<BackendEvent> {
   return apiPut(`/api/event/${eventId}`, eventData);
 }
 
