@@ -1,18 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import SignIn from "@/components/auth-ui/signIn";
 import SignUp from "@/components/auth-ui/signUp";
 
-const AuthPage = () => {
-  const [mode, setMode] = useState<"signup" | "signin">("signup");
+type AuthPageProps = {
+  initialMode?: "signup" | "signin";
+};
+const AuthPage = ({ initialMode = "signup" }: AuthPageProps) => {
+  const [mode, setMode] = useState<"signup" | "signin">(initialMode);
 
   const { t } = useTranslation();
 
-  const toggleMode = () => {
-    setMode(mode === "signup" ? "signin" : "signup");
-  };
+  useEffect(() => {
+    setMode(initialMode);
+  }, [initialMode]);
 
+  const toggleMode = () => {
+    setMode((prevMode) => (prevMode === "signup" ? "signin" : "signup"));
+  };
   return (
     <div className="h-screen w-screen bg-[#FFFBCF] flex items-center justify-center overflow-hidden">
       <div className="relative w-full max-w-4xl h-[600px] bg-white shadow-2xl rounded-xl overflow-hidden">
@@ -42,7 +48,7 @@ const AuthPage = () => {
             </button>
           </motion.div>
 
-          {/* Signup Form */}
+          {/* SignUp or SignIn Form */}
           <SignUp mode={mode} />
 
           {/* Signin Form */}

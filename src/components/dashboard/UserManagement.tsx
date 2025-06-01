@@ -12,6 +12,7 @@ type Props = {
   onRemove?: (email: string) => void;
 };
 type BackendUser = {
+  Id: string;
   Email: string;
 };
 const UserManagement: React.FC<Props> = ({ onRemove }) => {
@@ -31,12 +32,11 @@ const UserManagement: React.FC<Props> = ({ onRemove }) => {
         });
 
         const rawUsers = await response.json();
-        const formattedUsers: User[] = (rawUsers as BackendUser[]).map(
-          (u, idx) => ({
-            _id: (idx + 1).toString(),
-            email: u.Email,
-          }),
-        );
+        console.log("Fetched users from backend:", rawUsers);
+        const formattedUsers: User[] = (rawUsers as BackendUser[]).map((u) => ({
+          _id: u.Id,
+          email: u.Email,
+        }));
 
         setUsers(formattedUsers);
       } catch (err) {
@@ -48,6 +48,35 @@ const UserManagement: React.FC<Props> = ({ onRemove }) => {
 
     fetchUsers();
   }, []);
+
+  const handleDeleteUser = async (user: User) => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) return;
+
+      const token = await currentUser.getIdToken();
+
+      const res = await fetch(
+        `${API_BASE_URL}/api/user/${encodeURIComponent(user._id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to delete user");
+      }
+
+      setUsers((prev) => prev.filter((u) => u._id !== user._id));
+
+      onRemove?.(user.email);
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
 
   return (
     <section className="bg-[#94EE8F] rounded-lg shadow p-6">
@@ -66,7 +95,7 @@ const UserManagement: React.FC<Props> = ({ onRemove }) => {
               <p className="overflow-hidden text-ellipsis">{user.email}</p>
               <button
                 className="ml-2 text-red-500 opacity-0 hover:bg-green-100 hover:cursor-pointer rounded pl-2 pr-2 group-hover:opacity-100 transition duration-200 text-sm"
-                onClick={() => onRemove?.(user.email)}
+                onClick={() => handleDeleteUser(user)}
               >
                 {t("admin.removeUser")}
               </button>

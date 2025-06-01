@@ -2,8 +2,10 @@ import googleIcon from "@/assets/googleIcon.svg";
 import microsoftIcon from "@/assets/microsoftIcon.svg";
 import { signInWithProvider } from "@/auth/signInWithProvider";
 import { useNavigate } from "react-router-dom";
-import { showErrorToast } from "@/utils/toast";
-import { GoogleAuthProvider, OAuthProvider } from "firebase/auth";
+import { showErrorToast, showInfoToast } from "@/utils/toast";
+import { GoogleAuthProvider, OAuthProvider, signOut } from "firebase/auth";
+import { auth } from "@/firebase";
+import { postUserToBackend } from "@/auth/postUserToBackend";
 const AuthProviders = () => {
   const navigate = useNavigate();
   const handleOAuth = async (provider: "google" | "microsoft") => {
@@ -13,8 +15,25 @@ const AuthProviders = () => {
         : new OAuthProvider("microsoft.com");
     try {
       const result = await signInWithProvider(authProvider);
-      console.log("OAuth success, redirecting...", result);
-      navigate("/profile");
+
+      if (result?.emailVerified) {
+        const token = await result.getIdToken();
+        const data = await postUserToBackend(token);
+
+        if (data?.role === "admin") {
+          await signOut(auth);
+          showInfoToast(
+            "You're signed in as admin. Please sign in again to activate admin access.",
+          );
+          navigate("/signin");
+          return;
+        }
+
+        navigate("/profile");
+      } else {
+        await signOut(auth);
+        showErrorToast("Your provider email is not verified.");
+      }
     } catch (error: unknown) {
       let errorMessage = "OAuth sign-in failed";
 

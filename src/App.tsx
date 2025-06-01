@@ -51,7 +51,8 @@ const App = () => {
               path="/resources/ODEChildEnrollmentForm"
               element={<ODEChildEnrollmentForm />}
             />
-            <Route path="/signin" element={<AuthPage />} />
+            <Route path="/signin" element={<AuthPage initialMode="signup" />} />
+            <Route path="/signup" element={<AuthPage initialMode="signin" />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/calendar/events" element={<EventsPage />} />
             <Route path="/about" element={<AboutUsPage />} />

@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { forgotPassword } from "@/auth/forgotPassword";
 import { signInWithEmail } from "@/auth/signInWithEmail";
 import { showErrorToast } from "@/utils/toast";
 import AuthProviders from "@/components/auth-ui/authProvider";
+import { signOut, sendEmailVerification, User } from "firebase/auth";
+import { auth } from "@/firebase";
+import { API_BASE_URL } from "@/utils/api";
+import { showInfoToast } from "@/utils/toast";
 type Props = {
   mode: "signin" | "signup";
 };
@@ -14,10 +18,70 @@ const SignIn: React.FC<Props> = ({ mode }) => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [unverifiedUser, setUnverifiedUser] = useState(false);
+  const [resent, setResent] = useState(false);
+  const [pendingVerificationUser, setPendingVerificationUser] =
+    useState<User | null>(null);
+
+  useEffect(() => {
+    const toastType = localStorage.getItem("toastMessage");
+
+    if (toastType === "verifyEmail") {
+      setTimeout(() => {
+        showErrorToast(
+          "Verification email sent. Please verify your email before signing in.",
+        );
+      }, 100);
+      localStorage.removeItem("toastMessage");
+    }
+  }, []);
   const handleEmailPasswordSignIn = async () => {
     try {
-      await signInWithEmail(signInEmail, signInPassword);
-      navigate("/profile");
+      const user = await signInWithEmail(signInEmail, signInPassword);
+      console.log("user.emailVerified:", user.emailVerified);
+      if (!user.emailVerified) {
+        setPendingVerificationUser(user);
+        await signOut(auth);
+        setUnverifiedUser(true);
+        showErrorToast(
+          "Please verify your email before signing in. A verification email has been sent to your inbox.",
+        );
+        return;
+      }
+
+      if (user && user.emailVerified) {
+        console.log("user email is verified: ", user.emailVerified);
+        const token = await user.getIdToken();
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/user`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Failed to create user in backend:", errorText);
+          } else {
+            const data = await response.json();
+
+            if (data.role === "admin") {
+              await signOut(auth);
+              showInfoToast(
+                "You're signed in as admin. Please sign in again to activate admin access.",
+              );
+              navigate("/signin");
+              return;
+            }
+          }
+        } catch (err) {
+          console.error("POST /api/user error:", err);
+        }
+
+        navigate("/profile");
+      }
     } catch (error: unknown) {
       let errorMessage = "Sign-in failed";
 
@@ -28,7 +92,22 @@ const SignIn: React.FC<Props> = ({ mode }) => {
       showErrorToast(errorMessage);
     }
   };
+  const handleResendVerification = async () => {
+    try {
+      const userToUse = auth.currentUser ?? pendingVerificationUser;
 
+      if (userToUse && !userToUse.emailVerified) {
+        console.log("Resending verification email to:", userToUse.email);
+        await sendEmailVerification(userToUse);
+        setResent(true);
+        showErrorToast("Verification email sent. Please check your inbox.");
+      } else {
+        showErrorToast("User not found or already verified.");
+      }
+    } catch {
+      showErrorToast("Failed to resend verification email.");
+    }
+  };
   const handleForgotPassword = async () => {
     if (!signInEmail) {
       alert("Please enter your email above first.");
@@ -96,6 +175,19 @@ const SignIn: React.FC<Props> = ({ mode }) => {
       >
         {t("signin.logIn")}
       </button>
+      {unverifiedUser && (
+        <div className="mt-4 text-center">
+          <p className="text-red-600 text-sm mb-2">
+            Your email is not verified.
+          </p>
+          <button
+            onClick={handleResendVerification}
+            className="text-sm text-blue-700 underline hover:text-blue-900"
+          >
+            {resent ? "Verification email sent!" : "Resend verification email"}
+          </button>
+        </div>
+      )}
       <div className="mt-6 w-full">
         <p className="text-sm text-center text-black mb-2">
           {t("signin.orContinue")}
