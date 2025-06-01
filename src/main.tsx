@@ -7,12 +7,12 @@ import "./i18n";
 // import { AuthProvider } from "./auth/hooks/authProvider.tsx";
 //const { AuthProvider } = useAuthProvider();
 
-//import { BannerProvider } from "./context/BannerContext.tsx";
+import { BannerProvider } from "./context/BannerContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/* <BannerProvider> */}
-    <App />
-    {/* </BannerProvider> */}
+    <BannerProvider>
+      <App />
+    </BannerProvider>
   </StrictMode>,
 );
