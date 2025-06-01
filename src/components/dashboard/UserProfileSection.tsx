@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { auth } from "@/firebase";
 import { API_BASE_URL } from "@/utils/api";
 import { useAuthListener } from "@/auth/useAuthListener";
+import { useEventContext } from "@/context/EventContext";
 
 type Photo = {
   id: string;
@@ -13,7 +14,9 @@ type Photo = {
 const UserProfileSection = () => {
   const { t } = useTranslation();
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const { events } = useEventContext();
   const user = useAuthListener();
+  const userEvents = events;
   let accessToken: string;
 
   async function getToken() {
@@ -213,14 +216,17 @@ const UserProfileSection = () => {
 
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
-      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
-        {t("profile.title")}
-      </h2>
-      <div className="w-20 h-1 bg-green-800 mx-auto mb-6" />
+      <div className="text-center mt-6 mb-12">
+        <h2 className="text-3xl font-bold text-black inline-block relative">
+          {t("profile.title")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
+
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
         {/* Photo Uploads */}
-        <div className="shadow-md rounded flex-col p-5">
-          <h2 className="text-2xl text-black font-bold mx-auto mb-5">
+        <div className="shadow-md bg-[#94EE8F] rounded-xl flex-col p-5">
+          <h2 className="text-lg md:text-2xl text-black font-bold mx-auto mb-5">
             {t("profile.upload")}
           </h2>
           <input
@@ -233,7 +239,7 @@ const UserProfileSection = () => {
           />
           <label
             htmlFor="fileUpload"
-            className="cursor-pointer bg-[#94EE8F] text-black px-4 py-2 rounded hover:bg-green-200 transition-colors text-center w-max m-5"
+            className="cursor-pointer text-xs md:text-sm text-center w-max m-5 bg-[#2A9D8F] text-white border border-[#003366] hover:bg-white hover:text-[#003366] px-4 py-2 rounded"
           >
             {t("profile.browse")}
           </label>
@@ -247,7 +253,7 @@ const UserProfileSection = () => {
               />
               <button
                 onClick={() => handleDelete(index)}
-                className="absolute top-20 right-10 bg-[#94EE8F] text-black text-xs px-2 py-1 rounded hover:bg-green-200"
+                className="absolute top-20 right-10 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600 border border-[#003366]"
               >
                 ✕
               </button>
@@ -256,40 +262,55 @@ const UserProfileSection = () => {
         </div>
 
         {/*Events Section */}
-        <div className="shadow-md rounded flex-col p-5">
-          <h2 className="text-2xl text-black font-bold mx-auto mb-5">
+        <div className="bg-[#94EE8F] shadow-md rounded-xl flex-col p-5">
+          <h2 className="text-lg md:text-2xl text-black font-bold mx-auto mb-5">
             {t("profile.events")}
           </h2>
-          {/*To be mapped later */}
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 1</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
-            </div>
-          </div>
 
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 2</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
+          {!user ? (
+            <div className="text-center py-8 text-gray-600">
+              Please sign in to view your events
             </div>
-          </div>
-
-          <div className="shadow_md rounded bg-[#94EE8F] p-5 mb-5 relative">
-            <h3 className="text-md font-bold wrap-break-word">Event 3</h3>
-            <div className="absolute right-5 top-4 font-normal">By Creator</div>
-            <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="font-light text-gray-600">
-              <p> Feb 30 2025</p>
-              <p> 12:00pm - 3:00pm</p>
+          ) : userEvents.length === 0 ? (
+            <div className="text-center py-8 text-gray-600">
+              You haven't created any events yet
             </div>
-          </div>
+          ) : (
+            userEvents.map((event) => (
+              <div
+                key={event.id}
+                className="shadow_md rounded-lg bg-white p-5 mb-5 relative border"
+              >
+                <h3 className="text-md font-bold wrap-break-word">
+                  {event.title}
+                </h3>
+                <div className="absolute right-5 top-4 text-sm">
+                  {event.createdBy === user?.uid
+                    ? t("profile.byYou")
+                    : t("profile.invited")}
+                </div>
+                <hr className="h-px mt-3 mb-3 bg-gray-200 border-0 dark:bg-gray-700" />
+                <div className="font-light text-gray-600">
+                  <p>{event.start.toLocaleDateString()}</p>
+                  <p>
+                    {event.start.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}{" "}
+                    -{" "}
+                    {event.end.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  {event.location && <p>📍 {event.location}</p>}
+                  {event.description && (
+                    <p className="mt-2 text-sm">{event.description}</p>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

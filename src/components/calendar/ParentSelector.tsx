@@ -13,7 +13,6 @@ interface ParentSelectorProps {
   onSelect: (selectedParents: string[]) => void;
 }
 
-
 const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   const { t } = useTranslation();
   const [selectedParents, setSelectedParents] = useState<string[]>([]);
@@ -34,23 +33,30 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const users = await getUsers();
-        
+
         // Filter out the current user and convert to Parent format
         if (users && Array.isArray(users) && users.length > 0) {
-          const parentUsers = users.filter(user => 
-            user.Role === "parent" || user.Role === "user" || user.Role === "admin"
-          ).map(user => ({
-            id: user.ID,
-            name: user.Username || user.Email.split('@')[0] || 'Unknown User',
-            email: user.Email
-          }));
-          
+          const parentUsers = users
+            .filter(
+              (user) =>
+                user.Role === "parent" ||
+                user.Role === "user" ||
+                user.Role === "admin",
+            )
+            .map((user) => ({
+              id: user.ID,
+              name: user.Username || user.Email.split("@")[0] || "Unknown User",
+              email: user.Email,
+            }));
+
           setParents(parentUsers);
         } else {
           setParents([]);
-          setError("No users found. Please contact an administrator to create user accounts.");
+          setError(
+            "No users found. Please contact an administrator to create user accounts.",
+          );
         }
       } catch (err) {
         console.error("❌ Failed to fetch users from backend:", err);
@@ -79,7 +85,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   };
 
   const filteredParents = parents.filter((parent) =>
-    parent.name.toLowerCase().includes(searchTerm.toLowerCase())
+    parent.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleDone = () => {
@@ -87,17 +93,17 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto mt-4">
-      <h3 className="text-xl font-semibold mb-4">{t("events.inviteParents")}</h3>
-      
+    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl mx-auto mt-4 border-2 border-gray-300">
+      <h3 className="text-xl font-semibold mb-4">
+        {t("events.inviteParents")}
+      </h3>
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded-md">
-          <p className="text-sm text-red-800">
-            {error}
-          </p>
+          <p className="text-sm text-red-800">{error}</p>
         </div>
       )}
-      
+
       <div className="mb-4">
         <input
           type="text"
@@ -107,7 +113,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
           onChange={handleSearch}
         />
       </div>
-      
+
       <div className="max-h-60 overflow-y-auto mb-4">
         {loading ? (
           <div className="text-center py-4">
@@ -115,7 +121,7 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
           </div>
         ) : filteredParents.length > 0 ? (
           filteredParents.map((parent) => (
-            <div 
+            <div
               key={parent.id}
               className="flex items-center p-2 hover:bg-gray-100 rounded-md cursor-pointer"
               onClick={() => handleToggleParent(parent.id)}
@@ -135,10 +141,12 @@ const ParentSelector = ({ onSelect }: ParentSelectorProps) => {
         ) : error ? (
           <p className="text-gray-500 text-center py-4">{error}</p>
         ) : (
-          <p className="text-gray-500 text-center py-4">{t("events.noParentsFound")}</p>
+          <p className="text-gray-500 text-center py-4">
+            {t("events.noParentsFound")}
+          </p>
         )}
       </div>
-      
+
       <div className="flex justify-between">
         <span className="text-sm text-gray-600">
           {t("events.selectedCount", { count: selectedParents.length })}

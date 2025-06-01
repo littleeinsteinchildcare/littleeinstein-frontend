@@ -60,9 +60,14 @@ export const es = {
     scheduleButton: "Ver Programación Completa",
     art: `GALERIA DE NUESTROS PEQUEÑOS ARTISTAS`,
     sayings: "LO QUE DICEN LAS FAMILIAS",
-    test1: `hola mundo`,
-    test2: `hola mundo`,
-    test3: `hola mundo`,
+    test1: `Recomiendo encarecidamente la Guardería Little Einsteins 2 por su excepcional atención y apoyo. Mi hijo de 4 años lleva dos meses asistiendo y la experiencia ha sido excepcional.
+
+    . . . Durante nuestra primera entrevista, Sonia abordó mis preocupaciones sobre la seguridad y el bienestar de mi hijo, lo que me dio tranquilidad. Su disponibilidad para recibir visitas y llamadas telefónicas me tranquilizó aún más.`,
+    test2: `Llevo 8 años llevando a mis dos hijos a Little Einstein. Lo primero que preguntan cada mañana es si irán a "casa de la maestra Sonia".
+
+    Se emocionan muchísimo al saber que irán a Little Einstein. Sonia es cariñosa, amorosa y muy comunicativa. Me alegra saber que mis hijos están seguros y bien cuidados en Little Einstein.`,
+    test3: "",
+    test4: "",
     reviewMessage: `¡Adorado por padres en Google! Lee más reseñas de 5 estrellas de familias como la tuya.`,
     reviewButton: "Ver reseñas de Google",
     getDirections: "Direcciones",
@@ -70,6 +75,7 @@ export const es = {
 
   calendar: {
     title: "Calendario",
+    title2: "2025 Little Einstein Childcare Calendario",
     today: "Hoy",
     previous: "Previo",
     next: "Próximo",
@@ -82,6 +88,10 @@ export const es = {
     event: "Evento",
     noEvents: "No hay eventos en este rango",
     createEvent: "Crear Evento",
+    showSidebar: "Mostrar mis Eventos",
+    hideSidebar: "Ocultar barra Lateral",
+    myEvents: "Solo mis Eventos Creados",
+    showAll: "Mostrar Todos mis Eventos",
   },
 
   events: {
@@ -92,8 +102,10 @@ export const es = {
     location: "Ubicación",
     description: "Descripción",
     createEvent: "Crear Nuevo Evento",
+    editEvent: "Editar Evento",
     cancel: "Cancelar",
     submit: "Crear Evento",
+    update: "Evento de Actualización",
     errorTitle: "El título del evento es obligatorio",
     errorDate: "La fecha es obligatoria",
     errorStartTime: "La hora de inicio es obligatoria",
@@ -103,6 +115,26 @@ export const es = {
     errorLocation: "La ubicación es obligatoria",
     successTitle: "¡Éxito!",
     successMessage: "Tu evento ha sido creado.",
+    updateSuccess: "Evento Actualizado Exitosamente.",
+    color: "Color del Evento",
+    invitedParents: "Padres Invitados",
+    parentsSelected: "Padres Seleccionados",
+    addInvitations: "Agregar Invitaciones",
+    editInvitations: "Editar Invitaciones",
+    inviteParents: "Invitar a los Padres",
+    searchParents: "Buscar Padres...",
+    noParentsFound: "Ningún Padre Encontrado",
+    selectedCount: "{{count}} seleccionado",
+    done: "Hecho",
+    yourEvents: "Tus Eventos",
+    noEvents: "Aún no has creado ningún evento",
+    edit: "Editar",
+    delete: "Borrar",
+    confirmDelete: "¿Estás seguro que deseas eliminar este evento?",
+    yes: "Sí",
+    no: "No",
+    createNew: "Crear nuevo Evento",
+    searchLocation: "Buscar una ubicación...",
   },
 
   signin: {
@@ -112,6 +144,7 @@ export const es = {
     welcome: "¡Bienvenido!",
     dontHaveAccount: "¿No tienes una Cuenta?",
     signUp: "Inscribirse",
+    fullName: "Nombre Completo",
     email: "Correo Electrónico",
     password: "Contraseña",
     forgotPassword: "¿Has olvidado tu contraseña?",
@@ -197,5 +230,7 @@ export const es = {
     load: "Cargar Mis Imágenes",
     browse: "Buscar Fotos",
     events: "Tus Eventos",
+    byYou: "Creado por Ti",
+    invited: "Invitado",
   },
 };

@@ -33,10 +33,12 @@ const AboutUsPage = () => {
       </div>
 
       {/* Philosophy */}
-      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
-        {t("aboutus.philosophyTitle")}
-      </h2>
-      <div className="w-48 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mt-6 mb-12">
+        <h2 className="text-3xl font-bold text-black inline-block relative">
+          {t("aboutus.philosophyTitle")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
 
       <div className="text-sm md:text-lg mt-8 mx-auto text-left font-semibold text-black max-w-5xl bg-[#94EE8F] rounded-3xl p-8 border-b-3 border-green-200">
         {t("aboutus.philosophy")

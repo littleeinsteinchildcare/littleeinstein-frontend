@@ -67,9 +67,14 @@ export const en = {
     scheduleButton: "View Full Schedule",
     art: `OUR LITTLE ARTISTS' GALLERY`,
     sayings: "WHAT FAMILIES ARE SAYING",
-    test1: `hello world`,
-    test2: `hello world`,
-    test3: `hello world`,
+    test1: `I wholeheartedly recommend Little Einsteins Daycare for its exceptional care and support. My 4-year-old son has been attending for two months, and the experience has been outstanding.
+
+    . . . During our initial interview, Sonia addressed my concerns about my son's security and well-being, providing me with peace of mind. Her openness to visits and phone calls further reassured me`,
+    test2: `For the past 8 years I have been taking both my kids to little Einstein. First thing they ask every morning is if there are going to “teacher Sonia’s house”.
+
+    They get super excited to know they will be going to Little Einstein. Sonia is caring, loving and very communicative. It feels good to know my kids are safe and well taken care of at little Einstein.`,
+    test3: "",
+    test4: "",
     reviewMessage: `Loved by parents on Google! Read more 5-star reviews from families
             just like yours.`,
     reviewButton: "View Google Reviews",
@@ -78,6 +83,7 @@ export const en = {
 
   calendar: {
     title: "Calendar",
+    title2: "2025 Little Einstein Childcare Calendar",
     today: "Today",
     previous: "Back",
     next: "Next",
@@ -92,6 +98,8 @@ export const en = {
     createEvent: "Create Event",
     showSidebar: "Show My Events",
     hideSidebar: "Hide Sidebar",
+    myEvents: "My Created Events Only",
+    showAll: "Show All My Events",
   },
 
   events: {
@@ -239,5 +247,7 @@ export const en = {
     load: "Load My Images",
     browse: "Browse Photos",
     events: "Your Events",
+    byYou: "Created by You",
+    invited: "Invited",
   },
 };

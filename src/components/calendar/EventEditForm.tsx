@@ -12,18 +12,24 @@ interface EventEditFormProps {
   compact?: boolean; // Optional prop for compact layout
 }
 
-const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }: EventEditFormProps) => {
+const EventEditForm = ({
+  event,
+  onSubmit,
+  onCancel,
+  onDelete,
+  compact = false,
+}: EventEditFormProps) => {
   const { t } = useTranslation();
-  
+
   // Convert dates back to form format
   const formatDateForInput = (date: Date): string => {
-    return format(date, 'yyyy-MM-dd');
+    return format(date, "yyyy-MM-dd");
   };
-  
+
   const formatTimeForInput = (date: Date): string => {
-    return format(date, 'HH:mm');
+    return format(date, "HH:mm");
   };
-  
+
   const [formData, setFormData] = useState({
     id: event.id,
     title: event.title,
@@ -34,46 +40,51 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
     description: event.description || "",
     color: event.color || "#4CAF50",
     invitedParents: event.invitedParents || [],
-    createdBy: event.createdBy
+    createdBy: event.createdBy,
   });
 
-  
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showParentSelector, setShowParentSelector] = useState(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = t("events.errorTitle");
     }
-    
+
     if (!formData.date) {
       newErrors.date = t("events.errorDate");
     }
-    
+
     if (!formData.startTime) {
       newErrors.startTime = t("events.errorStartTime");
     }
-    
+
     if (!formData.endTime) {
       newErrors.endTime = t("events.errorEndTime");
     }
-    
-    if (formData.startTime && formData.endTime && formData.startTime >= formData.endTime) {
+
+    if (
+      formData.startTime &&
+      formData.endTime &&
+      formData.startTime >= formData.endTime
+    ) {
       newErrors.endTime = t("events.errorTimeRange");
     }
-    
+
     if (!formData.location.trim()) {
       newErrors.location = t("events.errorLocation");
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData({
@@ -82,14 +93,13 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
     });
   };
 
-  
   const handleColorChange = (color: string) => {
     setFormData({
       ...formData,
       color,
     });
   };
-  
+
   const handleParentSelection = (selectedParents: string[]) => {
     setFormData({
       ...formData,
@@ -99,11 +109,13 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validate()) {
       // Convert form data back to CalendarEvent
       const [year, month, day] = formData.date.split("-").map(Number);
-      const [startHours, startMinutes] = formData.startTime.split(":").map(Number);
+      const [startHours, startMinutes] = formData.startTime
+        .split(":")
+        .map(Number);
       const [endHours, endMinutes] = formData.endTime.split(":").map(Number);
 
       const start = new Date(year, month - 1, day, startHours, startMinutes);
@@ -119,15 +131,19 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
         invitedParents: formData.invitedParents,
         location: formData.location,
         description: formData.description,
-        createdBy: formData.createdBy
+        createdBy: formData.createdBy,
       };
-      
+
       onSubmit?.(updatedEvent);
     }
   };
-  
+
   return (
-    <div className={`bg-white ${!compact && "shadow-lg rounded-lg p-6"} w-full max-w-2xl mx-auto`}>
+    <div
+      className={`bg-white ${
+        !compact && "shadow-lg rounded-lg p-6"
+      } w-full max-w-2xl mx-auto`}
+    >
       {!compact && (
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           {t("events.editEvent")}
@@ -135,14 +151,22 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
       )}
 
       {showParentSelector ? (
-        <ParentSelector onSelect={(parents) => {
-          handleParentSelection(parents);
-          setShowParentSelector(false);
-        }} />
+        <ParentSelector
+          onSelect={(parents) => {
+            handleParentSelection(parents);
+            setShowParentSelector(false);
+          }}
+        />
       ) : (
-        <form onSubmit={handleSubmit} className={compact ? "grid grid-cols-2 gap-x-6 gap-y-3" : "space-y-4"}>
+        <form
+          onSubmit={handleSubmit}
+          className={compact ? "grid grid-cols-2 gap-x-6 gap-y-3" : "space-y-4"}
+        >
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t("events.title")}*
             </label>
             <input
@@ -161,7 +185,10 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="date"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t("events.date")}*
             </label>
             <input
@@ -182,7 +209,10 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
           {/* Time inputs - these should be separate in the grid layout */}
           <div className={compact ? "" : "grid grid-cols-2 gap-4"}>
             <div>
-              <label htmlFor="startTime" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="startTime"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 {t("events.startTime")}*
               </label>
               <input
@@ -202,7 +232,10 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
           </div>
 
           <div>
-            <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="endTime"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t("events.endTime")}*
             </label>
             <input
@@ -221,7 +254,10 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
           </div>
 
           <div className={compact ? "col-span-2" : ""}>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t("events.location")}*
             </label>
             <input
@@ -242,7 +278,10 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
           </div>
 
           <div className={compact ? "col-span-2" : ""}>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t("events.description")}
             </label>
             <textarea
@@ -255,16 +294,36 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
             />
           </div>
 
-          <div className={compact ? "flex items-center" : ""}>
-            <label htmlFor="color" className={`block text-sm font-medium text-gray-700 ${compact ? "mr-3 min-w-20" : "mb-1"}`}>
+          <div className={compact ? "col-span-2 mb-4" : "mb-4"}>
+            <label
+              htmlFor="color"
+              className={`block text-sm font-medium text-gray-700 ${
+                compact ? "mr-3 min-w-20" : "mb-1"
+              }`}
+            >
               {t("events.color")}
             </label>
-            <div className={`flex space-x-2 ${!compact && "mt-2"}`}>
-              {["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0", "#607D8B"].map((color) => (
+            <div
+              className={`flex flex-wrap items-center space-x-2 mt-2 ${
+                !compact && "mt-2"
+              }`}
+            >
+              {[
+                "#4CAF50",
+                "#2196F3",
+                "#FF9800",
+                "#E91E63",
+                "#9C27B0",
+                "#607D8B",
+              ].map((color) => (
                 <div
                   key={color}
-                  className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded-full cursor-pointer transition-transform ${
-                    formData.color === color ? "ring-2 ring-offset-1 ring-gray-500 scale-110" : ""
+                  className={`${
+                    compact ? "w-6 h-6" : "w-8 h-8"
+                  } rounded-full cursor-pointer transition-transform ${
+                    formData.color === color
+                      ? "ring-2 ring-offset-1 ring-gray-500 scale-110"
+                      : ""
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => handleColorChange(color)}
@@ -273,8 +332,12 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
             </div>
           </div>
 
-          <div className={compact ? "flex items-center" : ""}>
-            <label className={`block text-sm font-medium text-gray-700 ${compact ? "mr-3 min-w-20" : "mb-1"}`}>
+          <div className={compact ? "col-span-2 mb-4" : "mb-4"}>
+            <label
+              className={`block text-sm font-medium text-gray-700 ${
+                compact ? "mr-3 min-w-20" : "mb-1"
+              }`}
+            >
               {t("events.invitedParents")}
             </label>
             <div className="flex items-center">
@@ -293,7 +356,11 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
             </div>
           </div>
 
-          <div className={`${compact ? "col-span-2" : ""} flex justify-end space-x-3 ${compact ? "pt-2" : "pt-4"}`}>
+          <div
+            className={`${
+              compact ? "col-span-2" : ""
+            } flex justify-end space-x-3 ${compact ? "pt-2" : "pt-4"}`}
+          >
             {/* Don't show cancel button in compact mode since we have X in the header */}
             {!compact && (
               <button
@@ -308,14 +375,18 @@ const EventEditForm = ({ event, onSubmit, onCancel, onDelete, compact = false }:
               <button
                 type="button"
                 onClick={() => onDelete(event.id)}
-                className={`${compact ? "px-3 py-1" : "px-4 py-2"} bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500`}
+                className={`${
+                  compact ? "px-3 py-1" : "px-4 py-2"
+                } bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500`}
               >
                 {t("events.delete")}
               </button>
             )}
             <button
               type="submit"
-              className={`${compact ? "px-3 py-1" : "px-4 py-2"} bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500`}
+              className={`${
+                compact ? "px-3 py-1" : "px-4 py-2"
+              } bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500`}
             >
               {t("events.update")}
             </button>

@@ -52,7 +52,7 @@ const SignUp: React.FC<Props> = ({ mode }) => {
       <input
         id="signUpEmail"
         type="text"
-        placeholder={t("signin.fullName") || "Full Name"}
+        placeholder={t("signin.fullName")}
         value={signUpName}
         onChange={(e) => setSignUpName(e.target.value)}
         className="w-full mb-3 p-2 rounded-xl bg-white text-black border border-gray-300"

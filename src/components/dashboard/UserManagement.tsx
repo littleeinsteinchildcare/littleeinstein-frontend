@@ -80,7 +80,7 @@ const UserManagement: React.FC<Props> = ({ onRemove }) => {
 
   return (
     <section className="bg-[#94EE8F] rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-2 text-black">
+      <h2 className="text-lg md:text-2xl font-semibold mb-4 text-black">
         {t("admin.userManage")}
       </h2>
       {loading ? (
@@ -90,9 +90,11 @@ const UserManagement: React.FC<Props> = ({ onRemove }) => {
           {users.map((user) => (
             <div
               key={user._id}
-              className="group relative p-2 rounded hover:bg-green-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
+              className="group relative p-2 rounded-xl bg-white border mb-2 hover:bg-green-200 transition duration-200 flex items-center justify-between whitespace-nowrap min-w-0 flex-grow"
             >
-              <p className="overflow-hidden text-ellipsis">{user.email}</p>
+              <p className="overflow-hidden text-ellipsis text-black">
+                {user.email}
+              </p>
               <button
                 className="ml-2 text-red-500 opacity-0 hover:bg-green-100 hover:cursor-pointer rounded pl-2 pr-2 group-hover:opacity-100 transition duration-200 text-sm"
                 onClick={() => handleDeleteUser(user)}
