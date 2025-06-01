@@ -8,16 +8,12 @@ const Testimonials = () => {
 
   const testimonials = [
     {
-      name: "Kevin P.",
+      name: "Lorena B.",
       quote: t("homepage.test1"),
     },
     {
-      name: "Kevin P.",
+      name: "Vere G.",
       quote: t("homepage.test2"),
-    },
-    {
-      name: "Kevin P.",
-      quote: t("homepage.test3"),
     },
   ];
 
@@ -43,8 +39,8 @@ const Testimonials = () => {
       {/* Testimonials + Google Reviews */}
       <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto mt-10">
         {/* Testimonial Card */}
-        <div className="bg-[#94EE8F] rounded-3xl p-6 w-full md:w-1/2 flex flex-col justify-between relative border-b-3 border-green-200">
-          <p className="text-lg italic text-gray-700">
+        <div className="bg-[#94EE8F] min-h-[340px] rounded-3xl p-6 w-full md:w-1/2 flex flex-col justify-between relative border-b-3 border-green-200">
+          <p className="text-lg italic text-gray-700 whitespace-pre-line">
             “{testimonials[testimonialIndex].quote}”
           </p>
           <p className="text-right text-sm font-semibold text-[#003366] mt-4">

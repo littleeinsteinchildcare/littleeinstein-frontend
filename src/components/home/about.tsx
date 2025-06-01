@@ -38,7 +38,7 @@ const About = () => {
           <Link
             to="/about"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="inline-block px-6 py-2 text-base font-semibold whitespace-nowrap rounded-2xl shadow-sm bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white hover:shadow-md hover:scale-105 transform transition duration-300"
+            className="inline-block px-6 py-2 text-sm md:text-base font-semibold whitespace-nowrap rounded-2xl shadow-sm bg-white text-[#003366] border border-[#003366] hover:bg-[#2A9D8F] hover:text-white hover:shadow-md hover:scale-105 transform transition duration-300"
           >
             {t("homepage.aboutButton")}
           </Link>

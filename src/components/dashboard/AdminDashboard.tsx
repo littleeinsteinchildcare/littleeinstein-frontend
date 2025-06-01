@@ -41,16 +41,18 @@ const Admin = () => {
   return (
     <div className="bg-[#FFFBCF] min-h-screen p-8">
       {/* Header */}
-      <h2 className="text-3xl font-bold text-black m-6 text-center max-w-5xl mx-auto">
-        {t("admin.adminHeader")}
-      </h2>
-      <div className="w-30 h-1 bg-green-800 mx-auto mb-6"></div>
+      <div className="text-center mt-6 mb-12">
+        <h2 className="text-3xl font-bold text-black inline-block relative">
+          {t("admin.adminHeader")}
+          <span className="block h-1 bg-green-800 mt-2 mx-auto w-[70%]"></span>
+        </h2>
+      </div>
 
       {/* Dashboard Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-5xl mx-auto mt-10">
         {/* Banner Controls */}
         <section className="bg-[#94EE8F] rounded-xl shadow p-6">
-          <h2 className="text-xl font-semibold mb-6">
+          <h2 className="text-lg md:text-2xl font-semibold mb-6">
             {t("admin.bannerControls")}
           </h2>
 
@@ -120,7 +122,7 @@ const Admin = () => {
 
         {/* Image Management */}
         <section className="bg-[#94EE8F] rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-2 text-black">
+          <h2 className="text-lg md:text-2xl font-semibold mb-2 text-black">
             {t("admin.imageManage")}
           </h2>
           <p className="text-sm text-gray-500">For later</p>

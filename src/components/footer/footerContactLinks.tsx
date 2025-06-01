@@ -8,7 +8,14 @@ const FooterContactLinks = () => {
     <ul className="space-y-4 text-sm text-gray-800 mb-4">
       <li className="flex items-center gap-2">
         <FiMapPin />
-        1789 SE River RD, Hillsboro
+        <a
+          href="https://www.google.com/maps/dir/?api=1&destination=1789+SE+River+RD,+Hillsboro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm"
+        >
+          1789 SE River RD, Hillsboro
+        </a>
       </li>
       <li className="flex items-center gap-2">
         <FiPhone />

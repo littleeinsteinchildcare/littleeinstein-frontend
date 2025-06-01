@@ -53,7 +53,7 @@ const WelcomeSection = () => {
           <path d="M40 10c-10 0-18 8-18 18 0 1 .1 2 .3 3C14.4 33.3 10 39.2 10 46c0 8 6.5 14 14.5 14h110c11 0 20-9 20-20S145 20 134 20c-1.5 0-2.9.2-4.3.5C126.2 11.2 117 5 106 5c-9.2 0-17.2 5.2-21.2 12.7C79.8 12.2 71.3 10 62 10H40z" />
         </svg>
 
-        <span className="absolute top-[55%] left-[15%] transform pointer-events-none text-sm group-hover:text-white whitespace-nowrap">
+        <span className="absolute top-[55%] left-[15%] transform pointer-events-none text-xs md:text-sm group-hover:text-white whitespace-nowrap">
           {t("homepage.enroll")}
         </span>
       </Link>

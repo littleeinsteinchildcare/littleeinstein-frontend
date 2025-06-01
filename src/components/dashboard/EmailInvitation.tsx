@@ -34,7 +34,7 @@ const EmailInvitation = () => {
   };
   return (
     <section className="bg-[#94EE8F] rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-2 text-black">
+      <h2 className="text-lg md:text-2xl font-semibold mb-4 text-black">
         {t("admin.inviteUser")}
       </h2>
       <div className="relative">
