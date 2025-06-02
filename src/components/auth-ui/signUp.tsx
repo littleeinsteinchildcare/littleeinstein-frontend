@@ -2,9 +2,7 @@ import AuthProviders from "./authProvider";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { signUpWithEmail } from "@/auth/signUpWithEmail";
-import { showInfoToast, showErrorToast } from "@/utils/toast";
-import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "@/utils/api";
+import { showErrorToast } from "@/utils/toast";
 import { updateProfile, signOut, getAuth } from "firebase/auth";
 type Props = {
   mode: "signin" | "signup";
@@ -15,7 +13,6 @@ const SignUp: React.FC<Props> = ({ mode }) => {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const handleEmailPasswordSignUp = async () => {
     try {
       const user = await signUpWithEmail(signUpEmail, signUpPassword);
@@ -28,29 +25,9 @@ const SignUp: React.FC<Props> = ({ mode }) => {
       console.log("user: ", user);
 
       if (user) {
-        const token = await user.getIdToken();
-
-        const response = await fetch(`${API_BASE_URL}/api/user`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Failed to create user in backend:", errorText);
-        }
-        const data = await response.json();
-        if (data.role == "admin") {
-          await signOut(getAuth());
-          showInfoToast(
-            "You're signed up as admin. Please sign in again to activate admin access.",
-          );
-          navigate("/signin");
-        } else {
-          navigate("/profile");
-        }
+        await signOut(getAuth());
+        localStorage.setItem("toastMessage", "verifyEmail");
+        window.location.href = "/signin";
       }
     } catch (error: unknown) {
       let errorMessage = "Sign-up failed";

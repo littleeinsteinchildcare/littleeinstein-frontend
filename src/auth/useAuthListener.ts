@@ -9,15 +9,15 @@ export const useAuthListener = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
-      
+
       // Sync Firebase user with backend when user signs in
-      if (firebaseUser) {
+      if (firebaseUser && user?.emailVerified) {
         try {
           await syncFirebaseUser({
             uid: firebaseUser.uid,
             email: firebaseUser.email || "",
             name: firebaseUser.displayName || "",
-            displayName: firebaseUser.displayName || ""
+            displayName: firebaseUser.displayName || "",
           });
           console.log("User synced with backend successfully");
         } catch (error) {

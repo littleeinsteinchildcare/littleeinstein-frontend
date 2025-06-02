@@ -1,7 +1,12 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth } from "@/firebase";
-import { db } from "@/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { checkIfInvited } from "./checkIfInvited";
+import { showInfoToast } from "@/utils/toast";
+// import { db } from "@/firebase";
+// import { doc, getDoc } from "firebase/firestore";
 
 export const signUpWithEmail = async (email: string, password: string) => {
   try {
@@ -9,18 +14,22 @@ export const signUpWithEmail = async (email: string, password: string) => {
     console.log("Email:", normalizedEmail);
     console.log("Password:", password);
 
-    const inviteRef = doc(db, "invitedUsers", normalizedEmail);
-    const inviteSnap = await getDoc(inviteRef);
-
-    if (!inviteSnap.exists()) {
-      throw new Error("This email is not invited to sign up.");
+    const isInvited = await checkIfInvited(normalizedEmail);
+    if (!isInvited) {
+      throw new Error("You are not invited to use this application.");
+    } else {
+      console.log("User is invited.");
     }
+
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password,
     );
-    console.log("user credential", userCredential);
+    await sendEmailVerification(userCredential.user);
+    showInfoToast("Verification email sent. Please check your inbox.");
+    await auth.signOut();
+
     return userCredential.user;
   } catch (error: unknown) {
     if (error instanceof Error) {
