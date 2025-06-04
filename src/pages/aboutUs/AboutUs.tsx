@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import soniaPic from "@/assets/temp1.png";
+import soniaPic from "@/assets/Sonia2.jpeg";
 
 const AboutUsPage = () => {
   const { t } = useTranslation();

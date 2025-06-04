@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import temp from "@/assets/temp1.png";
+import temp from "@/assets/Sonia2.jpeg";
 
 const About = () => {
   const { t } = useTranslation();
