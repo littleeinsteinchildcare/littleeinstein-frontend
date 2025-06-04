@@ -31,7 +31,11 @@ const FooterConnectLinks = () => {
       </li>
       <li className="flex items-center space-x-2 hover:underline">
         <FaYelp />
-        <a href="" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://www.yelp.com/biz/little-einstein-childcare-hillsboro?osq=Little+Einstein+childcare&override_cta=Get+pricing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Yelp
         </a>
       </li>
