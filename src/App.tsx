@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,33 +35,31 @@ const App = () => {
 
   return (
     <>
-      <Router>
-        <EventProvider>
-          <Navbar />
-          {banner && <Banner type={banner.type} message={banner.message} />}
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/resources/" element={<ResourcesPage />} />
-            <Route
-              path="/resources/NWChildEnrollmentForm"
-              element={<NWChildEnrollmentForm />}
-            />
-            <Route
-              path="/resources/ODEChildEnrollmentForm"
-              element={<ODEChildEnrollmentForm />}
-            />
-            <Route path="/signin" element={<AuthPage initialMode="signup" />} />
-            <Route path="/signup" element={<AuthPage initialMode="signin" />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/calendar/events" element={<EventsPage />} />
-            <Route path="/about" element={<AboutUsPage />} />
-            <Route path="/contact" element={<ContactUsPage />} />
-            {/* <Route path="/docs" element={<DocsPage />} /> */}
-          </Routes>
-          <Footer />
-        </EventProvider>
-      </Router>
+      <EventProvider>
+        <Navbar />
+        {banner && <Banner type={banner.type} message={banner.message} />}
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/resources/" element={<ResourcesPage />} />
+          <Route
+            path="/resources/NWChildEnrollmentForm"
+            element={<NWChildEnrollmentForm />}
+          />
+          <Route
+            path="/resources/ODEChildEnrollmentForm"
+            element={<ODEChildEnrollmentForm />}
+          />
+          <Route path="/signin" element={<AuthPage initialMode="signup" />} />
+          <Route path="/signup" element={<AuthPage initialMode="signin" />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/calendar/events" element={<EventsPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          {/* <Route path="/docs" element={<DocsPage />} /> */}
+        </Routes>
+        <Footer />
+      </EventProvider>
       <ToastContainer position="top-center" />
     </>
   );
