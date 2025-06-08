@@ -1,4 +1,4 @@
-import ChildEnrollmentForm from "@/assets/ChildEnrollmentForm.pdf";
+import OnlineChildEnrollment from "/pdfs/OnlineChildEnrollment.pdf";
 import { useTranslation } from "react-i18next";
 
 const NWChildEnrollmentForm = () => {
@@ -10,7 +10,7 @@ const NWChildEnrollmentForm = () => {
         {t("resources.NWChildEnrollmentForm")}
       </h1>
       <iframe
-        src={ChildEnrollmentForm}
+        src={OnlineChildEnrollment}
         width="80%"
         height="600px"
         title="NW Child Enrollment Form"
