@@ -4,6 +4,10 @@ import { auth } from "@/firebase";
 import { API_BASE_URL } from "@/utils/api";
 import { useAuthListener } from "@/auth/useAuthListener";
 import { useEventContext } from "@/context/EventContext";
+import * as nsfwjs from "nsfwjs";
+import * as tf from "@tensorflow/tfjs";
+import { useRef } from "react";
+import { showErrorToast } from "@/utils/toast";
 
 type Photo = {
   id: string;
@@ -102,6 +106,39 @@ const UserProfileSection = () => {
     }
   }, [user]);
 
+  const nsfwModelRef = useRef<nsfwjs.NSFWJS | null>(null);
+
+  useEffect(() => {
+    const loadModel = async () => {
+      nsfwModelRef.current = await nsfwjs.load();
+    };
+    tf.ready().then(loadModel);
+  }, []);
+
+  const isNSFW = async (file: File): Promise<boolean> => {
+    if (!nsfwModelRef.current) return false;
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const img = new Image();
+        img.onload = async () => {
+          const predictions = await nsfwModelRef.current!.classify(img);
+          const nsfwScore = predictions.find(
+            (p) =>
+              p.className === "Porn" ||
+              p.className === "Hentai" ||
+              p.className === "Sexy",
+          )?.probability;
+
+          resolve((nsfwScore ?? 0) > 0.7);
+        };
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   async function handleAdd(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
       return;
@@ -125,6 +162,14 @@ const UserProfileSection = () => {
     const newPhotos: Photo[] = [];
 
     for (const file of files) {
+      const nsfw = await isNSFW(file);
+      if (nsfw) {
+        showErrorToast(
+          `Image "${file.name}" was blocked due to inappropriate content.`,
+        );
+        continue;
+      }
+
       const formData = new FormData();
       formData.append("image", file);
 
@@ -152,7 +197,6 @@ const UserProfileSection = () => {
         }
 
         const data = JSON.parse(text);
-
         if (data.success) {
           const userId = auth.currentUser?.uid;
           if (!userId) throw new Error("No user ID found");
@@ -162,7 +206,6 @@ const UserProfileSection = () => {
           const uploadedPhoto = {
             id: fullPath,
             name: data.image.name,
-            //url: data.image.url /*.replace("host.docker.internal:10000", "localhost:10000")*/,
             url: `${API_BASE_URL}/api/image/${encodeURIComponent(
               data.image.name,
             )}`,
@@ -174,8 +217,6 @@ const UserProfileSection = () => {
       }
     }
 
-    //setPhotos((prev) => [...prev, ...newPhotos]);
-    // get their images they just uploaded
     await fetchImages();
     console.log("Image uploaded successfully:", newPhotos);
   }
